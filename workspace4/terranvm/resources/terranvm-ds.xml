@@ -7,7 +7,7 @@
    <local-tx-datasource>
       <jndi-name>terranvmDatasource</jndi-name>
       <use-java-context>true</use-java-context>
-      <connection-url>jdbc:postgresql://10.40.1.9/20130218</connection-url>
+      <connection-url>jdbc:postgresql://10.40.1.22222/20130218</connection-url>
       <driver-class>org.postgresql.Driver</driver-class>
       <user-name>postgres</user-name>
       <password>onlinets</password>
