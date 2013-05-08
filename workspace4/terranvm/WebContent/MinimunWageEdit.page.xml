@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd"
+      no-conversation-view-id="/MinimunWageList.xhtml"
+      login-required="true">
+
+   <begin-conversation join="true" flush-mode="MANUAL"/>
+
+
+   <param name="minimunWageFrom"/>
+   <param name="minimunWageId" value="#{minimunWageHome.minimunWageId}"/>
+   <param name="systemVariableFrom"/>
+   <param name="systemVariableId" value="#{systemVariableHome.systemVariableId}"/>
+
+
+
+   <navigation from-action="#{minimunWageHome.persist}">
+      <rule if-outcome="persisted">
+         <end-conversation/>
+         <redirect view-id="/MinimunWageList.xhtml"/>
+      </rule>
+   </navigation>
+
+   <navigation from-action="#{minimunWageHome.update}">
+      <rule if-outcome="updated">
+         <end-conversation/>
+         <redirect view-id="/MinimunWageList.xhtml"/>
+      </rule>
+   </navigation>
+
+   <navigation from-action="#{minimunWageHome.remove}">
+      <rule if-outcome="removed">
+         <end-conversation/>
+         <redirect view-id="/MinimunWage.xhtml"/>
+      </rule>
+   </navigation>
+
+</page>

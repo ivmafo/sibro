@@ -1,0 +1,301 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:p="http://primefaces.prime.com.tr/ui" xmlns:a4j="http://richfaces.org/a4j" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+	<ui:define name="body">
+
+		<a4j:keepAlive beanName="retentionRateAccountHome"></a4j:keepAlive>
+		<rich:simpleTogglePanel id="tooglePanel1" opened="#{retentionRateAccountHome.toogleOpened1 == true}" switchType="client" ignoreDupResponses="true">
+			<f:facet name="header">#{messages.Ledger_Accounts_Business_Entity_Search}</f:facet>
+			<h:form>
+				<rich:extendedDataTable noDataLabel="#{messages.table_no_data}" binding="#{htmlBusinessEntitiesRRADataTable}" width="100%" height="400px" rows="7" sortMode="single" tableState="#{retentionRateAccountHome.businessEntitiesListTableState}" value="#{retentionRateAccountHome.businessEntitiesList}" var="_TERCERO" id="tableBusineesEntityList">
+
+					<rich:column width="10%" sortable="true" id="col0" sortBy="#{_TERCERO.id}" filterBy="#{_TERCERO.id}" filterEvent="onchange" style="text-align: center">
+						<f:facet name="header">
+							<h:outputText value="id" />
+						</f:facet>
+						<h:outputText value="#{_TERCERO.id}" />
+					</rich:column>
+
+					<rich:column width="35%" sortable="true" id="col1" sortBy="#{_TERCERO.nameBusinessEntity}" filterBy="#{_TERCERO.nameBusinessEntity}" filterEvent="onchange" style="text-align: center">
+						<f:facet name="header">
+							<h:outputText value="#{messages.bussines_entity_legalName}" />
+						</f:facet>
+						<h:outputText value="#{_TERCERO.nameBusinessEntity}" />
+					</rich:column>
+
+					<rich:column width="35%" sortable="true" id="col2" filterBy="#{_TERCERO.idNumber}" filterEvent="onchange" style="text-align: center">
+						<f:facet name="header">
+							<h:outputText value="#{messages.nit} / #{messages.cedula}" />
+						</f:facet>
+						<h:outputText value="#{_TERCERO.idNumber}" />
+					</rich:column>
+
+					<rich:column width="20%" sortable="true" id="col3" style="text-align: center">
+						<f:facet name="header">
+							<h:outputText value="" />
+						</f:facet>
+						<h:commandButton type="button" value="#{messages.Select}">
+							<a4j:support event="onclick" action="#{retentionRateAccountHome.instanceBusinessEntity(_TERCERO)}" ignoreDupResponses="true" oncomplete="#{retentionRateAccountHome.searchRRAList()}" limitToList="true" reRender="tooglePanel1,tooglePanel2,growlPanel"></a4j:support>
+						</h:commandButton>
+					</rich:column>
+
+					<f:facet name="footer">
+						<rich:datascroller rendered="#{retentionRateAccountHome.businessEntitiesList.size() > 7}" />
+					</f:facet>
+				</rich:extendedDataTable>
+			</h:form>
+		</rich:simpleTogglePanel>
+
+		<rich:simpleTogglePanel id="tooglePanel2" opened="#{retentionRateAccountHome.toogleOpened2 == true}" switchType="client">
+			<f:facet name="header">#{messages.Ledger_Accounts} #{retentionRateAccountHome.businessEntity.nameBusinessEntity}</f:facet>
+			<h:form>
+				<center>
+					<h:outputText style="color:red" value="Debe seleccionar un tercero facturador" rendered="#{retentionRateAccountHome.businessEntity == null}" />
+				</center>
+				<center>
+					<h:commandButton type="button" value="#{messages.Ledger_Accounts_Add_Account}" rendered="#{retentionRateAccountHome.businessEntity != null}">
+						<a4j:support event="onclick" ajaxSingle="true" limitToList="true" ignoreDupResponses="true" action="#{retentionRateAccountHome.newRRA()}" oncomplete="#{rich:component('modalPanelAddEditRRA')}.show()" reRender="addEditFormRRA,modaltitle1,panelButtonsAddEditRRA"></a4j:support>
+					</h:commandButton>
+				</center>
+				<rich:extendedDataTable rendered="#{retentionRateAccountHome.businessEntity != null}" noDataLabel="#{messages.table_no_data}" binding="#{htmlRetetentionRateAccountsRRADataTable}" width="100%" height="400px" rows="7" sortMode="single" tableState="#{retentionRateAccountHome.retetentionRateAccountsListTableState}" value="#{retentionRateAccountHome.retentionRateAccountsList}" var="_RRA">
+
+					<rich:column width="10%" sortable="true" id="col00" sortBy="#{_RRA.id}" filterBy="#{_RRA.id}" filterEvent="onchange" style="text-align: center">
+						<f:facet name="header">
+							<h:outputText value="id" />
+						</f:facet>
+						<h:outputText value="#{_RRA.id}" />
+					</rich:column>
+
+					<rich:column width="20%" sortable="true" id="col01" sortBy="#{_RRA.name}" filterBy="#{_RRA.name}" filterEvent="onchange" style="text-align: center">
+						<f:facet name="header">
+							<h:outputText value="#{messages.Name}" />
+						</f:facet>
+						<h:outputText value="#{_RRA.name}" />
+					</rich:column>
+
+					<rich:column width="20%" sortable="true" id="col02" sortBy="#{_RRA.retentionRate.name}" filterBy="#{_RRA.retentionRate.name}" filterEvent="onchange" style="text-align: center">
+						<f:facet name="header">
+							<h:outputText value="#{messages.Ledger_Accounts_Category}" />
+						</f:facet>
+						<h:outputText value="#{_RRA.retentionRate.name}" />
+					</rich:column>
+
+					<rich:column width="20%" sortable="true" id="col03" sortBy="#{_RRA.account}" filterBy="#{_RRA.account}" filterEvent="onchange" style="text-align: center">
+						<f:facet name="header">
+							<h:outputText value="#{messages.Ledger_Accounts_Account}" />
+						</f:facet>
+						<h:outputText value="#{_RRA.account}" />
+					</rich:column>
+
+					<rich:column width="10%" sortable="true" id="col04" filterBy="#{_RRA.value}" filterEvent="onchange" style="text-align: center">
+						<f:facet name="header">
+							<h:outputText value="#{messages.Percentage}" />
+						</f:facet>
+						<h:outputText value="#{_RRA.value == null ? 'N/A':_RRA.value}" />
+					</rich:column>
+
+					<rich:column width="20%" sortable="true" id="col05" style="text-align: center">
+						<f:facet name="header">
+							<h:outputText value="" />
+						</f:facet>
+						<h:commandButton type="button" value="#{messages.View}">
+							<a4j:support event="onclick" ajaxSingle="true" limitToList="true" ignoreDupResponses="true" action="#{retentionRateAccountHome.instanceRRA(_RRA)}" oncomplete="#{rich:component('modalPanelViewRRA')}.show()" reRender="viewFormRRA,modaltitle2"></a4j:support>
+						</h:commandButton>
+						<h:commandButton type="button" value="#{messages.Edit}">
+							<a4j:support event="onclick" ajaxSingle="true" limitToList="true" ignoreDupResponses="true" action="#{retentionRateAccountHome.instanceRRA(_RRA)}" oncomplete="#{rich:component('modalPanelAddEditRRA')}.show()" reRender="addEditFormRRA,panelButtonsAddEditRRA,modaltitle1,modalPanelAddEditRRA"></a4j:support>
+						</h:commandButton>
+					</rich:column>
+
+					<f:facet name="footer">
+						<rich:datascroller rendered="#{retentionRateAccountHome.retentionRateAccountsList.size() > 7}" />
+					</f:facet>
+				</rich:extendedDataTable>
+			</h:form>
+		</rich:simpleTogglePanel>
+
+
+
+		<rich:modalPanel id="modalPanelAddEditRRA" minWidth="400" autosized="true">
+			<f:facet name="header">
+				<h:panelGroup id="modaltitle1">
+					<h:outputText rendered="#{retentionRateAccountHome.operation == 0}" value="#{messages.Ledger_Accounts_Add_Account} - #{retentionRateAccountHome.businessEntity.nameBusinessEntity}"></h:outputText>
+					<h:outputText rendered="#{retentionRateAccountHome.operation == 1}" value="#{messages.Ledger_Accounts_Edit_Account} - #{retentionRateAccountHome.businessEntity.nameBusinessEntity}"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+			<a4j:form ajaxSubmit="false" id="addEditFormRRA" ajaxSingle="true">
+				<table style="width: 100%;">
+					<tr>
+						<td style="width: 100%; text-align:center;"><s:decorate id="categoryRRA" template="layout/edit.xhtml">
+								<ui:define name="label">#{messages.Ledger_Accounts_Category}</ui:define>
+								<h:selectOneMenu required="true" value="#{retentionRateAccountHome.category}" defaultLabel="Haga Click para elegir una categoría">
+									<s:selectItems value="#{retentionRateAccountHome.retentionRates}" var="rr" label="#{rr.name}" />
+									<s:convertEntity></s:convertEntity>
+									<a4j:support event="onchange" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="panelButtonsAddEditRRA,percentRRA,descriptionRRA,subCategoryRRA,codeRRA"></a4j:support>
+								</h:selectOneMenu>
+							</s:decorate> <a4j:outputPanel id="subCategoryRRA">
+								<s:decorate template="layout/edit.xhtml" rendered="#{retentionRateAccountHome.subCategories.size() > 0}">
+									<ui:define name="label">#{messages.Ledger_Accounts_SubCategory}</ui:define>
+									<h:selectOneMenu required="true" value="#{retentionRateAccountHome.subCategory}" defaultLabel="Haga Click para elegir una sub-categoría">
+										<s:selectItems value="#{retentionRateAccountHome.subCategories}" var="rr" label="#{rr.name}"/>
+										<s:convertEntity></s:convertEntity>
+										<a4j:support event="onchange" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="panelButtonsAddEditRRA,percentRRA,descriptionRRA,codeRRA"></a4j:support>
+									</h:selectOneMenu> 
+								</s:decorate>
+							</a4j:outputPanel> 
+							
+							<s:decorate id="accountCodeRRA" template="layout/edit.xhtml">
+								<ui:define name="label">#{messages.Ledger_Accounts_Account_Code}</ui:define>
+								<h:inputText required="true" value="#{retentionRateAccountHome.instance.account}">
+									<a4j:support event="onchange" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="panelButtonsAddEditRRA"></a4j:support>
+								</h:inputText>
+							</s:decorate> 
+							<s:decorate id="nameRRA" template="layout/edit.xhtml">
+								<ui:define name="label">#{messages.Name}</ui:define>
+								<h:inputText required="true" value="#{retentionRateAccountHome.instance.name}">
+									<a4j:support event="onchange" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="panelButtonsAddEditRRA"></a4j:support>
+								</h:inputText>
+							</s:decorate> 
+							<s:decorate id="natureBillingRRA" template="layout/edit.xhtml">
+								<ui:define name="label">#{messages.Ledger_Accounts_Nature_Billing}</ui:define>
+								<h:selectOneMenu required="true" value="#{retentionRateAccountHome.instance.natureBilling}" defaultLabel="#{messages.Ledger_Accounts_Nature_Message}">
+									<f:selectItems value="#{retentionRateAccountHome.natures}" />
+									<a4j:support event="onchange" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="panelButtonsAddEditRRA"></a4j:support>
+								</h:selectOneMenu>
+							</s:decorate> <s:decorate id="natureRecoverRRA" template="layout/edit.xhtml">
+								<ui:define name="label">#{messages.Ledger_Accounts_Nature_Recover}</ui:define>
+								<h:selectOneMenu required="true" value="#{retentionRateAccountHome.instance.natureRecover}" defaultLabel="#{messages.Ledger_Accounts_Nature_Message}">
+									<f:selectItems value="#{retentionRateAccountHome.natures}" />
+									<a4j:support event="onchange" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="panelButtonsAddEditRRA"></a4j:support>
+								</h:selectOneMenu>
+							</s:decorate> <s:decorate id="natureCreditNoteRRA" template="layout/edit.xhtml">
+								<ui:define name="label">#{messages.Ledger_Accounts_Nature_CreditNote}</ui:define>
+								<h:selectOneMenu required="true" value="#{retentionRateAccountHome.instance.natureCreditNote}" defaultLabel="#{messages.Ledger_Accounts_Nature_Message}">
+									<f:selectItems value="#{retentionRateAccountHome.natures}" />
+									<a4j:support event="onchange" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="panelButtonsAddEditRRA"></a4j:support>
+								</h:selectOneMenu> 
+							</s:decorate> <a4j:outputPanel id="percentRRA">
+								<s:decorate rendered="#{retentionRateAccountHome.percentValueRendered}" template="layout/edit.xhtml">
+									<ui:define name="label">#{messages.Ledger_Accounts_Tax_Percentege}</ui:define>
+									<a4j:outputPanel>
+										<rich:inputNumberSpinner id="spinnerConceptRecoverValue" inputSize="6" value="#{retentionRateAccountHome.instance.value}" step="0.01" minValue="0.00" maxValue="100.00">
+											<a4j:support event="oninputkeyup" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="panelButtonsAddEditRRA"></a4j:support>
+											<a4j:support event="onclick" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="panelButtonsAddEditRRA"></a4j:support>
+											<a4j:support event="onchange" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="panelButtonsAddEditRRA"></a4j:support>
+										</rich:inputNumberSpinner>
+									</a4j:outputPanel>
+								</s:decorate>
+							</a4j:outputPanel> <a4j:outputPanel id="descriptionRRA">
+								<s:decorate rendered="#{retentionRateAccountHome.bankDescriptionRendered}" template="layout/edit.xhtml">
+									<ui:define name="label">#{messages.Ledger_Accounts_Print_Description}</ui:define>
+									<h:inputTextarea value="#{retentionRateAccountHome.instance.description}">
+										<a4j:support event="onchange" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="panelButtonsAddEditRRA"></a4j:support>
+									</h:inputTextarea>
+								</s:decorate>
+							</a4j:outputPanel> <a4j:outputPanel id="codeRRA">
+								<s:decorate rendered="#{retentionRateAccountHome.codePayRendered}" template="layout/edit.xhtml">
+									<ui:define name="label">#{messages.Ledger_Accounts_Code_Pay}</ui:define>
+									<a4j:outputPanel>
+										<h:inputText required="true" value="#{retentionRateAccountHome.instance.accountsReceivableCode}">
+											<a4j:support event="onchange" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="panelButtonsAddEditRRA"></a4j:support>
+										</h:inputText>
+									</a4j:outputPanel>
+								</s:decorate>
+							</a4j:outputPanel></td>
+					</tr>
+					<tr>
+						<td style="width: 100%; text-align:center;"><a4j:outputPanel id="panelButtonsAddEditRRA">
+								<table style="width: 100%;">
+									<tr>
+										<td style="width: 33%;"><h:commandButton type="button" value="#{messages.Close}" onclick="#{rich:component('modalPanelAddEditRRA')}.hide()">
+											</h:commandButton></td>
+										<td style="width: 34%;"><h:commandButton rendered="#{retentionRateAccountHome.canDeleteRRA()}" type="button" value="#{messages.Delete}">
+												<a4j:support event="onclick" action="#{retentionRateAccountHome.deleteRRA()}" ignoreDupResponses="true" limitToList="true" oncomplete="#{rich:component('modalPanelAddEditRRA')}.hide()" reRender="tooglePanel2, growlPanel"></a4j:support>
+											</h:commandButton></td>
+										<td style="width: 33%;"><h:commandButton disabled="#{retentionRateAccountHome.addEditDisabled()}" type="button" value="#{retentionRateAccountHome.buttonLabel}">
+												<a4j:support event="onclick" action="#{retentionRateAccountHome.addEditRRA()}" ignoreDupResponses="true" limitToList="true" oncomplete="#{rich:component('modalPanelAddEditRRA')}.hide()" reRender="tooglePanel2, growlPanel"></a4j:support>
+											</h:commandButton></td>
+									</tr>
+								</table>
+							</a4j:outputPanel></td>
+					</tr>
+				</table>
+			</a4j:form>
+		</rich:modalPanel>
+
+		<rich:modalPanel id="modalPanelViewRRA" minWidth="350" autosized="true">
+			<f:facet name="header">
+				<h:panelGroup id="modaltitle2">
+					<h:outputText value="#{messages.Ledger_Accounts_View_Account} - #{retentionRateAccountHome.businessEntity.nameBusinessEntity}"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+			<a4j:form ajaxSubmit="false" id="viewFormRRA" ajaxSingle="true">
+				<table style="width: 100%;">
+					<tr>
+						<td style="width: 100%; text-align:center;"><s:decorate id="categoryRRAview" template="layout/edit.xhtml">
+								<ui:define name="label">#{messages.Ledger_Accounts_Category}</ui:define>
+								<h:outputText value="#{retentionRateAccountHome.categoryName}" />
+							</s:decorate>
+							<s:decorate id="subCategoryRRAview" template="layout/edit.xhtml" rendered="#{retentionRateAccountHome.subCategoryName.length() > 0}">
+								<ui:define name="label">#{messages.Ledger_Accounts_SubCategory}</ui:define>
+								<h:outputText value="#{retentionRateAccountHome.subCategoryName}" />
+							</s:decorate> 
+							<s:decorate id="nameRRAview" template="layout/edit.xhtml">
+								<ui:define name="label">#{messages.Name}</ui:define>
+								<h:outputText required="true" value="#{retentionRateAccountHome.instance.name}">
+								</h:outputText>
+							</s:decorate> <s:decorate id="accountCodeRRAview" template="layout/edit.xhtml">
+								<ui:define name="label">#{messages.Ledger_Accounts_Account_Code}</ui:define>
+								<h:outputText value="#{retentionRateAccountHome.instance.account}" />
+							</s:decorate> <s:decorate id="natureBillingRRAview" template="layout/edit.xhtml">
+								<ui:define name="label">#{messages.Ledger_Accounts_Nature_Billing}</ui:define>
+								<h:selectOneMenu readonly="true" disabled="true" required="true" value="#{retentionRateAccountHome.instance.natureBilling}" defaultLabel="#{messages.Ledger_Accounts_Nature_Message}">
+									<f:selectItems value="#{retentionRateAccountHome.natures}" />
+								</h:selectOneMenu>
+							</s:decorate> <s:decorate id="natureRecoverRRAview" template="layout/edit.xhtml">
+								<ui:define name="label">#{messages.Ledger_Accounts_Nature_Recover}</ui:define>
+								<h:selectOneMenu readonly="true" disabled="true" required="true" value="#{retentionRateAccountHome.instance.natureRecover}" defaultLabel="#{messages.Ledger_Accounts_Nature_Message}">
+									<f:selectItems value="#{retentionRateAccountHome.natures}" />
+								</h:selectOneMenu>
+							</s:decorate> <s:decorate id="natureCreditNoteRRAview" template="layout/edit.xhtml">
+								<ui:define name="label">#{messages.Ledger_Accounts_Nature_CreditNote}</ui:define>
+								<h:selectOneMenu readonly="true" disabled="true" required="true" value="#{retentionRateAccountHome.instance.natureCreditNote}" defaultLabel="#{messages.Ledger_Accounts_Nature_Message}">
+									<f:selectItems value="#{retentionRateAccountHome.natures}" />
+								</h:selectOneMenu>
+							</s:decorate> <a4j:outputPanel id="percentRRAview">
+								<s:decorate rendered="#{retentionRateAccountHome.percentValueRendered}" template="layout/edit.xhtml">
+									<ui:define name="label">#{messages.Ledger_Accounts_Tax_Percentege}</ui:define>
+									<h:outputText value="#{retentionRateAccountHome.instance.value} %" />
+								</s:decorate>
+							</a4j:outputPanel> <a4j:outputPanel id="descriptionRRAview">
+								<s:decorate rendered="#{retentionRateAccountHome.bankDescriptionRendered}" template="layout/edit.xhtml">
+									<ui:define name="label">#{messages.Ledger_Accounts_Print_Description}</ui:define>
+									<h:inputTextarea readonly="true" value="#{retentionRateAccountHome.instance.description}">
+									</h:inputTextarea>
+								</s:decorate>
+							</a4j:outputPanel> <a4j:outputPanel id="codeRRAview">
+								<s:decorate rendered="#{retentionRateAccountHome.codePayRendered}" template="layout/edit.xhtml">
+									<ui:define name="label">#{messages.Ledger_Accounts_Code_Pay}</ui:define>
+									<h:inputText readonly="true" value="#{retentionRateAccountHome.instance.accountsReceivableCode}"/>
+								</s:decorate>
+							</a4j:outputPanel>
+						</td>
+					</tr>
+					<tr>
+						<td style="width: 100%; text-align:center;"><a4j:outputPanel id="panelButtonsAddEditRRAview">
+								<center>
+									<h:commandButton type="button" value="#{messages.Close}" onclick="#{rich:component('modalPanelViewRRA')}.hide()">
+									</h:commandButton>
+								</center>
+							</a4j:outputPanel>
+						</td>
+					</tr>
+				</table>
+			</a4j:form>
+		</rich:modalPanel>
+
+
+
+
+	</ui:define>
+
+</ui:composition>

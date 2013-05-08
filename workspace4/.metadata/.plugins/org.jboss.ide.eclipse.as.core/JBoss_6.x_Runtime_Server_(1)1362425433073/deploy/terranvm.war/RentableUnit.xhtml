@@ -1,0 +1,107 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich" xmlns:a="http://richfaces.org/a4j" xmlns:a4j="http://richfaces.org/a4j" template="layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<rich:panel>
+			<f:facet name="header">Rentable unit Details</f:facet>
+
+
+			<s:decorate id="nameField" template="layout/edit.xhtml">
+				<ui:define name="label">Nombre</ui:define>
+				<h:outputText value="#{rentableUnitHome.instance.name}" required="true" />
+			</s:decorate>
+
+			<s:decorate id="metersField" template="layout/edit.xhtml">
+				<ui:define name="label">area (mts²)</ui:define>
+				<h:outputText value="#{rentableUnitHome.instance.meters}" required="true" />
+			</s:decorate>
+
+			<s:decorate id="areaCombo" template="layout/edit.xhtml">
+				<ui:define name="label">Area</ui:define>
+				<h:outputText value="#{rentableUnitHome.instance.area.name}" />
+			</s:decorate>
+
+			<div style="clear: both" />
+
+		</rich:panel>
+
+		<div class="actionButtons">
+		<table>
+		<tr><td>
+		<div id="editButton"><s:button view="/RentableUnitEdit.xhtml" id="edit" value="Edit" disabled="#{rentableUnitHome.rentableUnitListInApprove(rentableUnitHome.instance)}" rendered="#{empty makerCheckerId}" /> 
+		<rich:toolTip disabled="#{not rentableUnitHome.rentableUnitListInApprove(rentableUnitHome.instance)}" for="editButton">#{messages.You_can_not_edit_pending_approval_of_a_change}</rich:toolTip>
+		</div></td>
+		<td>
+		<s:button view="/#{empty rentableUnitFrom ? 'RentableUnitList' : rentableUnitFrom}.xhtml" id="done" value="Done" rendered="#{empty makerCheckerId}"/>
+		</td>
+		</tr></table>
+		<s:button view="/MakerCheckerList.xhtml" action="#{rentableUnitHome.approveChange()}" id="approved" value="#{messages.ApproveChange}" rendered="#{not empty makerCheckerId}"/>
+		 <s:button view="/MakerCheckerList.xhtml" action="#{rentableUnitHome.cancelChange()}" id="cancel" value="#{messages.Cancel}" rendered="#{not empty makerCheckerId}"/>
+		</div>
+
+		<rich:tabPanel switchType="ajax">
+
+			<rich:tab>
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;" />Rentable unit</h:panelGroup>
+				</f:facet>
+				<div class="association" id="rentableUnitParent"><h:outputText value="There is no rentableUnit associated with this rentableUnit." rendered="#{rentableUnitHome.instance.rentableUnit == null}" /> <rich:dataTable var="_rentableUnit" value="#{rentableUnitHome.instance.rentableUnit}" rendered="#{rentableUnitHome.instance.rentableUnit != null}" rowClasses="rvgRowOne,rvgRowTwo" id="rentableUnitTable">
+					<h:column>
+						<f:facet name="header">Id</f:facet>
+						<h:outputText value="#{_rentableUnit.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Rentable unit id</f:facet>
+						<h:outputText value="#{_rentableUnit.rentableUnit.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Area id</f:facet>
+						<h:outputText value="#{_rentableUnit.area.id}" />
+					</h:column>
+					<h:column styleClass="action">
+						<f:facet name="header">Action</f:facet>
+						<s:link id="viewrentableUnit" value="View" view="/RentableUnit.xhtml">
+							<f:param name="rentableUnitId" value="#{_rentableUnit.id}" />
+						</s:link>
+					</h:column>
+				</rich:dataTable></div>
+			</rich:tab>
+			
+			<rich:tab>
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;" />Rentable units</h:panelGroup>
+				</f:facet>
+				<h:form styleClass="association" id="rentableUnitsChildren">
+
+					<h:outputText value="There are no rentableUnits associated with this rentableUnit." rendered="#{empty rentableUnitHome.rentableUnits}" />
+
+					<rich:dataTable value="#{rentableUnitHome.rentableUnits}" var="_rentableUnit" rendered="#{not empty rentableUnitHome.rentableUnits}" rowClasses="rvgRowOne,rvgRowTwo" id="rentableUnitsTable">
+						<rich:column sortBy="#{_rentableUnit.id}">
+							<f:facet name="header">Id</f:facet>
+							<h:outputText value="#{_rentableUnit.id}" />
+						</rich:column>
+						<h:column>
+							<f:facet name="header">Action</f:facet>
+							<s:link id="selectrentableUnit" value="Select" view="/RentableUnit.xhtml">
+								<f:param name="rentableUnitId" value="#{_rentableUnit.id}" />
+								<f:param name="rentableUnitFrom" value="RentableUnit" />
+							</s:link>
+						</h:column>
+					</rich:dataTable>
+
+				</h:form>
+
+				<div class="actionButtons"><s:button value="Add rentableUnit" view="/RentableUnitEdit.xhtml">
+					<f:param name="rentableUnitId" value="#{rentableUnitHome.instance.id}" />
+					<f:param name="rentableUnitFrom" value="RentableUnit" />
+				</s:button></div>
+			</rich:tab>
+
+		</rich:tabPanel>
+	</ui:define>
+
+</ui:composition>

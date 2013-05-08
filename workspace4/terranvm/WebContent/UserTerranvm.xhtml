@@ -1,0 +1,83 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<rich:panel>
+			<f:facet name="header">#{messages.User_datails}</f:facet>
+
+			<s:decorate id="nombre" template="layout/display.xhtml">
+				<ui:define name="label">#{messages.Name}</ui:define>
+				<h:outputText value="#{userTerranvmHome.instance.nombre}" />
+			</s:decorate>
+
+			<s:decorate id="login" template="layout/display.xhtml">
+				<ui:define name="label">#{messages.Login}</ui:define>
+				<h:outputText value="#{userTerranvmHome.instance.login}" />
+			</s:decorate>
+
+			<s:decorate id="state" template="layout/display.xhtml">
+				<ui:define name="label">#{messages.State}</ui:define>
+				<h:outputText value="#{userTerranvmHome.getStateString(userTerranvmHome.instance.state)}" />
+			</s:decorate>
+
+			<s:decorate id="mail" template="layout/display.xhtml">
+				<ui:define name="label">#{messages.Email}</ui:define>
+				<h:outputText value="#{userTerranvmHome.instance.mail}" />
+			</s:decorate>
+
+			<s:decorate id="role" template="layout/display.xhtml">
+				<ui:define name="label">#{messages.name_role}</ui:define>
+				<h:outputText value="#{userTerranvmHome.instance.role.roleName}" />
+			</s:decorate>
+
+			<div style="clear: both" />
+
+		</rich:panel>
+
+		<div class="actionButtons">
+			<s:button view="/UserTerranvmEdit.xhtml" id="edit" value="#{messages.Edit}" /> 
+			<s:button view="/#{empty userTerranvmFrom ? 'UserTerranvmList' : userTerranvmFrom}.xhtml" id="done" value="#{messages.Done}" /></div>
+
+		<rich:tabPanel switchType="ajax">
+
+			<rich:tab>
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;" />#{messages.Projects}</h:panelGroup>
+				</f:facet>
+				<h:form styleClass="association" id="projectUsersChildren">
+
+					<h:outputText value="#{messages.There_are_no_projectUsers_associated_with_this_userTerranvm}" rendered="#{empty userTerranvmHome.projectUsers}" />
+
+					<rich:dataTable value="#{userTerranvmHome.projectUsers}" var="_projectUser" rendered="#{not empty userTerranvmHome.projectUsers}" rowClasses="rvgRowOne,rvgRowTwo" id="projectUsersTable">
+						<rich:column sortBy="#{_projectUser.id}">
+							<f:facet name="header">#{messages.Id}</f:facet>
+							<h:outputText value="#{_projectUser.id}" />
+						</rich:column>
+						<rich:column sortBy="#{_projectUser.nameProject}">
+							<f:facet name="header">#{messages.Name}</f:facet>
+							<h:outputText value="#{_projectUser.nameProject}" />
+						</rich:column>
+						<h:column>
+							<f:facet name="header">#{messages.Action}</f:facet>
+							<s:link id="selectprojectUser" value="#{messages.Select}" view="/Project.xhtml">
+								<f:param name="projectUserId" value="#{_project.id}" />
+								<f:param name="projectUserFrom" value="UserTerranvm" />
+							</s:link>
+						</h:column>
+					</rich:dataTable>
+
+				</h:form>
+
+				<div class="actionButtons">
+					<s:button value="#{messages.Add_project}" view="/ProjectList.xhtml">
+					<f:param name="userTerranvmId" value="#{userTerranvmHome.instance.id}" />
+					<f:param name="from" value="UserTerranvm" />
+				</s:button></div>
+			</rich:tab>
+		</rich:tabPanel>
+	</ui:define>
+
+</ui:composition>

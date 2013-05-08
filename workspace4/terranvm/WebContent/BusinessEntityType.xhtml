@@ -1,0 +1,59 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">#{messages.Business_entity_type_Details}</f:facet>
+
+        <s:decorate id="id" template="layout/display.xhtml">
+            <ui:define name="label">Id</ui:define>
+            <h:outputText value="#{businessEntityTypeHome.instance.id}"/>
+        </s:decorate>
+
+        <s:decorate id="nameBusinessEntityType" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Name}</ui:define>
+            <h:outputText value="#{businessEntityTypeHome.instance.nameBusinessEntityType}"/>
+        </s:decorate>
+
+        <s:decorate id="description" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Description}</ui:define>
+            <h:outputText value="#{businessEntityTypeHome.instance.description}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+    <table>
+		 		<tr>
+		 			<td>
+		 				<div id="editButton">
+        <s:button view="/BusinessEntityTypeEdit.xhtml"
+                    id="edit"
+                 value="#{messages.Edit}" disabled="#{businessEntityTypeHome.businessentitytypeListInApprove(businessEntityTypeHome.instance)}" rendered="#{empty makerCheckerId and authenticator.validateShowFunction('BusinessEntityType.xhtml', 'edit')}"/>
+                 <rich:toolTip disabled="#{not businessEntityTypeHome.businessentitytypeListInApprove(businessEntityTypeHome.instance)}" for="editButton">#{messages.You_can_not_edit_pending_approval_of_a_change}</rich:toolTip>
+                       </div>
+					</td>
+				<td>
+        <s:button view="/#{empty businessEntityTypeFrom ? 'BusinessEntityTypeList' : businessEntityTypeFrom}.xhtml"
+                    id="done"
+                 value="#{messages.Done}" rendered="#{empty makerCheckerId and authenticator.validateShowFunction('BusinessEntityType.xhtml', 'done')}"/>
+                 </td>
+				</tr>			 	
+		 	</table>
+		 	<s:button view="/MakerCheckerList.xhtml" action="#{businessEntityTypeHome.approveChange()}" id="approved" value="#{messages.ApproveChange}" rendered="#{not empty makerCheckerId and authenticator.validateShowFunction('BusinessEntityType.xhtml', 'approved')}"/>
+		 	<s:button view="/MakerCheckerList.xhtml" action="#{businessEntityTypeHome.cancelChange()}" id="cancel" value="#{messages.Cancel}" rendered="#{not empty makerCheckerId and authenticator.validateShowFunction('BusinessEntityType.xhtml', 'cancel')}"/>
+
+    </div>
+
+</ui:define>
+</ui:composition>

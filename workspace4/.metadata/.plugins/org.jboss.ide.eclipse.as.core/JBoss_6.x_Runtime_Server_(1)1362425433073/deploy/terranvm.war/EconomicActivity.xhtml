@@ -1,0 +1,162 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">#{messages.Economic_activity_Details}</f:facet>
+
+        <s:decorate id="name" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Name}</ui:define>
+            <h:outputText value="#{economicActivityHome.instance.name}"/>
+        </s:decorate>
+
+        <s:decorate id="description" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Description}</ui:define>
+            <h:outputText value="#{economicActivityHome.instance.description}"/>
+        </s:decorate>
+
+        <s:decorate id="code" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Code}</ui:define>
+            <h:outputText value="#{economicActivityHome.instance.code}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+    <table><tr><td>
+<div id="EditButton">
+        <s:button view="/EconomicActivityEdit.xhtml"
+                    id="edit"
+                 value="#{messages.Edit}"/>
+        </div></td>
+        <td>
+        <s:button view="/#{empty economicActivityFrom ? 'EconomicActivityList' : economicActivityFrom}.xhtml"
+                    id="done"
+                 value="#{messages.Done}" rendered="#{empty makerCheckerId}"/>
+                 </td>
+</tr>
+</table>
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>#{messages.Economic_sector}</h:panelGroup>
+        </f:facet>
+    <div class="association" id="economicSectorParent">
+
+        <h:outputText value="#{messages.There_is_no_economicSector_associated_with_this_economicActivity}"
+                   rendered="#{economicActivityHome.instance.economicSector == null}"/>
+
+        <rich:dataTable var="_economicSector"
+                   value="#{economicActivityHome.instance.economicSector}"
+                rendered="#{economicActivityHome.instance.economicSector != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="economicSectorTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_economicSector.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Name}</f:facet>
+                <h:outputText value="#{_economicSector.name}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Description}</f:facet>
+                <h:outputText value="#{_economicSector.description}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">#{messages.Action}</f:facet>
+                <s:link id="vieweconomicSector"
+                     value="View"
+                      view="/EconomicSector.xhtml">
+                    <f:param name="economicSectorId"
+                           value="#{_economicSector.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab rendered="false">
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>#{messages.Business_entities}</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="businessEntitiesChildren">
+
+        <h:outputText value="#{messages.There_are_no_businessEntities_associated_with_this_economicActivity}"
+                   rendered="#{empty economicActivityHome.businessEntities}"/>
+
+        <rich:dataTable value="#{economicActivityHome.businessEntities}"
+                       var="_businessEntity"
+                  rendered="#{not empty economicActivityHome.businessEntities}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="businessEntitiesTable">
+            <rich:column sortBy="#{_businessEntity.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_businessEntity.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_businessEntity.idType}">
+                <f:facet name="header">#{messages.Id_type}</f:facet>
+                <h:outputText value="#{_businessEntity.idType}"/>
+            </rich:column>
+            <rich:column sortBy="#{_businessEntity.idNumber}">
+                <f:facet name="header">#{messages.Id_number}</f:facet>
+                <h:outputText value="#{_businessEntity.idNumber}"/>
+            </rich:column>
+            <rich:column sortBy="#{_businessEntity.verificationNumber}">
+                <f:facet name="header">#{messages.Verification_number}</f:facet>
+                <h:outputText value="#{_businessEntity.verificationNumber}"/>
+            </rich:column>
+            <rich:column sortBy="#{_businessEntity.nameBusinessEntity}">
+                <f:facet name="header">#{messages.Name}</f:facet>
+                <h:outputText value="#{_businessEntity.nameBusinessEntity}"/>
+            </rich:column>
+            <rich:column sortBy="#{_businessEntity.email}">
+                <f:facet name="header">#{messages.Email}</f:facet>
+                <h:outputText value="#{_businessEntity.email}"/>
+            </rich:column>
+            <rich:column sortBy="#{_businessEntity.legalEntityType}">
+                <f:facet name="header">#{messages.Legal_entity_type}</f:facet>
+                <h:outputText value="#{_businessEntity.legalEntityType}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">#{messages.Action}</f:facet>
+                <s:link id="selectbusinessEntity"
+                     value="#{messages.Select}"
+                      view="/BusinessEntity.xhtml">
+                    <f:param name="businessEntityId"
+                            value="#{_businessEntity.id}"/>
+                    <f:param name="businessEntityFrom" value="EconomicActivity"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="#{messages.Add_businessEntity}"
+                view="/BusinessEntityEdit.xhtml">
+            <f:param name="economicActivityId"
+                    value="#{economicActivityHome.instance.id}"/>
+            <f:param name="businessEntityFrom" value="EconomicActivity"/>
+        </s:button>
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

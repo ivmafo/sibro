@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd"
+      no-conversation-view-id="/ConstructionLicensesList.xhtml"
+      login-required="true">
+
+   <begin-conversation join="true" flush-mode="MANUAL"/>
+
+   <action execute="#{constructionLicensesHome.wire}"/>
+
+   <param name="constructionLicensesFrom"/>
+   <param name="constructionLicensesId" value="#{constructionLicensesHome.constructionLicensesId}"/>
+   <param name="cityFrom"/>
+   <param name="cityId" value="#{cityHome.cityId}"/>
+   <param name="regionFrom"/>
+   <param name="regionId" value="#{regionHome.regionId}"/>
+   <param name="countryFrom"/>
+   <param name="countryId" value="#{countryHome.countryId}"/>
+
+
+
+   <param name="realPropertyFrom"/>
+   <param name="realPropertyId" value="#{realPropertyHome.realPropertyId}"/>
+   <param name="legalNatureOfPropertyFrom"/>
+   <param name="legalNatureOfPropertyId" value="#{legalNatureOfPropertyHome.legalNatureOfPropertyId}"/>
+
+   <param name="realPropertyUseTypeFrom"/>
+   <param name="realPropertyUseTypeId" value="#{realPropertyUseTypeHome.realPropertyUseTypeId}"/>
+
+
+
+
+   <navigation from-action="#{constructionLicensesHome.persist}">
+      <rule if-outcome="persisted">
+         <end-conversation/>
+         <redirect view-id="/ConstructionLicenses.xhtml"/>
+      </rule>
+   </navigation>
+
+   <navigation from-action="#{constructionLicensesHome.update}">
+      <rule if-outcome="updated">
+         <end-conversation/>
+         <redirect view-id="/ConstructionLicenses.xhtml"/>
+      </rule>
+   </navigation>
+
+   <navigation from-action="#{constructionLicensesHome.remove}">
+      <rule if-outcome="removed">
+         <end-conversation/>
+         <redirect view-id="/ConstructionLicensesList.xhtml"/>
+      </rule>
+   </navigation>
+
+</page>

@@ -1,0 +1,3007 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass book
+\begin_preamble
+
+\usepackage{watermark}\usepackage{eso-pic}\@ifundefined{definecolor}
+ {\usepackage{color}}{}
+\usepackage{type1cm}\usepackage{fancyhdr}\usepackage{multirow}
+
+\title{\mbox{\includegraphics[width=12cm]{watermark}}\\ \bigskip
+\Huge{\textsf{MANUAL DE USUARIO\\\textit{POSWEB V2.0}}} \\ \huge{\textsf{Solidda Group S.A.}}
+\author{\LARGE{\textsf{Cindy Andrea Serrano}}\\\LARGE{\textsf{Quality
+       Assurance}}\\\LARGE{\textsf{Koghi S.A.S.}}}}
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 2
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+mbox{
+\end_layout
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/watermark.eps
+	width 12cm
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset VSpace bigskip
+\end_inset
+
+ 
+\size giant
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{}
+\end_layout
+
+\end_inset
+
+
+\family sans
+MANUAL DE USUARIO
+\family default
+
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{}
+\end_layout
+
+\end_inset
+
+ 
+\family sans
+\shape italic
+TERRANUM BUSINESS PLATAFORM
+\family default
+\shape default
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{}
+\end_layout
+
+\end_inset
+
+ 
+\size default
+
+\begin_inset Newline newline
+\end_inset
+
+ 
+\size giant
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{}
+\end_layout
+
+\end_inset
+
+ 
+\size huge
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{}
+\end_layout
+
+\end_inset
+
+
+\family sans
+Terranum
+\family default
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{}
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Author
+
+\size largest
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{}
+\end_layout
+
+\end_inset
+
+
+\family sans
+Wilson Amaya
+\family default
+\size default
+
+\begin_inset Newline newline
+\end_inset
+
+ 
+\size largest
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{}
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{}
+\end_layout
+
+\end_inset
+
+
+\family sans
+Desarrollador
+\family default
+\size default
+
+\begin_inset Newline newline
+\end_inset
+
+ 
+\size largest
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{}
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{}
+\end_layout
+
+\end_inset
+
+
+\family sans
+Koghi S.A.S.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+pagestyle
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+fancy
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+addtolength{
+\backslash
+headheight}{50pt}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+CONTROL DE CAMBIOS
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset VSpace bigskip
+\end_inset
+
+ 
+\begin_inset Tabular
+<lyxtabular version="3" rows="2" columns="4">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Versión 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Autor 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Descripción 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Fecha
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.0 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Wilson Favian Amaya 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Versión Inicial 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+today
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+PROPOSITO DEL DOCUMENTO
+\end_layout
+
+\begin_layout Standard
+Este documento tiene como propósito describir el manejo de las funcionalidades
+ de la aplicación, este documento pretende ser una guía de manejo para los
+ usuarios que interactuaran con la aplicación.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+ALCANCE DEL DOCUMENTO
+\end_layout
+
+\begin_layout Standard
+En este documento se describirá el manejo de las funcionalidades de la aplicació
+n, esta orientado a los usuarios de los punto de venta.
+ En este documento no se encontraran detalles técnicos del funcionamiento
+ de la aplicación.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+ 
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+INGRESO A LA APLICACIÓN
+\end_layout
+
+\begin_layout Standard
+Para poder ingresar a la plataforma y todas sus funcionalidades, se debe
+ tener un usuario y una contraseña previamente creadas por el administrador
+ de la plataforma.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/Ingreso.png
+	lyxscale 40
+	width 14cm
+	height 14cm
+	BoundingBox 0bp 0bp 700bp 429bp
+	clip
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Usuario: Nombre del usuario
+\end_layout
+
+\begin_layout Itemize
+Contraseña: Contraseña de autenticación del usuario para ingresar al sistema
+\end_layout
+
+\begin_layout Itemize
+Ingresar al Sistema: Botón para acceder a las funcionalidades una vez se
+ haya ingresado un usuario y una contraseña correcta.
+\end_layout
+
+\begin_layout Section
+INICIO
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/Inicio.png
+	lyxscale 40
+	width 14cm
+	height 14cm
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+En la parte superior se encuentra un banner que se podrá visualizar en todas
+ las paginas de la aplicación donde se identifica: logo de la empresa, menús
+ de la aplicación y submenús, nombre del usuario que se encuentra logueado,
+ un combo con el nombre del proyecto al que pertenece el usuario logueado
+ y en la parte superior de este se encuentra el nombre de la entidad de
+ negocio relacionada con el proyecto y por ultimo el link de salir que se
+ redireccionara nuevamente al ingreso de la aplicación.
+\end_layout
+
+\begin_layout Section
+ESTRUCTURA ORGANIZACIONAL
+\end_layout
+
+\begin_layout Subsection
+ENTIDADES DE NEGOCIO
+\end_layout
+
+\begin_layout Standard
+Al ingresar a este menú se muestra una lista de entidades de negocio existentes
+ en la base de datos, en donde se puede buscar por determinados filtros
+ de búsqueda.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/Entidad de Negocio.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Filtro de búsqueda: Parámetros para buscar una entidad de negocio existente
+ en la base de datos:
+\end_layout
+
+\begin_layout Enumerate
+(a) Numero de identificación
+\end_layout
+
+\begin_layout Enumerate
+(b) Nombre
+\end_layout
+
+\begin_layout Enumerate
+(c) Nombre comercial
+\end_layout
+
+\begin_layout Enumerate
+(d) Correo electrónico
+\end_layout
+
+\begin_layout Enumerate
+(e) Coincidencias: Filtro de búsqueda si se quiere que se busquen Todas
+ o Algunas coincidencias de acuerdo al parámetro de búsqueda
+\end_layout
+
+\begin_layout Enumerate
+Se encuentra los botones de BUSCAR y RESTABLECER el primero de acuerdo al
+ parámetro escrito en el filtro de búsqueda muestra las entidades relacionadas
+ con tal filtro en una tabla resumen con los datos principales de la entidad
+ de negocio.
+ En la parte derecha se encuentran 2 links Ver y Editar.
+ Y el último nuevamente restablece toda la lista de entidades de negocio
+ existente en la base de datos.
+ La tabla se encuentra paginada.
+\end_layout
+
+\begin_layout Enumerate
+En la parte inferior de la pagina se encuentra el botón de Crear Entidad
+ de Negocio, el cual al dar click sobre este abrirá una pagina para la creación
+ de una nueva entidad de negocio.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/EntidadNegocio.eps
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Al ingresar a esta pagina la información a ingresar se encuentra dividida
+ de la siguiente manera:
+\end_layout
+
+\begin_layout Standard
+1.
+ INFORMACIÓN GENERAL
+\end_layout
+
+\begin_layout Standard
+2.
+ INFORMACIÓN TRIBUTARIA
+\end_layout
+
+\begin_layout Standard
+En la parte inferior se encuentran los tabs de: Números, telefónicos, Direccione
+s , Contactos, Configuraciones de Resolución de Facturación, Configuración
+ de Cuentas de Cobro, Configuración de Notas Credito y Configuración de
+ Recibos de Caja.
+ Los últimos 4 tab solo se habilitaran si se selecciona en la información
+ general “Si es facturador”.
+ 
+\end_layout
+
+\begin_layout Subsection
+LINEAS DE NEGOCIO
+\end_layout
+
+\begin_layout Standard
+En este menú se encuentran todas las lineas de negocio relacionadas con
+ las diferentes unidades de negocio.
+ A continuación se explica cada uno de los campos que se piden en esta pagina
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/LineadeNegocio.eps
+	lyxscale 75
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Filtro de búsqueda: Parámetros para buscar una linea de negocio existente
+ en la base de datos:
+\end_layout
+
+\begin_layout Enumerate
+(a) Linea de Negocio
+\end_layout
+
+\begin_layout Enumerate
+(b) Centro de costo
+\end_layout
+
+\begin_layout Enumerate
+(c) Coincidencias: Filtro de búsqueda si se quiere que se busquen Todas
+ o Algunas coincidencias de acuerdo al parámetro de búsqueda
+\end_layout
+
+\begin_layout Enumerate
+Se encuentra los botones de BUSCAR y RESTABLECER el primero de acuerdo al
+ parámetro escrito en el filtro de búsqueda muestra las entidades relacionadas
+ con tal filtro en una tabla resumen con los datos principales de la linea
+ de negocio.
+ En la parte derecha se encuentran 2 links Ver y Editar.
+ Y el último nuevamente restablece toda la lista de entidades de negocio
+ existente en la base de datos.
+ La tabla se encuentra paginada.
+\end_layout
+
+\begin_layout Enumerate
+En la parte inferior de la pagina se encuentra el botón de Crear Entidad
+ de Negocio, el cual al dar click sobre este abrirá una pagina para la creación
+ de una nueva entidad de negocio.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/addlineanegocio.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+PROYECTOS
+\end_layout
+
+\begin_layout Standard
+A continuación se explican cada uno de los campos que se ingresan en esta
+ interface
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/Proyecto.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En la parte inferior de la página se encuentra el botón de Crear Proyecto,
+ el cual al dar click sobre este abrirá una pagina para la creación de un
+ nuevo Proyecto.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/addproyecto.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En esta página se deben ingresar los datos del proyecto, tales como Nombre,Centr
+o de Costo del proyecto, Prefijo hoja de términos, y los tabs Entidad de
+ Negocio, Linea de Negocio, Hoja de términos, Redondeo, Intereses de mora.
+\end_layout
+
+\begin_layout Subsection
+CONTACTOS
+\end_layout
+
+\begin_layout Standard
+Los contactos son las personas que están relacionadas con los terceros,
+ activos de acuerdo a un cargo determinado
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/contactos.png
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+ACTIVIDADES ECONOMICAS
+\end_layout
+
+\begin_layout Standard
+Las actividades económicas hacen referencia la tipo de actividad a que se
+ dedica cada uno de los clientes o terceros.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/contactos.png
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+INMUEBLES
+\end_layout
+
+\begin_layout Subsection
+ACTIVOS
+\end_layout
+
+\begin_layout Standard
+Este se ingresa la información correspondiente a todos los activos que hacen
+ parte de los diferentes proyectos de la empresa.
+ Para la creación de un inmueble primeros se crea el activo (información
+ general), este puede estar asociado a uno o mas proyectos.
+ Por último se hace la creación de sus edificios, pisos, tipologías de área
+ y unidades arrendables si es el caso.
+ Una vez se crean sus unidades arrendables se pueden relacionar con módulos
+ de contribución ya sea con un valor o un porcentaje para ser tenidos en
+ cuenta en la facturación de determinado inmueble o unidad arrendable.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/addRealProperty.png
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Los campos obligatorios de diligenciar son los que tiene asterisco.
+ La aplicación no permite guardar la información relacionada hasta que se
+ haya escrito toda la información necesiaria y al menos se haya seleccionado
+ un activo de la lista exsistente en la aplicación.
+ Una vez se da guardar al activo se habilitan lo siguientes tab en la parte
+ inferior:
+\end_layout
+
+\begin_layout Itemize
+Licencia de construcción
+\end_layout
+
+\begin_layout Itemize
+Tramo
+\end_layout
+
+\begin_layout Itemize
+Avaluos
+\end_layout
+
+\begin_layout Itemize
+Edificios
+\end_layout
+
+\begin_layout Itemize
+Pisos
+\end_layout
+
+\begin_layout Itemize
+Tipologia de Area
+\end_layout
+
+\begin_layout Itemize
+Unidades Arrendables
+\end_layout
+
+\begin_layout Itemize
+Modulos de Contribución
+\end_layout
+
+\begin_layout Standard
+Si se desea editar el activo se debera seleccionar, se mostrara un formulario
+ muy parecido al de crear activos con la diferencia de que tendra cargados
+ sus respectivos datos y aparecera en la parte inferior derecha un check
+ o casilla de verificacion la cual preguntara si desea desactivar el activo,
+ esta casilla se debera seleccionar si se desea desactivar el inmueble ,
+ acto seguido aparecera una caja de texto en la cual se podra ingresar la
+ razon de por que se desactiva, o un mensaje diciendo que no puede desactivar
+ debio a que esta asociado a una hora de terminos.
+ Si al abrir el formulario la casilla esta seleccionada significara que
+ el inmueble esta desactivado y debera deseleccionarla y poner la razon
+ de activacion si desea activar la propiedad.
+\end_layout
+
+\begin_layout Subsubsection
+Licencias de Construcción
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/licenciasConstruccion.png
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Al crear el activo se pueden asociar licencias de construcción, Al hacer
+ click en el botón de agregar licencia de construcción se mostrara una nueva
+ pagina donde el usuario debe llenar la información requerida, en la parte
+ inferior se muestra un resumen del activo al cual se le esta asociando
+ la licencia de construcción.
+ La información que se pide en esta página es la siguiente: Número de matricula,
+ Tipo, Fecha de activación, Número de Curaduría, Ciudad donde se expidió
+ la licencia y por último una descripción de la licencia de construcción.
+ El usuario puede interactuar con los botones guardar y cancelar al hacer
+ click en guardar se guardara el registro en la base de datos seguido se
+ mostrara una pantalla con el resumen de la licencia que se creo; en esta
+ pantalla el usuario puede editar la licencia agregada o terminar el proceso
+ al hacer click en terminar, se direccionara a la pagina de edición del
+ activo.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Tramos
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/tramo.png
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Al crear el activo se pueden asociar tramos.
+ Los tramos hacen referencia a partes que se han comprado del activo durante
+ diferentes etapas o fechas.
+ Al hacer click en el boton agregar tramo se mostrara una nueva página donde
+ el usuario debe llenar la información requerida, en la parte inferior se
+ muestra un resumen del activo al cual se le esta asociando el tramo a crear.
+ La información que se pide en esta página es la siguiente: Tramo, Porcentaje
+ de Compra y Fecha de Compra; los anteriores campos son obligatorios.
+ El usuario puede interactuar con los botones guardar y cancelar al hacer
+ click en guardar se guardara el registro en la base de datos seguido se
+ mostrara una pantalla con el resumen del tramo que se creo; en esta pantalla
+ el usuario puede editar el tramo agregado o terminar el proceso al hacer
+ click en terminar, se direccionara a la pagina de edición del activo.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Avaluos
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/avaluosActivo.png
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Un activo puede tener varios avaluos los cuales pueden ser comerciales o
+ de reconstrucción.
+ Esta información de los avaluos se puede ingresar haciendo click en el
+ tab de Avaluos, agregar avaluo seguido se abre una ventana emergente donde
+ se debe ingresar la información de acuerdo al tipo de avaluo seleccionado
+ por el usuario.
+ En la parte inferior se encuentran los botones de guardar, cancelar, devolver
+ cambios y cerrar.
+ Una vez creado el avaluo en el tab se puede ver un resumen del avaluo creado.
+ Los avaluos solo se guardaran en la base de datos una vez se de click en
+ el botón guardar del activo.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Edificios
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/edificios.png
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Un activo puede tener varios edificios.
+ Y a la vez cada edificio puede tener avaluos pero solo de reconstrucción.
+ Estos avaluos se pueden visualizar haciendo click en el botón avaluos del
+ edifico, seguido de esto se abrirá una ventana emergente en donde se listaran
+ los avaluos de dicho edificio y además los botones de cerrar y crear un
+ nuevo avaluo.
+ La información requerida para agregar un edificio es la siguiente: Nombre,
+ Área Construida, Área Arrendable, Descripción y Dirección.
+ Este último campo de dirección se debe seleccionar país, departamento y
+ ciudad de la dirección.
+ La dirección esta en el formato estandar, pero si la dirección a ingresar
+ no cumple este formato se puede de seleccionar el check de dirección estándar
+ y se habilitara un campo de texto para introducir la dirección.
+ El área construida y el área arrendable deben ser iguales o menores al
+ area construida y arrendable del activo respectivamente.
+ Si alguna o las dos áreas sobrepasan las áreas del activo se deshabilita
+ el botón guardar y no permitirá guardar hasta ingresar un numero correcto.
+ Una vez de dar click en guardar se cierra la ventana emergente y en el
+ tab de Edificios se muestra un resumen de todos los edificios asociados
+ al activo.
+ En la lista de edificios se encuentra el boton de editar el cual le permitirá
+ modificar la información de un edificio creado.
+ En el formulario de editar edificio aparecera en la parte inferior derecha
+ un check o casilla de verificacion la cual preguntara si desea desactivar
+ el edificio, esta casilla se debera seleccionar si se desea desactivar
+ el edificio , acto seguido aparecera una caja de texto en la cual se podra
+ ingresar la razon de por que se desactiva, o un mensaje diciendo que no
+ puede desactivar debio a que posee una unidad arrendable asociada a una
+ hora de terminos.
+ Si al abrir el formulario la casilla esta seleccionada significara que
+ el edificio esta desactivado y debera deseleccionarla y poner la razon
+ de activacion si desea activar el edificio.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Pisos
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/piso.png
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En el tab de Pisos se muestra una tabla con los edificios del activo y en
+ la parte derecha se encuentran los botones de Agregar Pisos y Listar Pisos,
+ por cada uno de los edificios de la lista.
+ Al dar click en el botón agregar piso se abre una ventana emergente para
+ ingresar la información relacionada con el piso, esta información es Número
+ del Piso el cual puede ser alfanumérico, Área Construida y Área Arrendable.
+ El área construida debe ser menor o igual al área construida e igual el
+ área arrendable debe ser menor o igual al área arrendable del edificio.
+ Si en los dos o en uno de los casos se escribe un área mayor al del edificio
+ se deshabilitara el botón guardar y no permitirá guardar el piso hasta
+ que se ingrese un valor valido.
+ Una vez creado el piso se podrán visualizar haciendo click en el botón
+ Listar Pisos; al hacer esta acción se muestra una ventana emergente con
+ todos los pisos asociados al edificio y además se podrá editar cualquier
+ piso.
+ En el formulario de editar piso aparecera en la parte inferior derecha
+ un check o casilla de verificacion la cual preguntara si desea desactivar
+ el piso, esta casilla se debera seleccionar si se desea desactivar el piso
+ , acto seguido aparecera una caja de texto en la cual se podra ingresar
+ la razon de por que se desactiva, o un mensaje diciendo que no puede desactivar
+ debio a que posee una unidad arrendable asociada a una hora de terminos.
+ Si al abrir el formulario la casilla esta seleccionada significara que
+ el piso esta desactivado y debera deseleccionarla y llenar la casilla de
+ motivo con la razon de activacion si desea activar el piso.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Tipologia de Area
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/area.png
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En el tab de Tipología de Área hay un filtro de búsqueda por edificio donde
+ se selecciona el edificio y después se da click en buscar una vez de esta
+ acción se listan todos los pisos relacionados con el edificio en una tabla.
+ Una vez se listan se puede agregar una tipología de área a cada piso de
+ la lista, haciendo click en el botón Agregar Área.
+ Al dar click sobre este botón se muestra una ventana emergente para ingresar
+ la información del área, esta información es: Nombre, Área Construida,
+ Área Arrendable y Tipo de área.
+ El área construida debe ser menor o igual al área construida e igual el
+ área arrendable debe ser menor o igual al área arrendable del piso.
+ Si en los dos o en uno de los casos se escribe un área mayor a la del piso
+ se deshabilitara el botón guardar y no permitirá guardar el área hasta
+ que se ingrese un valor valido.
+ Una vez creado el área se podrán visualizar haciendo click en el botón
+ Listar Áreas; al hacer esta acción se muestra una ventana emergente con
+ todas las áreas asociadas al piso y además se podrá editar cualquier área.
+ En el formulario de editar area aparecera en la parte inferior derecha
+ un check o casilla de verificacion la cual preguntara si desea desactivar
+ el area, esta casilla se debera seleccionar si se desea desactivar el area
+ , acto seguido aparecera una caja de texto en la cual se podra ingresar
+ la razon de por que se desactiva, o un mensaje diciendo que no puede desactivar
+ debio a que posee una unidad arrendable asociada a una hora de terminos.
+ Si al abrir el formulario la casilla esta seleccionada significara que
+ el area esta desactivado y debera deseleccionarla y llenar la casilla de
+ motivo con la razon de activacion si desea activar el area.
+\end_layout
+
+\begin_layout Subsubsection
+Unidades Arrendables
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/unidadArrendable.png
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Al ingresar al tab de Unidades Arrendables se identifica un filtro de búsqueda
+ primero se selecciona el edificio luego se muestran los pisos de ese edificio
+ se selecciona cualquiera y seguido se da click en buscar después de esta
+ acción se muestra una tabla con las Tipologías de áreas relacionadas con
+ el piso seleccionado en el filtro; si no hay áreas en ese piso no se muestra
+ nada.
+ En la tabla se encuentran los botones de agregar Unidad Arrendable y Listar
+ Unidades Arrendables.
+ Al hacer click sobre el botón agregar unidad arrendable se muestra una
+ ventana emergente donde se diligencia la información básica como lo es:
+ Nombre, Licencia de Construcción, Matricula inmobiliaria, Área Construida,
+ Área Arrendable, tipo de uso de la unidad arrendable, concepto, valor y
+ periodicidad.
+ El área construida debe ser menor o igual al área construida e igual el
+ área arrendable debe ser menor o igual al área arrendable del área.
+ Si en los dos o en uno de los casos se escribe un área mayor a la del área
+ se deshabilitara el botón guardar y no permitirá guardar la unidad arrendable
+ hasta que se ingrese un valor valido.
+ Una vez creada la unidad arrendable se podrán visualizar haciendo click
+ en el botón Listar Unidades Arrendables; al dar click en esta acción se
+ muestra una ventana emergente con todas unidades arrendables del área y
+ además se podrá editar cualquier unidad arrendable.
+ En el formulario de editar unidad arrendable aparecera en la parte inferior
+ derecha un check o casilla de verificacion la cual preguntara si desea
+ desactivar la unidad, esta casilla se debera seleccionar si se desea desactivar
+ la unidad, acto seguido aparecera una caja de texto en la cual se podra
+ ingresar la razon de por que se desactiva, o un mensaje diciendo que no
+ puede desactivar debio a que posee una unidad arrendable asociada a una
+ hora de terminos.
+ Si al abrir el formulario la casilla esta seleccionada significara que
+ la unidad esta desactivada y debera deseleccionarla y llenar la casilla
+ de motivo con la razon de activacion si desea activar la unidad arrendable.
+\end_layout
+
+\begin_layout Subsubsection
+Modulos de Contribución
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/modulocontribucion.png
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Al ingresar al tab de Módulos de Contribución se visualizara una tabla donde
+ se pueden ver los módulos de contribución asociadas al activo además se
+ pueden ver a detalle el valor de cada modulo de contribución de cada unidad
+ arrendable.
+ Solo se pueden ingresar módulos de contribución si al menos el activo tiene
+ una unidad arrendable.
+ Los módulos de contribución pueden ser un valor o un porcentaje.
+\end_layout
+
+\begin_layout Standard
+Para agregar un nuevo modulo de contribución en la parte inferior se encuentra
+ el botón Agregar Modulo de Contribución al hacer click sobre este se muestra
+ una pagina emergente donde se ingresa la información necesaria de cada
+ modulo de contribución relacionados con las unidades arrendables del activo.
+ En esta pagina se muestra la siguiente información: 
+\end_layout
+
+\begin_layout Itemize
+Nombre: En este campo se ingresa el nombre del modulo de contribución a
+ crear.
+ Este campo es obligatorio
+\end_layout
+
+\begin_layout Itemize
+Prorrateo: Este siempre esta marcado por defecto y significa que el modulo
+ de contribución a crear debe ser un porcentaje y la suma de los porcentajes
+ debe ser igual al 100%, si es menor o mayor no se permitirá guardar el
+ modulo.
+ Al quitar el check se podrá colocar un valor no porcentual para cada unidad
+ arrendable.
+\end_layout
+
+\begin_layout Itemize
+Plantilla: Combo donde se muestran los módulos existentes del activo si
+ se selecciona una plantilla y si se da click en aplicar plantilla los valores
+ de dicha plantilla se llenaran a las respectivas unidades arrendables con
+ sus valores respectivos.
+\end_layout
+
+\begin_layout Itemize
+Tabla: en esta se muestran las diferentes unidades arrendables del activo
+ y una caja de texto para colocar el valor o porcentaje de cada unidad arrendabl
+e e del modulo a crear.
+\end_layout
+
+\begin_layout Itemize
+
+\end_layout
+
+\begin_layout Subsection
+NATURALEZA JURIDICA DEL ACTIVO
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/naturalezaJuridica.png
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Las naturaleza jurídica del activo hace referencia si el activo a crear
+ es de una PH, de naturaleza proindiviso o si es un único propietario.
+ Pero el sistema da la opción de crear mas tipos de naturalezas jurídicas
+ ingresando por el menú Activos>Naturaleza Jurídica del Activo; al dar click
+ sobre este se mostrara una pagina con un filtro de búsqueda y una tabla
+ donde se muestran todas los registros creados.
+ En la parte inferior se encuentra el botón crear naturaleza jurídica al
+ hacer click sobre este se abre una ventana como la de la figura donde se
+ piden: Un nombre y una descripción de la naturaleza a crear además se puede
+ asociar a un activo ya existente en el sistema.
+\end_layout
+
+\begin_layout Subsection
+TIPO DE USO DEL ACTIVO
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/tipoUsoActivo.png
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Al crear un activo se debe asociar el tipo de uso al que va a hacer destinado
+ el cual puede ser: Local Comercial, Centro comercial, Oficinas, Bodegas,
+ Grandes Superficies, Hotel, Clínica, Mixta: Oficinas-Bodegas, Mixta: Oficinas-c
+omercial, Mixta: Oficinas-Comercial-Bodegas y Parque Industrial.
+ Pero si se necesita crear un nuevo tipo de uso se puede hacer ingresando
+ por el menú: Inmuebles>Tipo de Uso del Activo.
+ Al dar click sobre este se mostrara una pagina con un filtro de búsqueda
+ y una tabla donde se muestran todas los registros creados.
+ En la parte inferior se encuentra el botón crear tipo de uso del activo
+ al hacer click sobre este se abre una ventana como la de la figura donde
+ se piden: Un nombre y una descripción del registro a crear además se puede
+ asociar a un activo ya existente en el sistema si se desea.
+\end_layout
+
+\begin_layout Subsection
+ASIGNAR PROPIETARIO Y ARRENDATARIO A UNIDADES ARRENDABLES
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/propietarioArrendatario.eps
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Una vez creadas las unidades arrendables de los diferentes activos del sistema
+ se debe asociar el propietario de la unidad arrendable y el arrendatario
+ de dicha unidad si es el caso, es decir si dicha unidad arrendable se encuentra
+ arrendada.
+ Para hacer dicha asociación se debe ingresar al menú Inmuebles>Asignar
+ Propietario y Arrendatario a Unidades arrendables al hacer click sobre
+ este link se mostrara al usuario una pagina con las siguientes divisiones:
+ Primero un combo donde se puede buscar por activo y el botón de buscar.
+ Al seleccionar el activo y hacer la acción de buscar en la tabla inferior
+ se mostraran las unidades arrendables de activo seleccionado.
+ La información que se muestra en esta tabla es la siguiente: Nombre, Propietari
+o, Arrendatario, Área Construida, Área Arrendable y el Tipo de Unidad arrendable.
+ Además de la acción de asignación para cada registro de la tabla.
+ Al seleccionar Asignación se muestra una tabla emergente en donde se debe
+ escoger el propietario y el arrendatario.
+ En la información del propietario se muestran todos los terceros cuya caracterí
+stica sean propietarios.
+ En esta tabla se puede buscar por nombre o numero de identificación y para
+ seleccionarlo solo basta con hacer click sobre el nombre del propietario
+ a asignar, al seleccionar el propietario en la parte inferior se muestran
+ los combos de Dirección de Domicilio y Numero telefónicos del propietario
+ seleccionado, si este no tiene al menos una dirección o un numero telefónico
+ no se permite guardar el registro ya que estos datos son necesarios para
+ la facturación.
+\end_layout
+
+\begin_layout Standard
+En la información del arrendatario se muestran todos los terceros cuya caracterí
+stica sean arrendatarios.
+ En esta tabla se puede buscar por nombre o numero de identificación y para
+ seleccionarlo solo basta con hacer click sobre el nombre del tercero a
+ asignar, al seleccionar el arrendatario en la parte inferior se muestran
+ los combos de Dirección de Domicilio y Numero telefónicos del tercero seleccion
+ado, si este no tiene al menos una dirección o un numero telefónico no se
+ permite guardar el registro ya que estos datos son necesarios para la facturaci
+ón.
+ Si el local queda sin arrendatario este tiene la opción de limpiar el arrendata
+rio para dejar vacante la unidad arrendable.
+ 
+\end_layout
+
+\begin_layout Section
+FACTURACIÓN
+\end_layout
+
+\begin_layout Standard
+En este menú se hace las diferente configuraciones para poder facturar a
+ los diferentes clientes de la empresa.
+ En este menú se encuentran la creación y edición de una hoja de termino
+ (Term Sheet), asignación y edición de ventas a las diferentes unidades
+ arrendables, creación y edición de cuentas por cobrar, creación y edición
+ de resoluciones de facturación, reversión de facturas, creación y edición
+ de plantillas de conceptos, creación de IPC'S, creación y edición de retencione
+s, Aprobación de facturas y cuentas de cobro y generación de interfaces
+ de SIIGO, ingreso de la tasa máxima de usura y generación de notas crédito.
+\end_layout
+
+\begin_layout Standard
+A continuación se explica cada uno de los anteriores a detalle.
+\end_layout
+
+\begin_layout Subsection
+HOJAS DE TÉRMINOS
+\end_layout
+
+\begin_layout Standard
+Las hojas de términos almacenaran la información del contrato, y de estas
+ se sacara la información para facturar.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/hojadeterminos.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Para poder crear una hoja de términos se deben diligenciar los datos obligatorio
+s.
+\end_layout
+
+\begin_layout Itemize
+Tipo de Contrato
+\end_layout
+
+\begin_layout Itemize
+Fecha de Inicio del Contrato
+\end_layout
+
+\begin_layout Itemize
+Duración del Contrato
+\end_layout
+
+\begin_layout Itemize
+Fecha de Inicio de Obligaciones
+\end_layout
+
+\begin_layout Itemize
+Fecha de preaviso
+\end_layout
+
+\begin_layout Itemize
+Activo(en caso de ser una hoja de términos de tipo unidad arrendable, se
+ debe elegir también la unidad arrendable de la hoja de términos).
+\end_layout
+
+\begin_layout Itemize
+Proyecto
+\end_layout
+
+\begin_layout Itemize
+Entidad Facturadora
+\end_layout
+
+\begin_layout Standard
+Una vez guardada la hoja de términos, se puede proceder a editar la hoja
+ de términos, para agregar los conceptos que se facturaran, para esto se
+ deben ingresar los datos del concepto, guardar el concepto y posteriormente
+ guardar la hoja de términos.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/addconcept.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Esta pagina también posee un tab archivos adjuntos, donde se podrán cargar
+ archivos PDF para su posterior visualización.
+\end_layout
+
+\begin_layout Subsection
+ASIGNAR VENTAS.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/AsignarVentas.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Algunas hojas de términos, tienen conceptos que dependen de las ventas de
+ las unidades arrendables.
+\end_layout
+
+\begin_layout Standard
+Por estos se deben ingresar los datos de las ventas mensuales de cada unidad
+ arrendable, para su uso posterior en facturación.
+\end_layout
+
+\begin_layout Standard
+Esta página tiene habilitados todos los meses desde enero del 2000 hasta
+ diciembre del 2030.
+\end_layout
+
+\begin_layout Subsection
+RESOLUCIONES DE FACTURACIÓN.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/Resoluciondefacturacion.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Las personas o entidades obligadas a expedir factura deberán solicitar autorizac
+ión de la numeración ante la División de Recaudación o la dependencia que
+ haga su veces de la Administración de Impuestos y Aduanas Nacionales correspond
+iente a su residencia o domicilio fiscal, cuando se expidan por medio de
+ talonarios o por computador.
+\end_layout
+
+\begin_layout Standard
+A esta numeración se le conoce como Resolución de Facturación, y sus datos
+ serán utilizados para la expedición de facturas.
+\end_layout
+
+\begin_layout Standard
+Para crear una Resolución de Facturación se piden los siguientes datos.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/addresolucionfacturacion.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+INFORMACIÓN DE LA RESOLUCIÓN
+\end_layout
+
+\begin_layout Itemize
+Prefijo 
+\end_layout
+
+\begin_layout Itemize
+Rango inicial 
+\end_layout
+
+\begin_layout Itemize
+Rango Final
+\end_layout
+
+\begin_layout Itemize
+Resolución Dian
+\end_layout
+
+\begin_layout Itemize
+Fecha de expedición
+\end_layout
+
+\begin_layout Itemize
+Fecha de vencimiento
+\end_layout
+
+\begin_layout Itemize
+Tipos de Facturación
+\end_layout
+
+\begin_layout Standard
+INFORMACIÓN DE LA FACTURA
+\end_layout
+
+\begin_layout Itemize
+Posición Actual del Consecutivo
+\end_layout
+
+\begin_layout Itemize
+Consecutivo del Comprobante Contable.
+\end_layout
+
+\begin_layout Itemize
+Observaciones en Documento de cobro(Estas observaciones saldrán impresas
+ en la factura o cuenta de cobro).
+\end_layout
+
+\begin_layout Subsection
+Reversión de facturas.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/reversión1.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En esta página se listan todas las facturas que han sido aprobadas, y están
+ dentro del periodo de facturación actual, aquí se pueden reversar facturas
+ facturas aprobadas a estado no aprobado, para hacer esto se selecciona
+ una de las facturas del listado y se da click en solicitud de reversión,
+ donde se abrirá un modal panel que pide la razón de la reversión.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/Solicitud de reversión.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+al ingresar la razón de reversión de activara el botón orden de reversión
+ y la factura cambiara a estado Solicitud de aprobación.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/solicitud de reversión.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En solicitud de reversión se evaluaran las reversiones con solicitud de
+ reversión y se podrán cancelar estas solicitudes o aprobar la solicitud,
+ en caso de aprobar la solicitud se cambiara el estado de esta a reversión
+ aprobada.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/reversión aprobada.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En reversión aprobada se podrán Reversar las facturas o devolverlas a su
+ estado vigente, en caso de reversar la factura, esta se devolverá a su
+ estado de factura no aprobada, y sera visible en preliquidación.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/facturareversada.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Aquí se listaran las facturas que ya han sufrido una reversión.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/facturasnoaprob.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Por ultimo, en Facturas no aprobadas en cortes pasados, se listan cada una
+ de las facturas que no fueron aprobadas en los cortes de facturación pasados.
+\end_layout
+
+\begin_layout Subsection
+PLANTILLAS DE CONCEPTO
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/plantillasconcepto.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Las plantillas de concepto contiene datos que se llenaran automáticamente
+ a la hora de crear un concepto.
+\end_layout
+
+\begin_layout Standard
+Los datos del concepto que se llenaran automáticamente son:
+\end_layout
+
+\begin_layout Itemize
+Nombre
+\end_layout
+
+\begin_layout Itemize
+Descripción de Impresión
+\end_layout
+
+\begin_layout Itemize
+Formula de Calculo del Concepto
+\end_layout
+
+\begin_layout Itemize
+¿Tiene Modulo de Contribución?
+\end_layout
+
+\begin_layout Itemize
+Cobro Anticipado
+\end_layout
+
+\begin_layout Itemize
+Tipo de documento
+\end_layout
+
+\begin_layout Subsection
+CONFIGURACIÓN IPC
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/ipc.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En esta página se encuentran 3 TABS que serán explicados a continuación.
+\end_layout
+
+\begin_layout Standard
+• IPC de los Doce Mese Inmediatamente Anteriores
+\end_layout
+
+\begin_layout Standard
+En este tab se encuentran listados los IPC creados para los últimos 12 meses,
+ además de un botón que permite la creación de IPC Mensuales 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/IPCMensual.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Para la creación de un IPC solo es necesario ingresar el porcentaje
+\end_layout
+
+\begin_layout Itemize
+IPC Año Calendario 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/IPCanocalendario.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Este IPC solo almacena el IPC del año inmediatamente anterior.
+\end_layout
+
+\begin_layout Itemize
+IPC Acumulado
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/IPCacumulado.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Este IPC solo almacena el IPC acumulado hasta el mes inmediatamente anterior.
+\end_layout
+
+\begin_layout Subsection
+CONFIGURACIÓN DE CUENTAS CONTABLES.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/configuracioncuentascontables.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Esta página consta de dos partes, Búsqueda de Entidades Facturadoras, y
+ Cuentas Contables, que a continuación se describirán.
+\end_layout
+
+\begin_layout Itemize
+Búsqueda de Entidades Facturadoras
+\end_layout
+
+\begin_layout Standard
+En esta pestaña, se listan todas las entidades facturadoras, se debe elegir
+ una de estas para poder configurar sus cuentas contables.
+\end_layout
+
+\begin_layout Itemize
+Cuentas contables
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/cuentascontables.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En esta pestaña se listan las cuentas contables ya creadas para la entidad
+ facturadora elegida previamente, y por cada una de estas cuentas existen
+ 2 botones que son ver y editar, donde se puede ver la configuración de
+ la cuenta, o editar sus valores respectivamente.
+\end_layout
+
+\begin_layout Standard
+Además de esto existe un botón llamado Agregar Cuenta Contable, al dar click
+ en este se abre un modal panel que me permite crear una cuenta nueva.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/addcuentacontable.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Para poder ingresar una cuenta nueva, se debe escoger una categoría, algunas
+ de estas categorías pueden tener subcategorias, en este caso también se
+ debe seleccionar una subcategoria, y luego ingresar el nombre de la cuenta
+ el código de la cuenta contable, la naturaleza de la cuenta en facturación,
+ naturaleza de la cuenta en recaudo, naturaleza de notas crédito porcentaje
+ de impuesto(si aplica) y en el caso de las cuentas de bancos una descripción
+ que sera impresa en la factura.
+\end_layout
+
+\begin_layout Subsection
+Facturación.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/facturacion.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Esta página consta de varios links que serán descritos a continuación.
+\end_layout
+
+\begin_layout Itemize
+Reversión:al dar click en este link se abre la página de reversión de facturas(f
+ue explicada con el subíndice 0.8.4).
+\end_layout
+
+\begin_layout Itemize
+Ver Preliquidación
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/preliquidaciones.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En esta página se muestran todas las facturas calculadas que fueron calculadas
+ dentro del periodo de facturación actual y no han sido aprobadas, en este
+ modal panel se puede generar un PDF con todas las.
+\end_layout
+
+\begin_layout Standard
+Al seleccionar una o varias facturas aparecerá un botón “Aprobar”, al dar
+ click en este botón aparecerá un modal panel.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/aprobarpreli.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+se debe ingresar la fecha de expedición y de vencimiento, al aprobar la
+ preliquidación dando click en 
+\begin_inset Quotes eld
+\end_inset
+
+Si, Aprobar Preliquidación
+\begin_inset Quotes erd
+\end_inset
+
+ se le asigna un consecutivo a la factura y se habilita un link para descargar
+ la interfaz de SIIGO.
+\end_layout
+
+\begin_layout Itemize
+Cerrar Periodo de Facturación
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/cerrarperiodo.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Al dar click al link de cerrar periodo de facturación aparecerá un modal
+ panel que preguntara que si se quiere cerrar el periodo de facturación,
+ al dar click a “Si, Cerrar Proyecto” se cerrara el periodo de facturación,
+ y se abrirá el periodo de facturación del mes en curso.
+\end_layout
+
+\begin_layout Itemize
+Agrupar
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/argupacion tercero.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Esta opción agrupa los conceptos que tengan el mismo tercero, para que se
+ muestren en una sola factura.
+\end_layout
+
+\begin_layout Itemize
+Generar PDF
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/descargarpdf.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Al dar click a este link se descargara un pdf con todas las facturas que
+ fueron aprobadas hasta el momento en el periodo de facturación actual.
+\end_layout
+
+\begin_layout Subsection
+TASA MAXIMA DE USURA
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/tasamaximausura.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En esta página se ingresa la tasa máxima de usura que se aplicara para facturaci
+ón del próximo trimestre.
+\end_layout
+
+\begin_layout Subsection
+NOTAS CRÉDITO
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/notas credito.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Las Notas Crédito se utilizan para generar un descuento o una nota crédito
+ a una factura que ha sido aprobada en un periodo de facturación anterior
+ al periodo actual.
+\end_layout
+
+\begin_layout Standard
+Para poder realizar esto, se debe escoger una o varias facturas, y dar click
+ al botón “Notas Crédito” que se habilitara cuando allá al menos una factura
+ seleccionada.
+\end_layout
+
+\begin_layout Standard
+Este botón abrirá un modal panel que pedirá el tipo de nota y la razón de
+ la nota crédito.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/notascredito2.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Al ingresar estos datos Se habilitara el botón 
+\begin_inset Quotes eld
+\end_inset
+
+Valor total de la Nota Crédito
+\begin_inset Quotes erd
+\end_inset
+
+ y este habilitara un modal panel.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/notacredito3.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En este modal panel se listan los conceptos, y se le asignan los valores
+ de las notas crédito a cada concepto.
+\end_layout
+
+\begin_layout Standard
+Al guardar la nota crédito, esta irá a aprobación.
+\end_layout
+
+\begin_layout Section
+Otros
+\end_layout
+
+\begin_layout Subsection
+DIRECCIONES.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/direcciones.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En esta página se podrán: listar, editar y crear direcciones para cada una
+ de las entidades de negocio de cada proyecto.
+\end_layout
+
+\begin_layout Standard
+para poder crear una dirección se debe dar click en el botón “Crear Dirección”
+ que abrirá una nueva página.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/adddirección.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En esta página se deberá ingresar la dirección, para esto existen dos formas,
+ si el campo “Dirección Estándar” esta seleccionado, se debe ingresar la
+ dirección con ayuda de los comboBox tal cual aparece en la imagen, en caso
+ contrario, se deben ingresar los datos en una caja de texto simple.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/adddireccion2.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+CIUDADES
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/ciudades.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En esta página se podrán: listar, editar y crear ciudades.
+ Además de esto, se puede filtrar por nombre usando el campo de texto y
+ el botón buscar.
+ Para poder crear una ciudad se debe dar click en el botón “Crear Ciudad”
+ que abrirá una nueva página.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/addcity.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En esta página se debe ingresar el nombre de la ciudad, y seleccionar una
+ región, y guardar la ciudad, una vez echo esto, se habilitara el botón
+ de “Agregar Dirección.” dentro del tab Direcciones.
+ Este botón abrirá la página de creación de direcciones.
+\end_layout
+
+\begin_layout Subsection
+REGIONES
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/REGIONES.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En esta página se podrán: listar, editar y crear regiones.
+ Además de esto, se puede filtrar por nombre o abreviación, usando los campo
+ de texto y el botón buscar.
+ Para poder crear una región se debe dar click en el botón “Crear Región”
+ que abrirá una nueva página.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/region.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Aquí se deberán ingresar los datos: Nombre, Abreviación, País y Ciudades.
+\end_layout
+
+\begin_layout Standard
+Una vez ingresados estos datos, se puede guardar la región, y al hacer esto
+ se habilita el botón “Agregar Ciudad” en el tab de Ciudades que abrirá
+ la página de creación de ciudades.
+\end_layout
+
+\begin_layout Subsection
+PAISES
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/pAIS.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En esta página se podrán: listar, editar y crear países.
+ Además de esto, se puede filtrar por nombre o abreviación, usando los campo
+ de texto y el botón buscar.
+ Para poder crear un país se debe dar click en el botón “Crear País” que
+ abrirá una nueva página.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/addpais.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Aquí se deberán ingresar los datos: Nombre, Abreviación.
+\end_layout
+
+\begin_layout Standard
+Una vez ingresados estos datos, se puede guardar el país, y al hacer esto
+ se habilita el botón “Región” en el tab de Ciudades que abrirá la página
+ de creación de regiones.
+\end_layout
+
+\begin_layout Subsection
+APROBACIÓN DE HOJA DE TÉRMINOS
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/makerchecker.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En esta página se listan las hojas de términos que estan pendientes de aprobació
+n, para aprobarlas se da click en ver.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/aprobmaker.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/aprobmaker2.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En esta página se obtienen los datos de toda la hoja de términos, se pueden
+ descargar archivos adjuntos, generar pdf de la hoja de términos y aprobar
+ la misma, al dar click en el botón 
+\begin_inset Quotes eld
+\end_inset
+
+Aprobar Cambio
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+APROBACIÓN DE PROYECTOS
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/makercheckerpro.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En esta página se listan los proyectos que están pendientes de aprobación,
+ para aprobarlas se da click en ver.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/aprobproyecto.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En esta página se obtienen los datos del proyecto, para aprobar un proyecto
+ se debe dar click en el botón 
+\begin_inset Quotes eld
+\end_inset
+
+Aprobar Cambio
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+APROBACIÓN DE LINEAS DE NEGOCIO
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/aproblineanegocio.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En esta página se obtienen los datos de la Linea de Negocio seleccionada
+ de la lista, para aprobarla se debe dar click en el botón “Aprobar Cambio”,
+ además de las aprobaciones, también se pueden hacer modificaciones.
+\end_layout
+
+\begin_layout Subsection
+APROBACIÓN DE ENTIDADES DE NEGOCIO
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/aprobentidadesnegocio.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En esta página se obtienen los datos de la Entidad de Negocio seleccionada
+ de la lista, para aprobarla se debe dar click en el botón “Aprobar Cambio”,
+ además de las aprobaciones, también se pueden hacer modificaciones.
+\end_layout
+
+\begin_layout Subsection
+APROBACIÓN DE ACTIVO
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/aprobactivo.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En esta página se obtienen los datos de la Entidad de Negocio seleccionada
+ de la lista, para aprobarla se debe dar click en el botón 
+\begin_inset Quotes eld
+\end_inset
+
+Aprobar Cambio
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+APROBACIÓN DE HOJA DE TÉRMINOS POR EL CONTADOR
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/aprobcont.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En esta página se encuentra la información basica de la hoja de términos
+ en la parte superior.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/aprobcon2.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Y en la parte inferior se encuentran, las Configuraciones de Resolución
+ de Facturación, Consecutivo Cuentas de cobro, Consecutivo Notas Crédito*,
+ Configuración de Recibos de Caja* y los tab de Cliente, Entidad Facturadora,
+ Proyecto, Concepto y archivos adjuntos.
+\end_layout
+
+\begin_layout Standard
+En el tab de Conceptos, se deben asignar las cuentas contables a cada concepto,
+ dando click en el botón “Editar”.
+ que esta frente a cada concepto.
+\end_layout
+
+\begin_layout Standard
+b 
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/aprobcon3.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+VARIABLES DEL SISTEMA
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/variablessistema.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En esta página se listan las variables del sistema, que podrán ser utilizadas
+ en la creación de un concepto para la configuración de la formula del concepto.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/addsystemvariable.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Para la creación de una variable de sistema, se debe seleccionar el proyecto
+ al cual pertenecerá, e ingresar nombre, sintaxis y valor de la variable.
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Subsection
+USUARIOS
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/adduser.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En esta pagina se puede crear un usuario nuevo, para esto se debe ingresar
+ Nombres y Apellidos, Usuario(con el que entrara a la aplicación), Contraseña,
+ Estado, Correo Electrónico, Nombre de rol, y se deben adicionar los proyectos
+ a los que va a estar asociado el usuario.
+ Este usuario tendrá o no permiso sobre las páginas dependiendo del rol
+ al que pertenezca.
+\end_layout
+
+\begin_layout Subsection
+APROBACIÓN NOTA CRÉDITO
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/aprobnotacredito.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En esta página se vera la información de los descuentos y notas crédito,
+ y este descuento o nota crédito puede ser aprobado o cancelado utilizando
+ los botones “Aprobar Cambio” y “Cancelar”
+\end_layout
+
+\begin_layout Subsection
+CAMBIAR CONTRASEÑA
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/cambiopsw.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En esta página se puede cambiar la contraseña del usuario que esta usando
+ la aplicación.
+\end_layout
+
+\begin_layout Standard
+Para poder hacer esto, el usuario deberá ingresar la contraseña actual,
+ la nueva contraseña y repetir la contraseña.
+\end_layout
+
+\begin_layout Standard
+Al dar click en el botón guardar ya se abra cambiado la contraseña del usuario.
+\end_layout
+
+\begin_layout Subsection
+REPORTES
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/reportesList-0.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Se mostrar una lista de los reportes que están disponibles, se debe seleccionar
+ uno haciendo click en el botón ver reporte.
+\end_layout
+
+\begin_layout Standard
+Si no se esta loggeado en Pentaho se mostrara la siguiente página de logueo.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/reportesLogueoPentaho-0.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+una vez se autentiquen en Pentajo, se debe dar click nuevamente en otros
+ y despúes en reportes, ya que Pentaho no redireccionara automaticamente
+ al reporte, así que se deberá elegir nuevamente el reporte que se desea
+ ver.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/reportesview-0.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+una vez seleccionado el reporte, este podrá ser visualizado en la aplicación.
+\end_layout
+
+\begin_layout Section
+RECAUDO
+\end_layout
+
+\begin_layout Subsection
+RECAUDO MANUAL
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/recaudomanual.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En esta página se listaran las facturas que ya han sido aprobadas, y están
+ pendientes de recaudo, durante el periodo actual de recaudo, para esto
+ se debe dar click en el botón buscar con los capo de texto de la búsqueda
+ vacíos.
+ para buscar los recaudos que se pueden realizar a un cliente especificado,
+ se puede buscar dicho cliente a través de su “Razón social” o “N.I.T ó Cédula”
+ y luego dar click en el botón buscar.
+\end_layout
+
+\begin_layout Standard
+Para poder realizar el recaudo, se debe seleccionar una o varias facturas
+ y luego dar click al botón “Recaudar”.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/recaudomanual2.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Se abrirá un modal panel que pedirá la valor del recaudo, forma de pago,
+ fecha del recaudo, al dar click en el botón fijar total del recaudo se
+ abrirá un nuevo modal panel.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/recaudomanual3.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En esta página se debe asignar el valor a recaudar de cada concepto, esto
+ se puede hacer de forma manual, o de forma automática dando click en el
+ botón “Con políticas de recaudo”, una vez hecho esto, se habilitara el
+ botón guardar recaudo al dar click en el se abrirá un nuevo modal panel.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/descargarpdfrecaudomanual.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En este modal panel se habilita la opción de descargar el recibo de caja.
+\end_layout
+
+\begin_layout Subsection
+RECAUDO AUTOMÁTICO
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/recaudoautomatico.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+CERRAR PERIODO DE RECAUDO
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/cerrarperiodorecaudo.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En esta pagina se podrán cerrar los periodos de recaudo y generar interfaz
+ SIIGO de los recaudos realizados dentro del periodo de recaudo actual.
+\end_layout
+
+\begin_layout Subsection
+CASTIGO DE CARTERA
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/castigocartera.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En esta página se listaran todas facturas que tienen un saldo pendiente,
+ para poder reversar una factura se deben seleccionar una o varias facturas,
+ luego se debe dar click en 
+\begin_inset Quotes eld
+\end_inset
+
+Castigar Facturas
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/castigar.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Al dar click en este botón, saldrá un modal panel que listara cada uno de
+ los conceptos de la o las facturas seleccionadas, para castigar los conceptos
+ se deben seleccionar los conceptos seleccionado el checBox que se encuentra
+ frente a cada uno de los conceptos y dar click en “Castigar Conceptos”.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/castigarconcepto.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Se abrirá un modal panel que pedirá la fecha del castigo, los conceptos
+ quedaran reversados al dar click en “Si Castigar Conceptos Seleccionados”.
+\end_layout
+
+\begin_layout Standard
+
+\lang spanish
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Title
+
+\lang spanish
+GLOSARIO
+\end_layout
+
+\end_body
+\end_document

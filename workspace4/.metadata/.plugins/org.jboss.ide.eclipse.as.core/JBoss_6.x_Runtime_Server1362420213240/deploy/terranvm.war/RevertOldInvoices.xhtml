@@ -1,0 +1,206 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:p="http://primefaces.prime.com.tr/ui" xmlns:a4j="http://richfaces.org/a4j" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+
+	<ui:define name="body">
+		<a4j:keepAlive beanName="recoverHome"></a4j:keepAlive>
+
+		<rich:simpleTogglePanel switchType="ajax">
+			<f:facet name="header">#{messages.revert_old_inovices}</f:facet>
+			<h:form>
+
+				<div style="width: 100%; height: 80px; text-align: center; vertical-align: middle;">
+					<a4j:outputPanel id="outputpanelSearch">
+
+						<rich:panel>
+							<table style="width: 100%; text-align: center;">
+								<tr>
+									<td><h:outputLabel style="font-weight:bold;" value="#{messages.bussines_entity_legalName} (#{messages.Billed}): " /> <h:inputText cols="30" rows="1" value="#{creditNoteHome.searchName}">
+											<a4j:support event="onkeyup" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="cleanButton"></a4j:support>
+										</h:inputText>
+									</td>
+									<td><h:outputLabel style="font-weight:bold;" value="#{messages.nit_cedula}: " /> <h:inputText cols="30" rows="1" value="#{creditNoteHome.searchId}">
+											<a4j:support event="onkeyup" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="cleanButton"></a4j:support>
+										</h:inputText>
+									</td>
+									<td><h:commandButton type="button" id="searchButton" value="#{messages.Search}">
+											<a4j:support event="onclick" limitToList="true" ajaxSingle="true" action="#{creditNoteHome.searchInvoicesToRevert()}" ignoreDupResponses="true" reRender="tableInvoiceRevertList,cleanButton,growlPanel"></a4j:support>
+										</h:commandButton>
+									</td>
+									<td><h:commandButton type="button" id="cleanButton" value="#{messages.Clean}" disabled="#{creditNoteHome.searchFormEmpty()}">
+											<a4j:support event="onclick" limitToList="true" ajaxSingle="true" action="#{creditNoteHome.cleanSearchForm()}" ignoreDupResponses="true" reRender="outputpanelSearch"></a4j:support>
+										</h:commandButton>
+									</td>
+								</tr>
+							</table>
+						</rich:panel>
+					</a4j:outputPanel>
+				</div>
+
+				<rich:extendedDataTable noDataLabel="#{messages.table_no_data}" binding="#{htmlRevertDataTable}" width="100%" height="400px" rows="10" sortMode="multi" tableState="#{creditNoteHome.revertListTableState}" value="#{creditNoteHome.invoiceRevertList}" var="_invoice" id="tableInvoiceRevertList">
+
+					<rich:column width="3%" sortable="true" id="col1" sortBy="#{_invoice.id}" filterBy="#{_invoice.id}" filterEvent="onkeyup" style="text-align: center">
+						<f:facet name="header">
+							<h:outputText value="id" />
+						</f:facet>
+						<h:outputText value="#{_invoice.id}" />
+					</rich:column>
+					<rich:column width="20%" sortable="true" id="col2" sortBy="#{_invoice.nameBilled}" filterBy="#{_invoice.nameBilled}" filterEvent="onkeyup" style="text-align: center">
+						<f:facet name="header">
+							<h:outputText value="#{messages.Billed}" />
+						</f:facet>
+						<h:outputText value="#{_invoice.nameBilled}" />
+					</rich:column>
+
+					<rich:column width="13%" sortable="true" id="col3" sortBy="#{_invoice.idNumberBilled}" filterBy="#{_invoice.idNumberBilled}" filterEvent="onkeyup" style="text-align: center">
+						<f:facet name="header">
+							<h:outputText value="#{messages.nit_cedula}" />
+						</f:facet>
+						<h:outputText value="#{_invoice.idNumberBilled}" />
+					</rich:column>
+
+					<rich:column width="13%" sortable="true" id="col4" sortBy="#{_invoice.number}" filterBy="#{_invoice.number}" filterEvent="onkeyup" style="text-align: center">
+						<f:facet name="header">
+							<h:outputText value="#{messages.Fac_Number}" />
+						</f:facet>
+						<h:outputText value="#{_invoice.number}" />
+					</rich:column>
+
+					<rich:column width="13%" sortable="true" id="col5" sortBy="#{_invoice.total()}" filterBy="#{_invoice.total()}" filterEvent="onkeyup" style="text-align: center">
+						<f:facet name="header">
+							<h:outputText value="#{messages.Total}" />
+						</f:facet>
+						<h:outputText value="#{_invoice.total()}">
+							<f:convertNumber currencySymbol="$ " type="currency" />
+						</h:outputText>
+					</rich:column>
+
+					<rich:column width="13%" sortable="true" id="col6" sortBy="#{_invoice.expeditionDate}" filterBy="#{_invoice.expeditionDate}" filterEvent="onkeyup" style="text-align: center">
+						<f:facet name="header">
+							<h:outputText value="#{messages.expediton_date}" />
+						</f:facet>
+						<h:outputText value="#{_invoice.expeditionDate}">
+						</h:outputText>
+					</rich:column>
+
+					<rich:column width="13%" sortable="true" id="col7" sortBy="#{_invoice.expirationDate}" filterBy="#{_invoice.expirationDate}" filterEvent="onkeyup" style="text-align: center">
+						<f:facet name="header">
+							<h:outputText value="#{messages.expiration_date}" />
+						</f:facet>
+						<h:outputText value="#{_invoice.expirationDate}">
+						</h:outputText>
+					</rich:column>
+					<rich:column width="12%" sortable="true" id="col8" sortBy="#{_invoice.selected}" filterBy="#{_invoice.selected}" filterEvent="onkeyup" style="text-align: center">
+						<f:facet name="header">
+							<h:outputText value="#{messages.Action}" />
+						</f:facet>
+						<h:commandButton type="button" value="#{messages.revert_concepts}">
+							<a4j:support event="onclick" ignoreDupResponses="true" limitToList="true" action="#{creditNoteHome.resetInvoiceConceptRevertList(_invoice)}" oncomplete="#{rich:component('modalPanelRevertInvoiceConcepts')}.show()" reRender="panelRevertConcepts,titleModalPanel1" />
+						</h:commandButton>
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="datascroller" />
+					</f:facet>
+				</rich:extendedDataTable>
+			</h:form>
+
+		</rich:simpleTogglePanel>
+
+
+		<rich:modalPanel id="modalPanelRevertInvoiceConcepts" width="900" autosized="true">
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText id="titleModalPanel1" value="#{messages.revert_concepts }  (#{messages.Fac_Number}: #{creditNoteHome.facNumber})"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+			<h:form>
+				<a4j:outputPanel id="panelRevertConcepts">
+					<h:panelGrid width="100%" columns="1">
+						<rich:extendedDataTable noDataLabel="#{messages.table_no_data}" binding="#{htmlRevertInvoiceConceptDataTable}" width="100%" height="250px" rows="0" sortMode="multi" tableState="#{creditNoteHome.revertConceptListTableState}" value="#{creditNoteHome.invoiceConceptRevertList}" var="_invCon" id="tableInvoiceConceptRevertList">
+
+							<rich:column width="5%" sortable="true" sortBy="#{_invCon.id}" filterBy="#{_invCon.id}" filterEvent="onkeyup" style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="id" />
+								</f:facet>
+								<h:outputText value="#{_invCon.id}" />
+							</rich:column>
+							<rich:column width="20%" sortable="true" sortBy="#{_invCon.concept.printDescription}" filterBy="#{_invCon.concept.printDescription}" filterEvent="onkeyup" style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="#{messages.Concept}" />
+								</f:facet>
+								<h:outputText value="#{_invCon.concept.printDescription}" />
+							</rich:column>
+							<rich:column width="15%" sortable="true" sortBy="#{_invCon.calculatedCost}" filterBy="#{_invCon.calculatedCost}" filterEvent="onkeyup" style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="#{messages.net_value}" />
+								</f:facet>
+								<h:outputText value="#{_invCon.calculatedCost}">
+									<f:convertNumber currencySymbol="$ " type="currency" />
+								</h:outputText>
+							</rich:column>
+							<rich:column width="15%" sortable="true" sortBy="#{_invCon.calculatedTax}" filterBy="#{_invCon.calculatedTax}" filterEvent="onkeyup" style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="#{messages.Tax}" />
+								</f:facet>
+								<h:outputText value="#{_invCon.calculatedTax}">
+									<f:convertNumber currencySymbol="$ " type="currency" />
+								</h:outputText>
+							</rich:column>
+							<rich:column width="15%" sortable="true" sortBy="#{_invCon.total}" filterBy="#{_invCon.total}" filterEvent="onkeyup" style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="#{messages.total_concept}" />
+								</f:facet>
+								<h:outputText value="#{_invCon.total}">
+									<f:convertNumber currencySymbol="$ " type="currency" />
+								</h:outputText>
+							</rich:column>
+							<rich:column width="15%" sortable="true" sortBy="#{_invCon.balance}" filterBy="#{_invCon.balance}" filterEvent="onkeyup" style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="#{messages.balance}" />
+								</f:facet>
+								<h:outputText value="#{_invCon.balance}">
+									<f:convertNumber currencySymbol="$ " type="currency" />
+								</h:outputText>
+							</rich:column>
+							<rich:column width="15%" sortable="true" id="colRecover" sortBy="#{_invCon.recoverValue}" filterBy="#{_invCon.recoverValue}" filterEvent="onkeyup" style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="#{messages.recover_value}" />
+								</f:facet>
+								<div id="divColumnRecover" style="width: 100%;" align="center">
+									<h:selectBooleanCheckbox rendered="#{_invCon.balance > 0.0 and _invCon.creditNote == null}" id="checkBoxSelected" value="#{_invCon.selected}">
+										<a4j:support event="onchange" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="panelCreateCreditNote"></a4j:support>
+									</h:selectBooleanCheckbox>
+									<h:outputLabel rendered="#{_invCon.balance == 0.0 and _invCon.creditNote == null}" style="font-weight:bold;" value="#{messages.recovered}" />
+									<h:outputLabel rendered="#{_invCon.creditNote != null}" style="font-weight:bold;" value="#{messages.credit_note_already}" />
+								</div>
+							</rich:column>
+
+						</rich:extendedDataTable>
+						<a4j:outputPanel id="panelCreateCreditNote">
+							<h:panelGrid width="100%" columns="3">
+
+								<h:commandButton type="button" value="#{messages.Close}">
+									<a4j:support event="onclick" ajaxSingle="true" ignoreDupResponses="true" limitToList="true" oncomplete="#{rich:component('modalPanelRevertInvoiceConcepts')}.hide()" reRender="panelTotalRecover"></a4j:support>
+								</h:commandButton>
+
+								<h:commandButton disabled="#{!creditNoteHome.canCreateCreditNote()}" type="button" value="#{messages.credit_note_generate_s}">
+									<a4j:support event="onclick" ajaxSingle="true" action="#{creditNoteHome.saveInvoiceConceptsCreditNote()}" ignoreDupResponses="true" limitToList="true" oncomplete="#{rich:component('modalPanelRevertInvoiceConcepts')}.hide();" reRender="tableInvoiceRevertList, growlPanel"></a4j:support>
+								</h:commandButton>
+
+								<a4j:outputPanel>
+									<h:outputLabel style="font-weight:bold;" value="#{messages.select_all}?" />
+									<h:selectBooleanCheckbox id="checkAll" value="#{creditNoteHome.selectAllInvoiceConcepts}">
+										<a4j:support event="onchange" action="#{creditNoteHome.checkAllInvoices()}" limitToList="true" ignoreDupResponses="true" ajaxSingle="true" reRender="checkBoxSelected,panelCreateCreditNote"></a4j:support>
+									</h:selectBooleanCheckbox>
+								</a4j:outputPanel>
+
+							</h:panelGrid>
+						</a4j:outputPanel>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</h:form>
+		</rich:modalPanel>
+
+	</ui:define>
+
+</ui:composition>

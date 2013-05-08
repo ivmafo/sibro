@@ -1,0 +1,236 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:a4j="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="contact" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{contactHome.managed ? messages.Edit : messages.Add} #{messages.Contact}</f:facet>
+
+
+            <s:decorate id="firstNameField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.First_name}</ui:define>
+                <h:inputTextarea id="firstName" cols="40" rows="1" required="true"
+                              value="#{contactHome.instance.firstName}">
+                   <a4j:support event="onblur" ajaxSingle="true"></a4j:support>             
+                </h:inputTextarea>
+            </s:decorate>
+
+
+            <s:decorate id="lastNameField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Last_name}</ui:define>
+                <h:inputTextarea id="lastName" cols="40" rows="1" required="true"
+                              value="#{contactHome.instance.lastName}">
+                     <a4j:support event="onblur" ajaxSingle="true"></a4j:support>  
+                </h:inputTextarea>              
+            </s:decorate>
+
+
+            <s:decorate id="idNumberField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Id_number}</ui:define>
+                <h:inputText id="idNumber" cols="160" rows="3" required="true"
+                              value="#{contactHome.instance.idNumber}">
+                    <a4j:support event="onblur" ajaxSingle="true"></a4j:support>  
+                </h:inputText>              
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                #{messages.required_fields}
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="#{messages.Save}"
+                         action="#{contactHome.persist}"
+                       disabled="#{!contactHome.wired}"
+                       rendered="#{!contactHome.managed}"
+                       view="/#{empty contactFrom ? default : contactFrom}.xhtml"/>
+
+            <h:commandButton id="update"
+                          value="#{messages.Save}"
+                         action="#{contactHome.update}"
+                       rendered="#{contactHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="#{messages.Delete}"
+                         action="#{contactHome.remove}"
+                      immediate="true"
+                       rendered="false or #{contactHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="#{messages.Cancel}"
+             propagation="end"
+                    view="/Contact.xhtml"
+                rendered="#{contactHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="#{messages.Cancel}"
+             propagation="end"
+                    view="/#{empty contactFrom ? 'ContactList' : contactFrom}.xhtml"
+                rendered="#{!contactHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="#{messages.Contact_type} *" labelClass="required">
+    <div class="association" id="contactTypeParent">
+
+        <h:outputText value="#{messages.There_is_no_contactType_associated_with_this_contact}"
+                   rendered="#{contactHome.instance.contactType == null}"/>
+
+        <rich:dataTable var="_contactType"
+                   value="#{contactHome.instance.contactType}"
+                rendered="#{contactHome.instance.contactType != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="contactTypeTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_contactType.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Name}</f:facet>
+                <h:outputText value="#{_contactType.name}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button id="#{contactHome.instance.contactType != null ? 'changeParent' : 'selectParent'}" value="#{contactHome.instance.contactType != null ? messages.Change : messages.Select} #{messages.Contact_type}"
+                       view="/ContactTypeList.xhtml">
+                <f:param name="from" value="ContactEdit"/>
+                <f:param name="contactFrom" value="#{empty contactFrom ? '': contacFrom }"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab label="#{messages.Real_properties}">
+        <h:form styleClass="association" id="realPropertyContactsChildren">
+
+            <h:outputText value="#{messages.There_are_no_realPropertyContacts_associated_with_this_contact}"
+                       rendered="#{empty contactHome.realPropertyContacts}"/>
+
+            <rich:dataTable value="#{contactHome.realPropertyContacts}"
+                           var="_realPropertyContact"
+                      rendered="#{not empty contactHome.realPropertyContacts}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="realPropertyContactsTable">
+                <rich:column sortBy="#{_realPropertyContact.id}">
+                    <f:facet name="header">Id</f:facet>
+                    <h:outputText value="#{_realPropertyContact.id}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{contactHome.managed}" id="realPropertyContacts">
+        <div class="actionButtons">
+            <s:button id="addrealPropertyContact"
+                   value="#{messages.Add_realPropertyContact}"
+                    view="/RealPropertyContactEdit.xhtml"
+             propagation="none">
+                 <f:param name="contactId"
+                         value="#{contactHome.instance.id}"/>
+                 <f:param name="realPropertyContactFrom" value="Contact"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+
+    <rich:tab label="#{messages.Business_entity}">
+        <h:form styleClass="association" id="businessEntityContactsChildren">
+
+            <h:outputText value="#{messages.There_are_no_businessEntityContacts_associated_with_this_contact}"
+                       rendered="#{empty contactHome.businessEntityContacts}"/>
+
+            <rich:dataTable value="#{contactHome.businessEntityContacts}"
+                           var="_businessEntityContact"
+                      rendered="#{not empty contactHome.businessEntityContacts}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="businessEntityContactsTable">
+                <rich:column sortBy="#{_businessEntityContact.id}">
+                    <f:facet name="header">Id</f:facet>
+                    <h:outputText value="#{_businessEntityContact.id}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{contactHome.managed}" id="businessEntityContacts">
+        <div class="actionButtons">
+            <s:button id="addbusinessEntityContact"
+                   value="#{messages.Add_businessEntityContact}"
+                    view="/BusinessEntityContactEdit.xhtml"
+             propagation="none">
+                 <f:param name="contactId"
+                         value="#{contactHome.instance.id}"/>
+                 <f:param name="businessEntityContactFrom" value="Contact"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+
+    <rich:tab label="#{messages.Phone_numbers}">
+        <h:form styleClass="association" id="phoneNumbersChildren">
+
+            <h:outputText value="There are no phoneNumbers associated with this contact."
+                       rendered="#{empty contactHome.phoneNumbers}"/>
+
+            <rich:dataTable value="#{contactHome.phoneNumbers}"
+                           var="_phoneNumber"
+                      rendered="#{not empty contactHome.phoneNumbers}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="phoneNumbersTable">
+                <rich:column sortBy="#{_phoneNumber.id}">
+                    <f:facet name="header">Id</f:facet>
+                    <h:outputText value="#{_phoneNumber.id}"/>
+                </rich:column>
+                <rich:column sortBy="#{_phoneNumber.number}">
+                    <f:facet name="header">#{messages.Phone_number}</f:facet>
+                    <h:outputText value="#{_phoneNumber.number}"/>
+                </rich:column>
+                <rich:column sortBy="#{_phoneNumber.indicative}">
+                    <f:facet name="header">#{messages.Indicative}</f:facet>
+                    <h:outputText value="#{_phoneNumber.indicative}"/>
+                </rich:column>
+                <rich:column sortBy="#{_phoneNumber.extension}">
+                    <f:facet name="header">#{messages.Extension}</f:facet>
+                    <h:outputText value="#{_phoneNumber.extension}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{contactHome.managed}" id="phoneNumbers">
+        <div class="actionButtons">
+            <s:button id="addphoneNumber"
+                   value="#{messages.Add_phoneNumber}"
+                    view="/PhoneNumberEdit.xhtml"
+             propagation="none">
+                 <f:param name="contactId"
+                         value="#{contactHome.instance.id}"/>
+                 <f:param name="phoneNumberFrom" value="Contact"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

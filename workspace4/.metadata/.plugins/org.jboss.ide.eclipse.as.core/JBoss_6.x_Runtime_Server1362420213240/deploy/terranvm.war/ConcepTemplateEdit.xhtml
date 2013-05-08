@@ -1,0 +1,149 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a4j="http://richfaces.org/a4j"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="concepTemplate" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{concepTemplateHome.managed ? 'Edición' : 'Adición'} Plantilla del concepto</f:facet>
+
+            <s:decorate id="nameField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Name}</ui:define>
+                <h:inputText id="name" value="#{concepTemplateHome.instance.name}"/>
+            </s:decorate>
+
+
+            <s:decorate id="printDescriptionField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Print_description}</ui:define>
+                <h:inputTextarea id="printDescription"
+                               cols="80"
+                               rows="3"
+                              value="#{concepTemplateHome.instance.printDescription}"/>
+            </s:decorate>
+
+
+            
+            
+            <a4j:outputPanel id="SystemVariableFields" rendered="true">
+						<s:decorate template="layout/edit.xhtml">
+							<ui:define name="label">#{messages.Expression}</ui:define>
+							<h:panelGrid rendered="true" columns="2">
+								<a4j:outputPanel id="expressionField">
+									<h:inputTextarea cols="80" rows="8" required="false" value="#{concepTemplateHome.instance.expression}">
+										<a4j:support event="onchange" ajaxSingle="true" action="#{concepTemplateHome.validateExpression()}" limitToList="true" ignoreDupResponses="true" reRender="resultValidate"></a4j:support>
+									</h:inputTextarea>
+								</a4j:outputPanel>
+								<rich:extendedDataTable rendered="false"  binding="#{tablesSystemVAriableBind}" width="400px" height="150px" selectionMode="single" rows="0" sortMode="single" selection="#{concepTemplateHome.systemVaribleSelection}" tableState="#{projectPropertyHome.tableState}" value="#{projectPropertyHome.systemVariable}" var="_systemvariable" id="tablesystemvariable">
+
+									<rich:column sortable="true" width="15%" sortBy="#{_systemvariable.id}" id="col_1" filterBy="#{_systemvariable.id}" filterEvent="onkeyup" label="#{messages.Code}">
+										<f:facet name="header">
+											<h:outputText value="Id" />
+										</f:facet>
+										<h:outputText value="#{_systemvariable.id}" />
+									</rich:column>
+									<rich:column sortable="true" width="25%" sortBy="#{_systemvariable.name}" id="col_2" filterBy="#{_systemvariable.name}" filterEvent="onkeyup" label="#{messages.Account_Number}">
+										<f:facet name="header">
+											<h:outputText value="Nombre" />
+										</f:facet>
+										<h:outputText value="#{_systemvariable.name}" />
+									</rich:column>
+									<rich:column sortable="true" width="60%" sortBy="#{_systemvariable.sintax}" id="col_3" filterBy="#{_systemvariable.sintax}" filterEvent="onkeyup" label="#{messages.Concept}">
+										<f:facet name="header">
+											<h:outputText value="Sintaxis" />
+										</f:facet>
+										<h:outputText value="#{_systemvariable.sintax}" />
+									</rich:column>
+									<a4j:support ajaxSingle="true" reRender="expressionField,resultValidate" limitToList="true" ignoreDupResponses="true" action="#{concepTemplateHome.onSelectionChangedSystemVariable()}" event="onselectionchange" />
+								</rich:extendedDataTable>
+							</h:panelGrid>
+						</s:decorate>
+				</a4j:outputPanel>
+
+				<a4j:outputPanel id="resultValidate">
+						<s:decorate template="layout/edit.xhtml" style="color:red">
+							<h:outputText style="#{projectPropertyHome.errorOnConceptExpresion ? 'color:red':'color:blue' }" value="#{concepTemplateHome.validateExpression()}">
+							<f:convertNumber currencySymbol="$ " type="currency" />
+							</h:outputText>
+						</s:decorate>
+				</a4j:outputPanel>
+				
+            
+            
+
+
+            <s:decorate id="isContributionModuleField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.IsContributionModule}</ui:define>
+                <h:selectBooleanCheckbox id="isContributionModule"
+                                      value="#{concepTemplateHome.instance.isContributionModule}"/>
+            </s:decorate>
+
+
+            <s:decorate id="isEarlyPaymentField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Is_early_payment}</ui:define>
+                <h:selectBooleanCheckbox id="isEarlyPayment"
+                                      value="#{concepTemplateHome.instance.isEarlyPayment}"/>
+            </s:decorate>
+
+
+            <s:decorate id="documentTypeField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.periodicity_type}</ui:define>
+                <h:inputText id="documentType"
+                          value="#{concepTemplateHome.instance.documentType}">
+                    <a:support event="onblur" reRender="documentTypeField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                #{messages.required_fields}
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="#{messages.Save}"
+                         action="#{concepTemplateHome.persist}"
+                       disabled="#{!concepTemplateHome.wired}"
+                       rendered="#{!concepTemplateHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="#{messages.Save}"
+                         action="#{concepTemplateHome.update}"
+                       rendered="#{concepTemplateHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="#{messages.Delete}"
+                         action="#{concepTemplateHome.remove}"
+                      immediate="true"
+                       rendered="false or #{concepTemplateHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="#{messages.Cancel}"
+             propagation="end"
+                    view="/ConcepTemplate.xhtml"
+                rendered="#{concepTemplateHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="#{messages.Cancel}"
+             propagation="end"
+                    view="/#{empty concepTemplateFrom ? 'ConcepTemplateList' : concepTemplateFrom}.xhtml"
+                rendered="#{!concepTemplateHome.managed}"/>
+
+        </div>
+    </h:form>
+
+</ui:define>
+
+</ui:composition>

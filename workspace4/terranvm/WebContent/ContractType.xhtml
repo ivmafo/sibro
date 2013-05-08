@@ -1,0 +1,106 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Contract type Details</f:facet>
+
+        <s:decorate id="id" template="layout/display.xhtml">
+            <ui:define name="label">Id</ui:define>
+            <h:outputText value="#{contractTypeHome.instance.id}"/>
+        </s:decorate>
+
+        <s:decorate id="name" template="layout/display.xhtml">
+            <ui:define name="label">Name</ui:define>
+            <h:outputText value="#{contractTypeHome.instance.name}"/>
+        </s:decorate>
+
+        <s:decorate id="description" template="layout/display.xhtml">
+            <ui:define name="label">Description</ui:define>
+            <h:outputText value="#{contractTypeHome.instance.description}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/ContractTypeEdit.xhtml"
+                    id="edit"
+                 value="Edit"/>
+
+        <s:button view="/#{empty contractTypeFrom ? 'ContractTypeList' : contractTypeFrom}.xhtml"
+                    id="done"
+                 value="Done"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Project properties</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="projectPropertiesChildren">
+
+        <h:outputText value="There are no projectProperties associated with this contractType."
+                   rendered="#{empty contractTypeHome.projectProperties}"/>
+
+        <rich:dataTable value="#{contractTypeHome.projectProperties}"
+                       var="_projectProperty"
+                  rendered="#{not empty contractTypeHome.projectProperties}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="projectPropertiesTable">
+            <rich:column sortBy="#{_projectProperty.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_projectProperty.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_projectProperty.subscriptionDate}">
+                <f:facet name="header">Subscription date</f:facet>
+                <h:outputText value="#{_projectProperty.subscriptionDate}">
+                    <s:convertDateTime type="date" dateStyle="short"/>
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_projectProperty.expirationDate}">
+                <f:facet name="header">Expiration date</f:facet>
+                <h:outputText value="#{_projectProperty.expirationDate}">
+                    <s:convertDateTime type="date" dateStyle="short"/>
+                </h:outputText>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Action</f:facet>
+                <s:link id="selectprojectProperty"
+                     value="Select"
+                      view="/ProjectProperty.xhtml">
+                    <f:param name="projectPropertyId"
+                            value="#{_projectProperty.id}"/>
+                    <f:param name="projectPropertyFrom" value="ContractType"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Add projectProperty"
+                view="/ProjectPropertyEdit.xhtml">
+            <f:param name="contractTypeId"
+                    value="#{contractTypeHome.instance.id}"/>
+            <f:param name="projectPropertyFrom" value="ContractType"/>
+        </s:button>
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

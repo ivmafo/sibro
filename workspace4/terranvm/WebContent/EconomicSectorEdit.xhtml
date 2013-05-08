@@ -1,0 +1,124 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="economicSector" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{economicSectorHome.managed ? 'Editar' : 'Agregar'} #{messages.Economic_sector}</f:facet>
+
+            <s:decorate id="nameField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Name}</ui:define>
+                <h:inputTextarea id="name"
+                               cols="80"
+                               rows="3"
+                           required="true"
+                              value="#{economicSectorHome.instance.name}"/>
+            </s:decorate>
+
+
+            <s:decorate id="descriptionField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Description}</ui:define>
+                <h:inputTextarea id="description"
+                               cols="80"
+                               rows="3"
+                              value="#{economicSectorHome.instance.description}"/>
+            </s:decorate>
+
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                #{messages.required_fields}
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="#{messages.Save}"
+                         action="#{economicSectorHome.persist}"
+                       disabled="#{!economicSectorHome.wired}"
+                       rendered="#{!economicSectorHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="#{messages.Save}"
+                         action="#{economicSectorHome.update}"
+                       rendered="#{economicSectorHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="#{messages.Delete}"
+                         action="#{economicSectorHome.remove}"
+                      immediate="true"
+                       rendered="#{economicSectorHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="#{messages.Cancel}"
+             propagation="end"
+                    view="/EconomicSector.xhtml"
+                rendered="#{economicSectorHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="#{messages.Cancel}"
+             propagation="end"
+                    view="/#{empty economicSectorFrom ? 'EconomicSectorList' : economicSectorFrom}.xhtml"
+                rendered="#{!economicSectorHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="#{messages.Economic_activities}">
+        <h:form styleClass="association" id="economicActivitiesChildren">
+
+            <h:outputText value="#{messages.There_are_no_economicActivities_associated_with_this_economicSector}"
+                       rendered="#{empty economicSectorHome.economicActivities}"/>
+
+            <rich:dataTable value="#{economicSectorHome.economicActivities}"
+                           var="_economicActivity"
+                      rendered="#{not empty economicSectorHome.economicActivities}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="economicActivitiesTable">
+                <rich:column sortBy="#{_economicActivity.name}">
+                    <f:facet name="header">#{messages.Name}</f:facet>
+                    <h:outputText value="#{_economicActivity.name}"/>
+                </rich:column>
+                <rich:column sortBy="#{_economicActivity.description}">
+                    <f:facet name="header">#{messages.Description}</f:facet>
+                    <h:outputText value="#{_economicActivity.description}"/>
+                </rich:column>
+                <rich:column sortBy="#{_economicActivity.code}">
+                    <f:facet name="header">#{messages.Code}</f:facet>
+                    <h:outputText value="#{_economicActivity.code}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{economicSectorHome.managed}" id="economicActivities">
+        <div class="actionButtons">
+            <s:button id="addeconomicActivity"
+                   value="#{messages.Add_economicActivity}"
+                    view="/EconomicActivityEdit.xhtml"
+             propagation="none">
+                 <f:param name="economicSectorId"
+                         value="#{economicSectorHome.instance.id}"/>
+                 <f:param name="economicActivityFrom" value="EconomicSector"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

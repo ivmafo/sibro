@@ -1,0 +1,179 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="realPropertyContact" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{realPropertyContactHome.managed ? 'Edit' : 'Add'} Real property contact</f:facet>
+
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                required fields
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Save"
+                         action="#{realPropertyContactHome.persist}"
+                       disabled="#{!realPropertyContactHome.wired}"
+                       rendered="#{!realPropertyContactHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Save"
+                         action="#{realPropertyContactHome.update}"
+                       rendered="#{realPropertyContactHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Delete"
+                         action="#{realPropertyContactHome.remove}"
+                      immediate="true"
+                       rendered="#{realPropertyContactHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancel"
+             propagation="end"
+                    view="/RealPropertyContact.xhtml"
+                rendered="#{realPropertyContactHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancel"
+             propagation="end"
+                    view="/#{empty realPropertyContactFrom ? 'RealPropertyContactList' : realPropertyContactFrom}.xhtml"
+                rendered="#{!realPropertyContactHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Contact *" labelClass="required">
+    <div class="association" id="contactParent">
+
+        <h:outputText value="There is no contact associated with this realPropertyContact."
+                   rendered="#{realPropertyContactHome.instance.contact == null}"/>
+
+        <rich:dataTable var="_contact"
+                   value="#{realPropertyContactHome.instance.contact}"
+                rendered="#{realPropertyContactHome.instance.contact != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="contactTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_contact.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Contact type id</f:facet>
+                <h:outputText value="#{_contact.contactType.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">First name</f:facet>
+                <h:outputText value="#{_contact.firstName}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Last name</f:facet>
+                <h:outputText value="#{_contact.lastName}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Id number</f:facet>
+                <h:outputText value="#{_contact.idNumber}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button id="#{realPropertyContactHome.instance.contact != null ? 'changeParent1' : 'selectParent1'}" value="#{realPropertyContactHome.instance.contact != null ? 'Change' : 'Select'} contact"
+                       view="/ContactList.xhtml">
+                <f:param name="from" value="RealPropertyContactEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab label="Real property *" labelClass="required">
+    <div class="association" id="realPropertyParent">
+
+        <h:outputText value="There is no realProperty associated with this realPropertyContact."
+                   rendered="#{realPropertyContactHome.instance.realProperty == null}"/>
+
+        <rich:dataTable var="_realProperty"
+                   value="#{realPropertyContactHome.instance.realProperty}"
+                rendered="#{realPropertyContactHome.instance.realProperty != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="realPropertyTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_realProperty.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Legal nature of property id</f:facet>
+                <h:outputText value="#{_realProperty.legalNatureOfProperty.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Real property use type id</f:facet>
+                <h:outputText value="#{_realProperty.realPropertyUseType.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Name property real property</f:facet>
+                <h:outputText value="#{_realProperty.nameProperty}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Year built real property</f:facet>
+                <h:outputText value="#{_realProperty.yearBuilt}">
+                    <s:convertDateTime type="date" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Construction license real property</f:facet>
+                <h:outputText value="#{_realProperty.constructionLicense}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Fund real property</f:facet>
+                <h:outputText value="#{_realProperty.fund}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Enrolment number real property</f:facet>
+                <h:outputText value="#{_realProperty.enrolmentNumber}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Purchase date</f:facet>
+                <h:outputText value="#{_realProperty.purchaseDate}">
+                    <s:convertDateTime type="date" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Total surface area real property</f:facet>
+                <h:outputText value="#{_realProperty.totalSurfaceArea}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Cadastral id</f:facet>
+                <h:outputText value="#{_realProperty.cadastralId}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button id="#{realPropertyContactHome.instance.realProperty != null ? 'changeParent' : 'selectParent'}" value="#{realPropertyContactHome.instance.realProperty != null ? 'Change' : 'Select'} realProperty"
+                       view="/RealPropertyList.xhtml">
+                <f:param name="from" value="RealPropertyContactEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

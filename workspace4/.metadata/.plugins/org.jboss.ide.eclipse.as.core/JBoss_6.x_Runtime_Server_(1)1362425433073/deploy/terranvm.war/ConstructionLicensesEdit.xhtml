@@ -1,0 +1,223 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:a4j="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="constructionLicenses" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{constructionLicensesHome.managed ? messages.Edit : messages.Add} #{messages.Construction_license}</f:facet>
+            
+            <s:decorate id="numberField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Number}</ui:define>
+                <h:inputText id="number"
+                               cols="80"
+                               rows="3"
+                           required="true"
+                              value="#{constructionLicensesHome.instance.number}"/>
+            </s:decorate>
+
+
+            <s:decorate id="typeField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Type}</ui:define>
+                <h:inputText id="type"
+                               cols="80"
+                               rows="3"
+                           required="true"
+                              value="#{constructionLicensesHome.instance.type}"/>
+            </s:decorate>
+
+
+            <s:decorate id="dateLicenseField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Date_license}</ui:define>
+                <rich:calendar id="dateLicense"
+                       required="true"
+                          value="#{constructionLicensesHome.instance.dateLicense}" datePattern="dd/MM/yyyy" />
+            </s:decorate>
+
+
+            <s:decorate id="numberCuratingField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Number_curating}</ui:define>
+                <h:inputText id="numberCurating"
+                       required="true"
+                          value="#{constructionLicensesHome.instance.numberCurating}">
+                    <a4j:support event="onblur" reRender="numberCuratingField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+            
+            <s:decorate id="cityDecorate" template="layout/edit.xhtml">
+							<ui:define name="label">#{messages.License_city}</ui:define>	
+							<a4j:outputPanel  id="regionsSelector">
+								<h:selectOneMenu id="regiones"
+									value="#{constructionLicensesHome.selectedRegion}">
+									<s:selectItems value="#{constructionLicensesHome.selectRegionList}"
+										var="region" label="#{region.name}"></s:selectItems>
+									<s:convertEntity></s:convertEntity>
+									<a4j:support ajaxSingle="true" event="onchange"
+										disableDefault="true" reRender="citiesSelector"></a4j:support>
+								</h:selectOneMenu>
+							</a4j:outputPanel>	
+							<a4j:outputPanel id="citiesSelector">
+								<h:selectOneMenu required="true" id="cities"
+									value="#{constructionLicensesHome.instance.city}">
+									<s:selectItems value="#{constructionLicensesHome.selectedRegion.cities}"
+										var="city" label="#{city.name}"></s:selectItems>
+									<s:convertEntity></s:convertEntity>
+									
+								</h:selectOneMenu>
+							</a4j:outputPanel>					
+						</s:decorate>
+
+            <s:decorate id="descriptionField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Description}</ui:define>
+                <h:inputTextarea id="description"
+                               cols="60"
+                               rows="2"
+                              value="#{constructionLicensesHome.instance.description}"/>
+            </s:decorate>
+           
+            <div style="clear:both">
+                <span class="required">*</span>
+                #{messages.required_fields}
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="#{messages.Save}"
+                         action="#{constructionLicensesHome.persist}"
+                       disabled="#{!constructionLicensesHome.wired}"
+                       rendered="#{!constructionLicensesHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="#{messages.Save}"
+                         action="#{constructionLicensesHome.update}"
+                       rendered="#{constructionLicensesHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="#{messages.Delete}"
+                         action="#{constructionLicensesHome.remove}"
+                      immediate="true"
+                       rendered="false or #{constructionLicensesHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="#{messages.Cancel}"
+             propagation="end"
+                    view="/ConstructionLicenses.xhtml"
+                rendered="#{constructionLicensesHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="#{messages.Cancel}"
+             propagation="end"
+                    view="/#{empty constructionLicensesFrom ? 'ConstructionLicensesList' : constructionLicensesFrom}.xhtml"
+                rendered="#{!constructionLicensesHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab rendered="false" label="City *" labelClass="required">
+    <div class="association" id="cityParent">
+
+        <h:outputText value="There is no city associated with this constructionLicenses."
+                   rendered="#{constructionLicensesHome.instance.city == null}"/>
+
+        <rich:dataTable var="_city"
+                   value="#{constructionLicensesHome.instance.city}"
+                rendered="#{constructionLicensesHome.instance.city != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="cityTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_city.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Region id</f:facet>
+                <h:outputText value="#{_city.region.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Name</f:facet>
+                <h:outputText value="#{_city.name}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button id="#{constructionLicensesHome.instance.city != null ? 'changeParent' : 'selectParent'}" value="#{constructionLicensesHome.instance.city != null ? 'Change' : 'Select'} city"
+                       view="/CityList.xhtml">
+                <f:param name="from" value="ConstructionLicensesEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab label="#{messages.Real_property} *" labelClass="required">
+    <div class="association" id="realPropertyParent">
+
+        <h:outputText value="#{messages.There_is_no_realProperty_associated_with_this_constructionLicenses}"
+                   rendered="#{constructionLicensesHome.instance.realProperty == null}"/>
+
+        <rich:dataTable var="_realProperty"
+                   value="#{constructionLicensesHome.instance.realProperty}"
+                rendered="#{constructionLicensesHome.instance.realProperty != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="realPropertyTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_realProperty.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Legal_nature_of_property_id}</f:facet>
+                <h:outputText value="#{_realProperty.legalNatureOfProperty.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Real_property_use_type_id}</f:facet>
+                <h:outputText value="#{_realProperty.realPropertyUseType.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Name}</f:facet>
+                <h:outputText value="#{_realProperty.nameProperty}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Year_built}</f:facet>
+                <h:outputText value="#{_realProperty.yearBuilt}">
+                    <s:convertDateTime type="date" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Enrolment_number}</f:facet>
+                <h:outputText value="#{_realProperty.enrolmentNumber}"/>
+            </h:column>
+            
+            <h:column>
+                <f:facet name="header">#{messages.Total_surface_area}</f:facet>
+                <h:outputText value="#{_realProperty.totalSurfaceArea}"/>
+            </h:column>
+        
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button id="#{constructionLicensesHome.instance.realProperty != null ? 'changeParent1' : 'selectParent1'}" value="#{constructionLicensesHome.instance.realProperty != null ? messages.Change : messages.Select} #{messages.Real_property}"
+                       view="/RealPropertyList.xhtml">
+                <f:param name="from" value="ConstructionLicensesEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

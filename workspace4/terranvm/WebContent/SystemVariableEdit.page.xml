@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd"
+      no-conversation-view-id="/SystemVariableList.xhtml"
+      login-required="true">
+
+   <begin-conversation join="true" flush-mode="MANUAL"/>
+
+   <action execute="#{systemVariableHome.wire}"/>
+
+   <param name="systemVariableFrom"/>
+   <param name="systemVariableId" value="#{systemVariableHome.systemVariableId}"/>
+   <param name="projectFrom"/>
+   <param name="projectId" value="#{projectHome.projectId}"/>
+   <param name="businessEntityFrom"/>
+   <param name="businessEntityId" value="#{businessEntityHome.businessEntityId}"/>
+   <param name="cityFrom"/>
+   <param name="cityId" value="#{cityHome.cityId}"/>
+   <param name="regionFrom"/>
+   <param name="regionId" value="#{regionHome.regionId}"/>
+   <param name="countryFrom"/>
+   <param name="countryId" value="#{countryHome.countryId}"/>
+
+
+   <param name="economicSectorFrom"/>
+   <param name="economicSectorId" value="#{economicSectorHome.economicSectorId}"/>
+
+
+
+   <param name="businessLineFrom"/>
+   <param name="businessLineId" value="#{businessLineHome.businessLineId}"/>
+
+
+
+
+   <navigation from-action="#{systemVariableHome.persist}">
+      <rule if-outcome="persisted">
+         <end-conversation/>
+         <redirect view-id="/SystemVariable.xhtml"/>
+      </rule>
+   </navigation>
+
+   <navigation from-action="#{systemVariableHome.update}">
+      <rule if-outcome="updated">
+         <end-conversation/>
+         <redirect view-id="/SystemVariable.xhtml"/>
+      </rule>
+   </navigation>
+
+   <navigation from-action="#{systemVariableHome.remove}">
+      <rule if-outcome="removed">
+         <end-conversation/>
+         <redirect view-id="/SystemVariableList.xhtml"/>
+      </rule>
+   </navigation>
+
+</page>

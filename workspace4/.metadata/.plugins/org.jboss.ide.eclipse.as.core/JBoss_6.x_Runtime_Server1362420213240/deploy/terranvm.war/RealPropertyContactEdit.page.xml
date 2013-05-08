@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd"
+      no-conversation-view-id="/RealPropertyContactList.xhtml"
+      login-required="true">
+
+   <begin-conversation join="true" flush-mode="MANUAL"/>
+
+   <action execute="#{realPropertyContactHome.wire}"/>
+
+   <param name="realPropertyContactFrom"/>
+   <param name="realPropertyContactId" value="#{realPropertyContactHome.realPropertyContactId}"/>
+   <param name="contactFrom"/>
+   <param name="contactId" value="#{contactHome.contactId}"/>
+   <param name="contactTypeFrom"/>
+   <param name="contactTypeId" value="#{contactTypeHome.contactTypeId}"/>
+
+
+   <param name="realPropertyFrom"/>
+   <param name="realPropertyId" value="#{realPropertyHome.realPropertyId}"/>
+   <param name="legalNatureOfPropertyFrom"/>
+   <param name="legalNatureOfPropertyId" value="#{legalNatureOfPropertyHome.legalNatureOfPropertyId}"/>
+
+   <param name="realPropertyUseTypeFrom"/>
+   <param name="realPropertyUseTypeId" value="#{realPropertyUseTypeHome.realPropertyUseTypeId}"/>
+
+
+
+
+   <navigation from-action="#{realPropertyContactHome.persist}">
+      <rule if-outcome="persisted">
+         <end-conversation/>
+         <redirect view-id="/RealPropertyContact.xhtml"/>
+      </rule>
+   </navigation>
+
+   <navigation from-action="#{realPropertyContactHome.update}">
+      <rule if-outcome="updated">
+         <end-conversation/>
+         <redirect view-id="/RealPropertyContact.xhtml"/>
+      </rule>
+   </navigation>
+
+   <navigation from-action="#{realPropertyContactHome.remove}">
+      <rule if-outcome="removed">
+         <end-conversation/>
+         <redirect view-id="/RealPropertyContactList.xhtml"/>
+      </rule>
+   </navigation>
+
+</page>

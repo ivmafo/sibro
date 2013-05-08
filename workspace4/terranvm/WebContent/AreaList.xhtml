@@ -1,0 +1,115 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich" xmlns:a4j="http://richfaces.org/a4j" template="layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<h:form id="areaSearch" styleClass="edit">
+
+			<rich:simpleTogglePanel label="#{messages.Area_type_Details}" switchType="ajax">
+
+				<s:decorate template="layout/display.xhtml">
+					<ui:define name="label">#{messages.Name}</ui:define>
+					<h:inputText id="name" value="#{areaList.area.name}" />
+				</s:decorate>
+
+				<s:decorate template="layout/display.xhtml">
+					<ui:define name="label">#{messages.Match}</ui:define>
+					<h:selectOneRadio id="logic" value="#{areaList.restrictionLogicOperator}" styleClass="radio">
+						<f:selectItem itemLabel="#{messages.All}" itemValue="and" />
+						<f:selectItem itemLabel="#{messages.Any}" itemValue="or" />
+					</h:selectOneRadio>
+				</s:decorate>
+
+			</rich:simpleTogglePanel>
+
+			<div class="actionButtons"><h:commandButton id="search" value="#{messages.Search}" action="/AreaList.xhtml" rendered="#{authenticator.validateShowFunction('AreaList.xhtml', 'search')}" /> <s:button id="reset" value="#{messages.Reset}" includePageParams="false" rendered="#{authenticator.validateShowFunction('AreaList.xhtml', 'reset')}"         /></div>
+
+		</h:form>
+
+		<rich:panel>
+			<f:facet name="header">#{messages.Search_Results} (#{empty areaList.resultList ? 0 : (areaList.paginated ? areaList.resultCount : areaList.resultList.size)})</f:facet>
+			<div class="results" id="areaList"><h:outputText value="#{messages.search_returned_no_results}" rendered="#{empty areaList.resultList}" /> <rich:dataTable id="areaList" var="_area" value="#{areaList.resultList}" rendered="#{not empty areaList.resultList}">
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="layout/sort.xhtml">
+							<ui:param name="entityList" value="#{areaList}" />
+							<ui:param name="propertyLabel" value="#{messages.Id}" />
+							<ui:param name="propertyPath" value="area.id" />
+						</ui:include>
+					</f:facet>
+					<h:outputText value="#{_area.id}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="layout/sort.xhtml">
+							<ui:param name="entityList" value="#{areaList}" />
+							<ui:param name="propertyLabel" value="#{messages.Area_type_id}" />
+							<ui:param name="propertyPath" value="area.areaType.id" />
+						</ui:include>
+					</f:facet>
+					<h:outputText value="#{_area.areaType.id}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="layout/sort.xhtml">
+							<ui:param name="entityList" value="#{areaList}" />
+							<ui:param name="propertyLabel" value="#{messages.Name}" />
+							<ui:param name="propertyPath" value="area.name" />
+						</ui:include>
+					</f:facet>
+					<h:outputText value="#{_area.name}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="layout/sort.xhtml">
+							<ui:param name="entityList" value="#{areaList}" />
+							<ui:param name="propertyLabel" value="#{messages.Area}" />
+							<ui:param name="propertyPath" value="area.area" />
+						</ui:include>
+					</f:facet>
+					<h:outputText value="#{_area.area}" />
+				</h:column>
+
+
+				<rich:column styleClass="action">
+					<table>
+						<tr>
+							<td>
+							<f:facet name="header"> #{messages.Action}</f:facet>
+								<s:link view="/#{empty from ? 'Area' : from}.xhtml" value="#{empty from ? messages.View : messages.Select}" propagation="#{empty from ? 'none' : 'default'}" id="areaViewId" rendered="#{authenticator.validateShowFunction('AreaList.xhtml', 'areaViewId')}"  >
+									<f:param name="areaId" value="#{_area.id}" />
+								</s:link>
+							</td>
+							<td>#{' '}</td> 
+							<td>
+								<div id="editButton#{_area.id}">
+									<s:link view="/AreaEdit.xhtml" value="#{messages.Edit}" propagation="none" id="areaEdit" rendered="#{empty from and authenticator.validateShowFunction('AreaList.xhtml', 'areaEdit')}" disabled="#{areaHome.areaListInApprove(_area)}">
+										<f:param name="areaId" value="#{_area.id}" />
+									</s:link>
+									<rich:toolTip disabled="#{not areaHome.areaListInApprove(_area)}" for="editButton#{_area.id}"> #{messages.You_can_not_edit_pending_approval_of_a_change}</rich:toolTip>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</rich:column>
+			</rich:dataTable></div>
+		</rich:panel>
+
+		<div class="tableControl"><s:link view="/AreaList.xhtml" rendered="#{areaList.previousExists and authenticator.validateShowFunction('AreaList.xhtml', 'firstPage')}" value="#{messages.left}#{messages.left} #{messages.First_Page}" id="firstPage">
+			<f:param name="firstResult" value="0" />
+		</s:link> <s:link view="/AreaList.xhtml" rendered="#{areaList.previousExists and authenticator.validateShowFunction('AreaList.xhtml', 'previousPage')}" value="#{messages.left} #{messages.Previous_Page}" id="previousPage">
+			<f:param name="firstResult" value="#{areaList.previousFirstResult}" />
+		</s:link> <s:link view="/AreaList.xhtml" rendered="#{areaList.nextExists and authenticator.validateShowFunction('AreaList.xhtml', 'nextPage')}" value="#{messages.Next_page} #{messages.right}" id="nextPage">
+			<f:param name="firstResult" value="#{areaList.nextFirstResult}" />
+		</s:link> <s:link view="/AreaList.xhtml" rendered="#{areaList.nextExists and authenticator.validateShowFunction('AreaList.xhtml', 'lastPâge')}" value="#{messages.Last_Page} #{messages.right}#{messages.right}" id="lastPage">
+			<f:param name="firstResult" value="#{areaList.lastFirstResult}" />
+		</s:link></div>
+
+		<s:div styleClass="actionButtons" rendered="#{empty from}">
+			<s:button view="/AreaEdit.xhtml" id="create" propagation="none" value="#{messages.Create_area}"  rendered="#{authenticator.validateShowFunction('AreaList.xhtml', 'create')}">
+				<f:param name="areaId" />
+			</s:button>
+		</s:div>
+	</ui:define>
+</ui:composition>

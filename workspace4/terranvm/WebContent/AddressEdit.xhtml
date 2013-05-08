@@ -1,0 +1,395 @@
+
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j" xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<h:form id="address" styleClass="edit">
+
+			<rich:panel>
+				<s:decorate template="layout/edit.xhtml">
+					<ui:define name="label">
+						<h:outputText value="#{messages.Standard_address}" />
+					</ui:define>
+					<a4j:outputPanel ajaxRendered="true">
+
+						<h:selectBooleanCheckbox value="#{addressHome.direccionEstandar}">
+							<a4j:support event="onchange" disableDefault="true"
+								ajaxSingle="true" reRender="estandarDir,otherAddress"></a4j:support>
+						</h:selectBooleanCheckbox>
+					</a4j:outputPanel>
+				</s:decorate>
+				
+				<s:decorate id="cityDecorate" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Location}</ui:define>
+					<a4j:region id="citySelector">
+						<h:selectOneMenu value="#{addressHome.selectedCountry}">
+							<s:selectItems value="#{addressHome.countryList}" var="country"
+								label="#{country.name}"></s:selectItems>
+							<s:convertEntity></s:convertEntity>
+							<a4j:support ajaxSingle="true" event="onchange"
+								disableDefault="true" reRender="regionsSelector,citiesSelector"></a4j:support>
+						</h:selectOneMenu>
+
+						<a4j:outputPanel  id="regionsSelector">
+							<h:selectOneMenu id="regiones"
+								value="#{addressHome.selectedRegion}">
+								<s:selectItems value="#{addressHome.selectedCountry.regions}"
+									var="region" label="#{region.name}"></s:selectItems>
+								<s:convertEntity></s:convertEntity>
+								<a4j:support ajaxSingle="true" event="onchange"
+									disableDefault="true" reRender="citiesSelector"></a4j:support>
+							</h:selectOneMenu>
+						</a4j:outputPanel>
+						<a4j:outputPanel id="citiesSelector">
+							<h:selectOneMenu required="true" id="cities"
+								value="#{addressHome.instance.city}">
+								<s:selectItems value="#{addressHome.selectedRegion.cities}"
+									var="city" label="#{city.name}"></s:selectItems>
+								<s:convertEntity></s:convertEntity>
+								
+							</h:selectOneMenu>
+						</a4j:outputPanel>
+					</a4j:region>
+				</s:decorate>
+
+				<a4j:outputPanel id="estandarDir">
+					<a4j:outputPanel 
+						rendered="#{addressHome.direccionEstandar}">
+						<f:facet name="header">#{addressHome.managed ? messages.Edit : messages.Add} #{messages.Address}</f:facet>
+						<s:decorate id="kindOfWayField" template="layout/edit.xhtml">
+							<table>
+								<tr>
+									<td><ui:define name="label">#{messages.Kind_of_way}</ui:define>
+
+									<h:selectOneMenu value="#{addressHome.instance.kindOfWay}">
+
+										<f:selectItem itemValue="Cll" itemLabel="Cll" />
+
+										<f:selectItem itemValue="Cr" itemLabel="Cr" />
+
+										<f:selectItem itemValue="Dg" itemLabel="Dg" />
+
+										<f:selectItem itemValue="Tr" itemLabel="Tr" />
+
+										<f:selectItem itemValue="Av Cll" itemLabel="Av Cll" />
+
+										<f:selectItem itemValue="Av Cr" itemLabel="Av Cr" />
+										
+									</h:selectOneMenu></td>
+									<td><h:inputText id="wayNumber"
+										value="#{addressHome.instance.wayNumber}" size="3"
+										style="width:30px">
+									</h:inputText></td>
+									<td><h:selectOneMenu
+										value="#{addressHome.instance.wayLetter}">
+										<f:selectItem itemValue=" " itemLabel="" />
+										<f:selectItem itemValue="A" itemLabel="A" />
+										<f:selectItem itemValue="B" itemLabel="B" />
+										<f:selectItem itemValue="C" itemLabel="C" />
+										<f:selectItem itemValue="D" itemLabel="D" />
+										<f:selectItem itemValue="E" itemLabel="E" />
+										<f:selectItem itemValue="F" itemLabel="F" />
+										<f:selectItem itemValue="G" itemLabel="G" />
+										<f:selectItem itemValue="H" itemLabel="H" />
+										<f:selectItem itemValue="I" itemLabel="I" />
+
+										<f:selectItem itemValue="J" itemLabel="J" />
+										<f:selectItem itemValue="K" itemLabel="K" />
+										<f:selectItem itemValue="L" itemLabel="L" />
+										<f:selectItem itemValue="M" itemLabel="M" />
+										<f:selectItem itemValue="N" itemLabel="N" />
+										<f:selectItem itemValue="O" itemLabel="O" />
+										<f:selectItem itemValue="P" itemLabel="P" />
+										<f:selectItem itemValue="Q" itemLabel="Q" />
+										<f:selectItem itemValue="R" itemLabel="R" />
+
+										<f:selectItem itemValue="S" itemLabel="S" />
+										<f:selectItem itemValue="T" itemLabel="T" />
+										<f:selectItem itemValue="U" itemLabel="U" />
+										<f:selectItem itemValue="V" itemLabel="V" />
+										<f:selectItem itemValue="W" itemLabel="W" />
+										<f:selectItem itemValue="X" itemLabel="X" />
+										<f:selectItem itemValue="Y" itemLabel="Y" />
+										<f:selectItem itemValue="Z" itemLabel="Z" />
+																				
+									</h:selectOneMenu> <h:outputText value="bis ?" /> <a4j:outputPanel layout="none"
+										ajaxRendered="true">
+										
+										<h:selectBooleanCheckbox id="isWayBis"
+											value="#{addressHome.instance.isWayBis}">
+											<a4j:support reRender="bisLetter" ajaxSingle="true"
+												event="onchange" disableDefault="true"></a4j:support>
+										</h:selectBooleanCheckbox>
+										
+									</a4j:outputPanel> <a4j:outputPanel id="bisLetter" ajaxRendered="true">
+										<h:selectOneMenu rendered="#{addressHome.instance.isWayBis}"
+											value="#{addressHome.instance.wayBisLetter}">
+											<f:selectItem itemValue=" " itemLabel="" />
+											<f:selectItem itemValue="A" itemLabel="A" />
+											<f:selectItem itemValue="B" itemLabel="B" />
+											<f:selectItem itemValue="C" itemLabel="C" />
+											<f:selectItem itemValue="D" itemLabel="D" />
+											<f:selectItem itemValue="E" itemLabel="E" />
+											<f:selectItem itemValue="F" itemLabel="F" />
+
+											<f:selectItem itemValue="G" itemLabel="G" />
+											<f:selectItem itemValue="H" itemLabel="H" />
+											<f:selectItem itemValue="I" itemLabel="I" />
+											<f:selectItem itemValue="J" itemLabel="J" />
+											<f:selectItem itemValue="K" itemLabel="K" />
+											<f:selectItem itemValue="L" itemLabel="L" />
+											<f:selectItem itemValue="M" itemLabel="M" />
+											<f:selectItem itemValue="N" itemLabel="N" />
+											<f:selectItem itemValue="O" itemLabel="O" />
+
+											<f:selectItem itemValue="P" itemLabel="P" />
+											<f:selectItem itemValue="Q" itemLabel="Q" />
+											<f:selectItem itemValue="R" itemLabel="R" />
+											<f:selectItem itemValue="S" itemLabel="S" />
+											<f:selectItem itemValue="T" itemLabel="T" />
+											<f:selectItem itemValue="U" itemLabel="U" />
+											<f:selectItem itemValue="V" itemLabel="V" />
+											<f:selectItem itemValue="W" itemLabel="W" />
+											<f:selectItem itemValue="X" itemLabel="X" />
+
+											<f:selectItem itemValue="Y" itemLabel="Y" />
+											<f:selectItem itemValue="Z" itemLabel="Z" />
+											</h:selectOneMenu>
+									</a4j:outputPanel></td>
+									<td><h:selectOneRadio
+										value="#{addressHome.instance.wayEastOrSouth}">
+										<f:selectItem itemLabel="E" itemValue="E" />
+										<f:selectItem itemLabel="S" itemValue="S" />
+									</h:selectOneRadio></td>
+									<td><h:inputText id="number"
+										value="#{addressHome.instance.number}" size="3"
+										style="width:30px">
+																			</h:inputText></td>
+									<td><h:selectOneMenu
+										value="#{addressHome.instance.numberLetter}">
+										<f:selectItem itemValue=" " itemLabel="" />
+										<f:selectItem itemValue="A" itemLabel="A" />
+										<f:selectItem itemValue="B" itemLabel="B" />
+										<f:selectItem itemValue="C" itemLabel="C" />
+										<f:selectItem itemValue="D" itemLabel="D" />
+										<f:selectItem itemValue="E" itemLabel="E" />
+										<f:selectItem itemValue="F" itemLabel="F" />
+
+										<f:selectItem itemValue="G" itemLabel="G" />
+										<f:selectItem itemValue="H" itemLabel="H" />
+										<f:selectItem itemValue="I" itemLabel="I" />
+										<f:selectItem itemValue="J" itemLabel="J" />
+										<f:selectItem itemValue="K" itemLabel="K" />
+										<f:selectItem itemValue="L" itemLabel="L" />
+										<f:selectItem itemValue="M" itemLabel="M" />
+										<f:selectItem itemValue="N" itemLabel="N" />
+										<f:selectItem itemValue="O" itemLabel="O" />
+
+										<f:selectItem itemValue="P" itemLabel="P" />
+										<f:selectItem itemValue="Q" itemLabel="Q" />
+										<f:selectItem itemValue="R" itemLabel="R" />
+										<f:selectItem itemValue="S" itemLabel="S" />
+										<f:selectItem itemValue="T" itemLabel="T" />
+										<f:selectItem itemValue="U" itemLabel="U" />
+										<f:selectItem itemValue="V" itemLabel="V" />
+										<f:selectItem itemValue="W" itemLabel="W" />
+										<f:selectItem itemValue="X" itemLabel="X" />
+										<f:selectItem itemValue="Y" itemLabel="Y" />
+										<f:selectItem itemValue="Z" itemLabel="Z" />
+									</h:selectOneMenu> <h:inputText id="additionalNumber"
+										value="#{addressHome.instance.additionalNumber}" size="3"
+										style="width:30px">
+									</h:inputText></td>
+									<td><h:selectOneRadio
+										value="#{addressHome.instance.numberEastOrSouth}">
+										<f:selectItem itemLabel="E" itemValue="E" />
+										<f:selectItem itemLabel="S" itemValue="S" />
+									</h:selectOneRadio></td>
+								</tr>
+							</table>
+						</s:decorate>
+
+
+					</a4j:outputPanel>
+				</a4j:outputPanel>
+
+
+				<a4j:outputPanel ajaxRendered="true">
+					<a4j:region id="otherAddress"
+						rendered="#{! addressHome.direccionEstandar}">
+						<s:decorate id="otherField" template="layout/edit.xhtml">
+							<ui:define name="label">#{messages.Other}</ui:define>
+							<h:inputTextarea id="other" cols="50" rows="2"
+								value="#{addressHome.instance.other}" />
+						</s:decorate>
+					</a4j:region>
+				</a4j:outputPanel>
+
+				<div style="clear: both"><span class="required">*</span>
+				#{messages.required_fields}</div>
+
+			</rich:panel>
+
+			<div class="actionButtons"><h:commandButton id="save"
+				value="#{messages.Save}" action="#{addressHome.persist}"
+				disabled="#{!addressHome.wired}" rendered="#{!addressHome.managed and authenticator.validateShowFunction('AddressEdit.xhtml', 'save')}"/>
+				                                                                      
+				
+			<h:commandButton id="update" value="#{messages.Save}"
+				action="#{addressHome.update}" rendered="#{addressHome.managed and authenticator.validateShowFunction('AddressEdit.xhtml', 'update')}" />
+				
+			<h:commandButton id="delete" value="#{messages.Delete}"
+				action="#{addressHome.remove}" immediate="true"
+				rendered="false or #{addressHome.managed and authenticator.validateShowFunction('AddressEdit.xhtml', 'delete')}"  
+				/> 
+				<s:button id="cancelEdit"
+				value="#{messages.Cancel}" propagation="end" view="/Address.xhtml"
+				rendered="#{addressHome.managed and authenticator.validateShowFunction('AddressEdit.xhtml', 'cancelEdit')}" />
+				
+				<s:button id="cancelAdd"
+				value="#{messages.Cancel}" propagation="end"
+				view="/#{empty addressFrom ? 'AddressList' : addressFrom}.xhtml"
+				rendered="#{!addressHome.managed and authenticator.validateShowFunction('AddressEdit.xhtml', 'cancelAdd')}" /></div>
+		</h:form>
+
+		<rich:tabPanel switchType="ajax">
+
+			<rich:tab label="#{messages.Business_entity}" rendered="#{not empty businessEntityId}">
+				<div class="association" id="businessEntityParent"><h:outputText
+					value="#{messages.There_is_no_businessEntity_associated_with_this_address}"
+					rendered="#{addressHome.instance.businessEntity == null}" /> <rich:dataTable
+					var="_businessEntity"
+					value="#{addressHome.instance.businessEntity}"
+					rendered="#{addressHome.instance.businessEntity != null}"
+					rowClasses="rvgRowOne,rvgRowTwo" id="businessEntityTable">
+					<h:column>
+						<f:facet name="header">Id</f:facet>
+						<h:outputText value="#{_businessEntity.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Economic_activity_id}</f:facet>
+						<h:outputText value="#{_businessEntity.economicActivity.code}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Id_type}</f:facet>
+						<h:outputText value="#{_businessEntity.idType}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Id_number}</f:facet>
+						<h:outputText value="#{_businessEntity.idNumber}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Verification_number}</f:facet>
+						<h:outputText value="#{_businessEntity.verificationNumber}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Name}</f:facet>
+						<h:outputText value="#{_businessEntity.nameBusinessEntity}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Email}</f:facet>
+						<h:outputText value="#{_businessEntity.email}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Legal_entity_type}</f:facet>
+						<h:outputText value="#{_businessEntity.legalEntityType}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Trade_Name}</f:facet>
+						<h:outputText value="#{_businessEntity.tradeName}" />
+					</h:column>
+				</rich:dataTable>
+
+				<div class="actionButtons"><s:button
+					id="#{addressHome.instance.businessEntity != null ? 'changeParent1' : 'selectParent1'}"
+					value="#{addressHome.instance.businessEntity != null ? messages.Change : messages.Select} #{messages.businessEntity}"
+					rendered="#{authenticator.validateShowFunction('AddressEdit.xhtml', 'Business_entity_change') or authenticator.validateShowFunction('AddressEdit.xhtml', 'Business_entity_select')}"
+					view="/BusinessEntityList.xhtml" 
+					>
+					<f:param name="from" value="AddressEdit" />
+				</s:button></div>
+
+				</div>
+			</rich:tab>
+
+			<rich:tab label="#{messages.Real_property}" rendered="false"  >
+				<div class="association" id="realPropertyParent"><h:outputText
+					value="#{messages.There_is_no_realProperty_associated_with_this_address}"
+					rendered="#{addressHome.instance.realProperty == null}" /> <rich:dataTable
+					var="_realProperty" value="#{addressHome.instance.realProperty}"
+					rendered="#{addressHome.instance.realProperty != null}"
+					rowClasses="rvgRowOne,rvgRowTwo" id="realPropertyTable"
+					 >
+					<h:column>
+						<f:facet name="header">Id</f:facet>
+						<h:outputText value="#{_realProperty.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Legal_nature_of_property_id}</f:facet>
+						<h:outputText value="#{_realProperty.legalNatureOfProperty.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Real_property_use_type_id}</f:facet>
+						<h:outputText value="#{_realProperty.realPropertyUseType.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Name}</f:facet>
+						<h:outputText value="#{_realProperty.nameProperty}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Year_built}</f:facet>
+						<h:outputText value="#{_realProperty.yearBuilt}">
+							<s:convertDateTime type="date" dateStyle="short" />
+						</h:outputText>
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Construction_license}</f:facet>
+						<h:outputText value="#{_realProperty.constructionLicense}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Fund}</f:facet>
+						<h:outputText value="#{_realProperty.fund}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Enrolment_number}</f:facet>
+						<h:outputText value="#{_realProperty.enrolmentNumber}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Purchase_date}</f:facet>
+						<h:outputText value="#{_realProperty.purchaseDate}">
+							<s:convertDateTime type="date" dateStyle="short" />
+						</h:outputText>
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Total_surface_area}</f:facet>
+						<h:outputText value="#{_realProperty.totalSurfaceArea}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Cadastral_id}</f:facet>
+						<h:outputText value="#{_realProperty.cadastralId}" />
+					</h:column>
+				</rich:dataTable>
+
+				<div class="actionButtons"><s:button
+					id="#{addressHome.instance.realProperty != null ? 'changeParent3' : 'selectParent3'}"
+					value="#{addressHome.instance.realProperty != null ? messages.Change : messages.Select} #{messages.realProperty}"
+					rendered="#{authenticator.validateShowFunction('AddressEdit.xhtml', 'Real_property_change') or authenticator.validateShowFunction('AddressEdit.xhtml', 'Real_property_select')}"
+					view="/RealPropertyList.xhtml"
+					>
+					<f:param name="from" value="AddressEdit" />
+				</s:button></div>
+
+				</div>
+			</rich:tab>
+		</rich:tabPanel>
+	</ui:define>
+
+</ui:composition>

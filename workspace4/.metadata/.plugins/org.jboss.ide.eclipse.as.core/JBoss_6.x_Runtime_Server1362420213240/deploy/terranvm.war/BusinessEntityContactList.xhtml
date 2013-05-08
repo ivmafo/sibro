@@ -1,0 +1,130 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="businessEntityContactSearch" styleClass="edit">
+
+ 
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">#{messages.Search_Results} (#{empty businessEntityContactList.resultList ? 0 : (businessEntityContactList.paginated ? businessEntityContactList.resultCount : businessEntityContactList.resultList.size)})</f:facet>
+    <div class="results" id="businessEntityContactList">
+
+    <h:outputText value="#{messages.search_returned_no_results}"
+               rendered="#{empty businessEntityContactList.resultList}"/>
+
+    <rich:dataTable id="businessEntityContactList"
+                var="_businessEntityContact"
+              value="#{businessEntityContactList.resultList}"
+           rendered="#{not empty businessEntityContactList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{businessEntityContactList}"/>
+                    <ui:param name="propertyLabel" value="Id"/>
+                    <ui:param name="propertyPath" value="businessEntityContact.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_businessEntityContact.id}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{businessEntityContactList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Business_entity_id}"/>
+                    <ui:param name="propertyPath" value="businessEntityContact.businessEntity.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_businessEntityContact.businessEntity.id}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{businessEntityContactList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Contact_id}"/>
+                    <ui:param name="propertyPath" value="businessEntityContact.contact.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_businessEntityContact.contact.id}"/>
+        </h:column>
+        <rich:column styleClass="action">
+            <f:facet name="header">#{messages.Action}</f:facet>
+            <s:link view="/#{empty from ? 'BusinessEntityContact' : from}.xhtml"
+                   value="#{empty from ? messages.View : messages.Select}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="businessEntityContactViewId"
+                      rendered="#{authenticator.validateShowFunction('BusinessEntityContactList.xhtml', 'businessEntityContactViewId')}">
+                <f:param name="businessEntityContactId"
+                        value="#{_businessEntityContact.id}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/BusinessEntityContactEdit.xhtml"
+                   value="#{messages.Edit}"
+             propagation="none"
+                      id="businessEntityContactEdit"
+                rendered="#{empty from and authenticator.validateShowFunction('BusinessEntityContactList.xhtml', 'businessEntityContactEdit') }">
+                <f:param name="businessEntityContactId"
+                        value="#{_businessEntityContact.id}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/BusinessEntityContactList.xhtml"
+            rendered="#{businessEntityContactList.previousExists and authenticator.validateShowFunction('BusinessEntityContactList.xhtml', 'firstPage')}"
+               value="#{messages.left}#{messages.left} #{messages.First_Page}"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/BusinessEntityContactList.xhtml"
+            rendered="#{businessEntityContactList.previousExists and authenticator.validateShowFunction('BusinessEntityContactList.xhtml', 'previousPage')}"
+               value="#{messages.left} #{messages.Previous_Page}"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{businessEntityContactList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/BusinessEntityContactList.xhtml"
+            rendered="#{businessEntityContactList.nextExists and authenticator.validateShowFunction('BusinessEntityContactList.xhtml', 'nextPage')}"
+               value="#{messages.Next_page} #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{businessEntityContactList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/BusinessEntityContactList.xhtml"
+            rendered="#{businessEntityContactList.nextExists and authenticator.validateShowFunction('BusinessEntityContactList.xhtml', 'lastPage')}"
+               value="#{messages.Last_Page} #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{businessEntityContactList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from and authenticator.validateShowFunction('BusinessEntityContactList.xhtml', 'create') }">
+        <s:button view="/BusinessEntityContactEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="#{messages.Create_businessEntityContact}">
+            <f:param name="businessEntityContactId"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

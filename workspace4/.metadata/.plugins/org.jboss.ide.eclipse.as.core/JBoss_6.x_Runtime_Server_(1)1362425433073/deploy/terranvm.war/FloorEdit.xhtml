@@ -1,0 +1,186 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:a="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<h:form id="floor" styleClass="edit">
+
+			<rich:panel>
+				<f:facet name="header">#{floorHome.managed ? messages.Edit : messages.Add} #{messages.Floor}</f:facet>
+
+
+				<s:decorate id="areaApartmentBuildingField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Area_apartment_building}</ui:define>
+					<h:inputText id="areaApartmentBuilding" cols="160" rows="3" required="true" value="#{floorHome.instance.area}" />
+				</s:decorate>
+
+
+				<s:decorate id="floorNumberApartmentBuildingField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Floor_number_apartment_building}</ui:define>
+					<h:inputText id="floorNumberApartmentBuilding" cols="160" rows="3" required="true" value="#{floorHome.instance.floorNumber}" />
+				</s:decorate>
+
+				<div style="clear: both"><span class="required">*</span> #{messages.required_fields}</div>
+
+			</rich:panel>
+
+			<div class="actionButtons"><h:commandButton id="save" value="#{messages.Save}" action="#{floorHome.persist}" disabled="#{!floorHome.wired}" rendered="#{!floorHome.managed}" /> <h:commandButton id="update" value="#{messages.Save}" action="#{floorHome.update}" rendered="#{floorHome.managed}" /> <h:commandButton id="delete" value="#{messages.Delete}" action="#{floorHome.remove}" immediate="true" rendered="#{floorHome.managed}" /> <s:button id="cancelEdit" value="#{messages.Cancel}" propagation="end" view="/Floor.xhtml" rendered="#{floorHome.managed}" /> <s:button id="cancelAdd" value="#{messages.Cancel}" propagation="end" view="/#{empty floorFrom ? 'FloorList' : floorFrom}.xhtml" rendered="#{!floorHome.managed}" /></div>
+		</h:form>
+
+		<rich:tabPanel switchType="ajax">
+
+			<rich:tab label="#{messages.Construction} *" labelClass="required">
+				<div class="association" id="constructionParent"><h:outputText value="#{messages.There_is_no_construction_associated_with_this_floor}" rendered="#{floorHome.instance.construction == null}" /> <rich:dataTable var="_construction" value="#{floorHome.instance.construction}" rendered="#{floorHome.instance.construction != null}" rowClasses="rvgRowOne,rvgRowTwo" id="constructionTable">
+					<h:column>
+						<f:facet name="header">Id</f:facet>
+						<h:outputText value="#{_construction.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Real_property_id}</f:facet>
+						<h:outputText value="#{_construction.realProperty.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Name}</f:facet>
+						<h:outputText value="#{_construction.name}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Description}</f:facet>
+						<h:outputText value="#{_construction.description}" />
+					</h:column>
+				</rich:dataTable>
+
+				<div class="actionButtons"><s:button id="#{floorHome.instance.construction != null ? 'changeParent' : 'selectParent'}" value="#{floorHome.instance.construction != null ? messages.Change : messages.Select} #{messages.Construction}" view="/ConstructionList.xhtml">
+					<f:param name="from" value="FloorEdit" />
+				</s:button></div>
+
+				</div>
+			</rich:tab>
+
+			<rich:tab label="#{messages.Areas}">
+				<h:form styleClass="association" id="areasChildren">
+
+					<h:outputText value="#{messages.There_are_no_areas_associated_with_this_Floor}" rendered="#{empty floorHome.instance.areas}" />
+
+					<rich:dataTable value="#{floorHome.instance.areas}" var="_area" rendered="#{!empty floorHome.instance.areas}" rowClasses="rvgRowOne,rvgRowTwo" id="areasTable">
+						<rich:column sortBy="#{_area.id}">
+							<f:facet name="header">Id</f:facet>
+							<h:outputText value="#{_area.id}" />
+						</rich:column>
+						<rich:column sortBy="#{_area.name}">
+							<f:facet name="header">#{messages.Name}</f:facet>
+							<h:outputText value="#{_area.name}" />
+						</rich:column>
+						<rich:column sortBy="#{_area.area}">
+							<f:facet name="header">#{messages.Area}</f:facet>
+							<h:outputText value="#{_area.area}" />
+						</rich:column>
+					</rich:dataTable>
+
+				</h:form>
+
+				<f:subview rendered="#{floorHome.managed}" id="areas">
+					<div class="actionButtons"><s:button id="addarea" value="#{messages.Add_area}" view="/AreaEdit.xhtml" propagation="none">
+						<f:param name="realPropertyId" value="#{realPropertyHome.instance.id}" />
+						<f:param name="areaFrom" value="RealProperty" />
+					</s:button></div>
+				</f:subview>
+			</rich:tab>
+		</rich:tabPanel>
+	</ui:define>
+	<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:a="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+
+		<ui:define name="body">
+
+			<h:form id="floor" styleClass="edit">
+
+				<rich:panel>
+					<f:facet name="header">#{floorHome.managed ? messages.Edit : messages.Add} #{messages.Floor}</f:facet>
+
+
+					<s:decorate id="areaApartmentBuildingField" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Area_apartment_building}</ui:define>
+						<h:inputText id="areaApartmentBuilding" cols="160" rows="3" required="true" value="#{floorHome.instance.area}" />
+					</s:decorate>
+
+
+					<s:decorate id="floorNumberApartmentBuildingField" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Floor_number_apartment_building}</ui:define>
+						<h:inputText id="floorNumberApartmentBuilding" cols="160" rows="3" required="true" value="#{floorHome.instance.floorNumber}" />
+					</s:decorate>
+
+					<div style="clear: both"><span class="required">*</span> #{messages.required_fields}</div>
+
+				</rich:panel>
+
+				<div class="actionButtons">
+					<h:commandButton id="save" value="#{messages.Save}" action="#{floorHome.persist}" disabled="#{!floorHome.wired}" rendered="#{!floorHome.managed}" />
+					<h:commandButton id="update" value="#{messages.Save}" action="#{floorHome.update}" rendered="#{floorHome.managed}" />
+					<h:commandButton id="delete" value="#{messages.Delete}" action="#{floorHome.remove}" immediate="true" rendered="#{floorHome.managed}" />
+					<s:button id="cancelEdit" value="#{messages.Cancel}" propagation="end" view="/Floor.xhtml" rendered="#{floorHome.managed}" />
+					<s:button id="cancelAdd" value="#{messages.Cancel}" propagation="end" view="/#{empty floorFrom ? 'FloorList' : floorFrom}.xhtml" rendered="#{!floorHome.managed}" />
+				</div>
+			</h:form>
+
+			<rich:tabPanel switchType="ajax">
+
+				<rich:tab label="#{messages.Construction} *" labelClass="required">
+					<div class="association" id="constructionParent"><h:outputText value="#{messages.There_is_no_construction_associated_with_this_floor}" rendered="#{floorHome.instance.construction == null}" /> <rich:dataTable var="_construction" value="#{floorHome.instance.construction}" rendered="#{floorHome.instance.construction != null}" rowClasses="rvgRowOne,rvgRowTwo" id="constructionTable">
+						<h:column>
+							<f:facet name="header">Id</f:facet>
+							<h:outputText value="#{_construction.id}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Real_property_id}</f:facet>
+							<h:outputText value="#{_construction.realProperty.id}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Name}</f:facet>
+							<h:outputText value="#{_construction.name}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Description}</f:facet>
+							<h:outputText value="#{_construction.description}" />
+						</h:column>
+					</rich:dataTable>
+
+					<div class="actionButtons"><s:button id="#{floorHome.instance.construction != null ? 'changeParent' : 'selectParent'}" value="#{floorHome.instance.construction != null ? 'Cambiar' : 'Seleccionar'} #{messages.Construction}" view="/ConstructionList.xhtml">
+						<f:param name="from" value="FloorEdit" />
+					</s:button></div>
+
+					</div>
+				</rich:tab>
+
+				<rich:tab label="#{messages.Areas}">
+					<h:form styleClass="association" id="areasChildren">
+
+						<h:outputText value="#{messages.There_are_no_areas_associated_with_this_Floor}" rendered="#{empty floorHome.instance.areas}" />
+
+						<rich:dataTable value="#{floorHome.instance.areas}" var="_area" rendered="#{!empty floorHome.instance.areas}" rowClasses="rvgRowOne,rvgRowTwo" id="areasTable">
+							<rich:column sortBy="#{_area.id}">
+								<f:facet name="header">Id</f:facet>
+								<h:outputText value="#{_area.id}" />
+							</rich:column>
+							<rich:column sortBy="#{_area.name}">
+								<f:facet name="header">#{messages.Name}</f:facet>
+								<h:outputText value="#{_area.name}" />
+							</rich:column>
+							<rich:column sortBy="#{_area.area}">
+								<f:facet name="header">#{messages.Area}</f:facet>
+								<h:outputText value="#{_area.area}" />
+							</rich:column>
+						</rich:dataTable>
+
+					</h:form>
+
+					<f:subview rendered="#{floorHome.managed}" id="areas">
+						<div class="actionButtons"><s:button id="addarea" value="#{messages.Add_area}" view="/AreaEdit.xhtml" propagation="none">
+							<f:param name="floorId" value="#{floorHome.instance.id}" />
+							<f:param name="from" value="FloorEdit" />
+						</s:button></div>
+					</f:subview>
+				</rich:tab>
+			</rich:tabPanel>
+		</ui:define>
+	</ui:composition>
+</ui:composition>

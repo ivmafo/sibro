@@ -1,0 +1,264 @@
+
+<rich:toolBar xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:rich="http://richfaces.org/rich" xmlns:a4j="http://richfaces.org/a4j">
+	<rich:toolBarGroup location="left" style="width:25%;">
+		<a4j:status id="a4jStatusGlobal" style="text-align:center;" startStyle="
+   				position: fixed;
+   				top: 0px;
+  				 margin-left: 48% ;
+  				  margin-right: 48% ;
+ 				 z-index: 1000;
+ 				 display: block;
+  				 width: 55px;
+  				 height:15px;">
+			<f:facet name="start">
+				<h:graphicImage width="100%" value="img/ajax-loader.gif" />
+			</f:facet>
+		</a4j:status>   
+	</rich:toolBarGroup>
+	<rich:toolBarGroup>
+		<!--		<h:outputText value="#{projectName}:" />-->
+		<s:link id="menuHomeId" view="/home.xhtml" value="#{messages.Home}" propagation="none" rendered="#{identity.loggedIn}"/>
+	</rich:toolBarGroup>
+
+	<rich:dropDownMenu showDelay="250" hideDelay="0" submitMode="none" rendered="#{identity.loggedIn}">
+		<f:facet name="label">#{messages.Organizational_Structure}</f:facet>
+		<rich:menuItem rendered="#{authenticator.validateShowPage('BusinessEntityList.xhtml')}">
+			<s:link view="/BusinessEntityList.xhtml" value="#{messages.BusinessEntity_List}" id="BusinessEntityId" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		<rich:menuItem rendered="#{authenticator.validateShowPage('BusinessLineList.xhtml')}">
+			<s:link view="/BusinessLineList.xhtml" value="#{messages.BusinessLine_List}" id="BusinessLineId" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		<rich:menuItem rendered="#{authenticator.validateShowPage('ProjectList.xhtml')}">
+			<s:link view="/ProjectList.xhtml" value="#{messages.Project_List}" id="ProjectId" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		<rich:menuItem rendered="#{authenticator.validateShowPage('ContactList.xhtml')}">
+			<s:link view="/ContactList.xhtml" value="#{messages.Contact_List}" id="ContactId" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		<rich:menuItem rendered="#{authenticator.validateShowPage('EconomicActivityList.xhtml')}">
+			<s:link view="/EconomicActivityList.xhtml" value="#{messages.EconomicActivity_List}" id="EconomicActivityId" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		
+	</rich:dropDownMenu>
+
+	<rich:dropDownMenu showDelay="250" hideDelay="0" submitMode="none" rendered="#{identity.loggedIn}">
+		<f:facet name="label">#{messages.Properties}</f:facet>
+		<rich:menuItem rendered="#{authenticator.validateShowPage('RealPropertyList.xhtml')}">
+			<s:link view="/RealPropertyList.xhtml" value="#{messages.RealProperty_List}" id="RealPropertyId" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+
+		<rich:menuItem rendered="#{authenticator.validateShowPage('LegalNatureOfPropertyList.xhtml')}">
+			<s:link view="/LegalNatureOfPropertyList.xhtml" value="#{messages.LegalNatureOfProperty_List}" id="LegalNatureOfPropertyId" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		<rich:menuItem rendered="#{authenticator.validateShowPage('RealPropertyUseTypeList.xhtml')}">
+			<s:link view="/RealPropertyUseTypeList.xhtml" value="#{messages.RealPropertyUseType_List}" id="RealPropertyUseTypeId" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		
+		<rich:menuItem rendered="#{authenticator.validateShowPage('RentableUnitOwnerLesseeList.xhtml')}">
+			<s:link view="/RentableUnitOwnerLesseeList.xhtml" value="#{messages.Owner_Lessee_assigning_rentable_unit}" id="RentableUnitOwnerLesseeid" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		
+
+		<rich:menuItem rendered="#{authenticator.validateShowPage('ConstructionLicensesList.xhtml')}">
+			<s:link view="/ConstructionLicensesList.xhtml" value="#{messages.ConstructionLicenses_List}" id="ConstructionLicensesId" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+
+		<rich:menuItem rendered="#{authenticator.validateShowPage('SegmentStageList.xhtml')}">
+			<s:link view="/SegmentStageList.xhtml" value="#{messages.SegmentStage_List}" id="SegmentStageId" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+
+	</rich:dropDownMenu>
+
+	<rich:dropDownMenu showDelay="250" hideDelay="0" submitMode="none" rendered="#{identity.loggedIn}">
+		<f:facet name="label">#{messages.Billing}</f:facet>
+		<rich:menuItem rendered="#{authenticator.validateShowPage('ProjectPropertyList.xhtml')}">
+			<s:link view="/ProjectPropertyList.xhtml" value="#{messages.ProjectProperty_List}" id="ProjectPropertyId" includePageParams="false" propagation="none" />
+		</rich:menuItem>		
+		<rich:menuItem rendered="#{authenticator.validateShowPage('SalesListTab.xhtml')}">
+			<s:link view="/SalesListTab.xhtml" value="Asignar Ventas" id="SalesListTabid" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		
+		<rich:menuItem rendered="#{authenticator.validateShowPage('RentRuleList.xhtml')}">
+			<s:link view="/RentRuleList.xhtml" value="#{messages.RentRule_List}" id="RentRuleId" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		<rich:menuItem rendered="#{authenticator.validateShowPage('BillingResolutionList.xhtml')}">
+			<s:link view="/BillingResolutionList.xhtml" value="#{messages.BillingResolution_List}" id="BillingResolutionId" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		<rich:menuItem rendered="#{authenticator.validateShowPage('BillLesseeConditionList.xhtml')}">
+			<s:link view="/BillLesseeConditionList.xhtml" value="#{messages.BillLesseeCondition_List}" id="BillLesseeConditionId" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		<rich:menuItem rendered="#{authenticator.validateShowPage('BillOwnerConditionList.xhtml')}">
+			<s:link view="/BillOwnerConditionList.xhtml" value="#{messages.BillOwnerCondition_List}" id="BillOwnerConditionId" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		<rich:menuItem rendered="#{authenticator.validateShowPage('InvoiceList.xhtml')}">
+			<s:link view="/InvoiceList.xhtml" value="#{messages.Invoice_Lists}" id="InvoiceId" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+
+		<rich:menuItem rendered="#{authenticator.validateShowPage('CounterConfigurationTamplateList.xhtml')}">
+			<s:link view="/CounterConfigurationTamplateList.xhtml"  value="#{messages.Counter_Template_List}"  id="CounterTempId" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		
+		<rich:menuItem rendered="#{authenticator.validateShowPage('ConcepTemplateList.xhtml')}"> 
+			<s:link view="/ConcepTemplateList.xhtml" value="#{messages.Concep_Template_List}" id="ConcepTempId" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		
+		
+		<rich:menuItem rendered="#{authenticator.validateShowPage('Ipcs.xhtml')}">
+			<s:link view="/Ipcs.xhtml" value="#{messages.Ipc_Configuration}" id="ipc_config" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		<rich:menuItem rendered="#{authenticator.validateShowPage('MinimunWageList.xhtml')}">
+		<s:link view="/MinimunWageList.xhtml" value="#{messages.Minimun_wage}" id="minimun_wage" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		<rich:menuItem rendered="#{authenticator.validateShowPage('RevertOldInvoices.xhtml')}">
+			<s:link view="/RevertOldInvoices.xhtml" value="#{messages.revert_old_inovices}" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+
+		<rich:menuItem rendered="#{authenticator.validateShowPage('RetentionRateAccount.xhtml')}">
+			<s:link view="/RetentionRateAccount.xhtml" value="#{messages.Ledger_Accounts_Config}" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		
+		<rich:menuItem  rendered="#{authenticator.validateShowPage('BillingList.xhtml')}" >
+			<s:link view="/BillingList.xhtml" value="#{messages.Billing}"  includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		
+		<rich:menuItem  rendered="#{authenticator.validateShowPage('UsuryRateEdit.xhtml')}" >
+			<s:link view="/UsuryRateEdit.xhtml" value="#{messages.UsuryRate}"  includePageParams="false" propagation="begin">
+				<f:param name="usuryRateId" value="#{usuryRateHome.returnId()}"></f:param>
+			</s:link>
+		</rich:menuItem>
+		
+		<rich:menuItem ajaxSingle="true" rendered="#{authenticator.validateShowPage('CreditNotes.xhtml')}"  >
+				<s:link view="/CreditNotes.xhtml" value="#{messages.Credit_Notes}" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		
+		<rich:menuItem ajaxSingle="true" rendered="#{authenticator.validateShowPage('InvoiceProcesorManual.xhtml')}"  >
+				<s:link view="/InvoiceProcesorManual.xhtml" value="#{messages.Cron_Job}" includePageParams="false" propagation="none" />
+		</rich:menuItem> 
+		
+		
+		
+	</rich:dropDownMenu>
+
+	<rich:dropDownMenu showDelay="250" hideDelay="0" submitMode="none" rendered="#{identity.loggedIn}">
+		<f:facet name="label">#{messages.Others}</f:facet>
+
+		<rich:menuItem rendered="#{authenticator.validateShowPage('PhoneNumberList.xhtml')}">
+			<s:link view="/PhoneNumberList.xhtml" value="#{messages.PhoneNumber_List}" id="PhoneNumberId" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		<rich:menuItem rendered="#{authenticator.validateShowPage('AddressList.xhtml')}">
+			<s:link view="/AddressList.xhtml" value="#{messages.Address_List}" id="AddressId" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		<rich:menuItem rendered="#{authenticator.validateShowPage('CityList.xhtml')}">
+			<s:link view="/CityList.xhtml" value="#{messages.City_List}" id="CityId" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		<rich:menuItem rendered="#{authenticator.validateShowPage('RegionList.xhtml')}">
+			<s:link view="/RegionList.xhtml" value="#{messages.Region_List}" id="RegionId" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		<rich:menuItem rendered="#{authenticator.validateShowPage('CountryList.xhtml')}">
+			<s:link view="/CountryList.xhtml" value="#{messages.Country_List}" id="CountryId" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		<rich:menuItem rendered="#{authenticator.validateShowPage('MakerCheckerList.xhtml')}">
+			<s:link view="/MakerCheckerList.xhtml" value="#{messages.Maker_Checker_List}" id="MakerCheckerId" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		<rich:menuItem rendered="#{authenticator.validateShowPage('MakerCheckerProjectList.xhtml')}">
+			<s:link view="/MakerCheckerProjectList.xhtml" value="#{messages.Maker_Checker_Project}" id="MakerCheckerProject" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		<rich:menuItem rendered="#{authenticator.validateShowPage('MakerCheckerBusinessLineList.xhtml')}">
+			<s:link view="/MakerCheckerBusinessLineList.xhtml" value="#{messages.Maker_Checker_BusinessLine}" id="MakerCheckerBusinessLine" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		<rich:menuItem rendered="#{authenticator.validateShowPage('MakerCheckerBusinessEntityList.xhtml')}">
+			<s:link view="/MakerCheckerBusinessEntityList.xhtml" value="#{messages.Maker_Checker_BusinessEntity}" id="MakerCheckerBusinessEntity" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		<rich:menuItem rendered="#{authenticator.validateShowPage('MakerCheckerRealPropertyList.xhtml')}">
+			<s:link view="/MakerCheckerRealPropertyList.xhtml" value="#{messages.Maker_Checker_RealProperty}" id="MakerCheckerRealProperty" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+
+		<rich:menuItem rendered="#{authenticator.validateShowPage('MakerCheckerProjectPropertyList.xhtml')}">
+			<s:link view="/MakerCheckerProjectPropertyList.xhtml" value="#{messages.Maker_Checker_Project_Property_Counter}" id="MakerCheckerProjectProperty" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		
+		<rich:menuItem rendered="#{authenticator.validateShowPage('SystemVariableList.xhtml')}">
+			<s:link view="/SystemVariableList.xhtml" value="#{messages.System_variable}" id="SystemVariable" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		
+		<rich:menuItem rendered="#{authenticator.validateShowPage('UserTerranvmList.xhtml')}">
+			<s:link view="/UserTerranvmList.xhtml" value="#{messages.Users}" id="Users" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		
+		<rich:menuItem rendered="#{authenticator.validateShowPage('MakerCheckerCreditNotesList.xhtml')}">
+			<s:link view="/MakerCheckerCreditNotesList.xhtml" value="Aprobacion Nota Credito" id="makerCheckerCreditNotesList" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		
+		<rich:menuItem rendered="#{identity.loggedIn}" >
+			<s:link view="/ChangePasswordEdit.xhtml" value="Cambiar Contraseña" id="changePassword" includePageParams="false" propagation="none" >
+				<f:param name="userTerranvmId" value="#{user.id}"></f:param>
+			</s:link>
+		</rich:menuItem>
+		
+		<rich:menuItem rendered="#{identity.loggedIn}" >
+			<s:link view="/Reports.xhtml" value="Reportes" id="menuItemReports" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		
+
+	</rich:dropDownMenu>
+
+	<rich:dropDownMenu showDelay="250" hideDelay="0" submitMode="none" rendered="#{identity.loggedIn}">
+		<f:facet name="label">#{messages.recover}</f:facet>
+		<rich:menuItem ajaxSingle="true" rendered="#{authenticator.validateShowPage('RecoverManual.xhtml')}">
+			<s:link view="/RecoverManual.xhtml" value="#{messages.recover_manual}" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		
+		<rich:menuItem ajaxSingle="true" rendered="#{authenticator.validateShowPage('RecoverAutomatic.xhtml')}">
+			<s:link view="/RecoverAutomatic.xhtml" value="#{messages.recover_automatic}" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		
+		<rich:menuItem ajaxSingle="true" rendered="#{authenticator.validateShowPage('Collection.xhtml')}" >
+			<s:link view="/Collection.xhtml" value="#{messages.Close_Recover}" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		
+		<rich:menuItem ajaxSingle="true" rendered="#{authenticator.validateShowPage('PortafolioPenalty.xhtml')}" >
+			<s:link view="/PortafolioPenalty.xhtml" value="#{messages.portafolioPenalty}" includePageParams="false" propagation="none" />
+		</rich:menuItem>
+		
+
+	</rich:dropDownMenu>
+	
+	<rich:toolBarGroup style="width:25%" location="right">
+		<div style="width: 100%">
+			<h:outputLabel value="#{' '}" style="width:100%" rendered="#{not identity.loggedIn}" />
+			<h:form rendered="#{identity.loggedIn}">
+				<script type="text/javascript">
+					function reload(){
+						 window.location = "home.seam"
+					}
+				</script>
+				<table style="width: 100%; text-align: center;">
+					<tr>
+						<td>
+							<h:panelGrid columns="2" style="width: 100%; text-align: right;">
+								<h:outputText id="menuWelcomeId" value="#{authenticator.name1}" rendered="#{identity.loggedIn}" />
+								<a4j:form>
+									<s:link id="menuLogoutId" view="/home.xhtml" action="#{identity.logout}" value="#{messages.Logout}" rendered="#{identity.loggedIn}" propagation="none"/>
+								</a4j:form>
+							</h:panelGrid>
+							<br />
+						</td>
+					</tr>
+					<tr>
+						<td>
+					    	<h:outputText value="#{authenticator.Entity()}" />
+						</td>
+					</tr>
+					
+					<tr>
+						<td>
+						<h:selectOneMenu id="projectFilterField" value="#{projectFilter}">
+							<f:selectItems value="#{projectsFilter}" />
+							<a4j:support event="onchange" ajaxSingle="true" ignoreDupResponses="true" oncomplete="reload()" />
+						</h:selectOneMenu>
+						</td>
+					</tr>
+				</table>
+			</h:form>
+		</div>
+	</rich:toolBarGroup>
+</rich:toolBar>

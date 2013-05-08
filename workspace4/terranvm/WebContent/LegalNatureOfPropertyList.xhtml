@@ -1,0 +1,157 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="legalNatureOfPropertySearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="#{messages.LegalNatureOfProperty_Search_Filter}" switchType="ajax">
+        
+        <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">#{messages.Name}</ui:define>
+                <h:inputText id="name" value="#{legalNatureOfPropertyList.legalNatureOfProperty.name}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">#{messages.Description}</ui:define>
+                <h:inputText id="description" value="#{legalNatureOfPropertyList.legalNatureOfProperty.description}"/>
+            </s:decorate>
+
+            
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">#{messages.Match}</ui:define>
+                <h:selectOneRadio id="logic" value="#{legalNatureOfPropertyList.restrictionLogicOperator}" styleClass="radio">
+                    <f:selectItem itemLabel="#{messages.All}" itemValue="and"/>
+                    <f:selectItem itemLabel="#{messages.Any}" itemValue="or"/>
+                </h:selectOneRadio>
+            </s:decorate>
+
+        </rich:simpleTogglePanel>
+
+        <div class="actionButtons">
+            <h:commandButton id="search" value="#{messages.Search}" action="/LegalNatureOfPropertyList.xhtml"/>
+            <s:button id="reset" value="#{messages.Reset}" includePageParams="false"/>
+        </div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">#{messages.Search_Results} (#{empty legalNatureOfPropertyList.resultList ? 0 : (legalNatureOfPropertyList.paginated ? legalNatureOfPropertyList.resultCount : legalNatureOfPropertyList.resultList.size)})</f:facet>
+    <div class="results" id="legalNatureOfPropertyList">
+
+    <h:outputText value="#{messages.search_returned_no_results}"
+               rendered="#{empty legalNatureOfPropertyList.resultList}"/>
+
+    <rich:dataTable id="legalNatureOfPropertyList"
+                var="_legalNatureOfProperty"
+              value="#{legalNatureOfPropertyList.resultList}"
+           rendered="#{not empty legalNatureOfPropertyList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{legalNatureOfPropertyList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Id}"/>
+                    <ui:param name="propertyPath" value="legalNatureOfProperty.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_legalNatureOfProperty.id}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{legalNatureOfPropertyList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Name}"/>
+                    <ui:param name="propertyPath" value="legalNatureOfProperty.name"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_legalNatureOfProperty.name}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{legalNatureOfPropertyList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Description}"/>
+                    <ui:param name="propertyPath" value="legalNatureOfProperty.description"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_legalNatureOfProperty.description}"/>
+        </h:column>
+        <rich:column styleClass="action">
+         <f:facet name="header">#{messages.Action}</f:facet>
+         <table><tr><td>
+            <s:link view="/#{empty from ? 'LegalNatureOfProperty' : from}.xhtml"
+                   value="#{empty from ? messages.View : messages.Select}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="legalNatureOfPropertyViewId">
+                <f:param name="legalNatureOfPropertyId"
+                        value="#{_legalNatureOfProperty.id}"/>
+            </s:link></td>
+            <td>#{' '}</td>
+            <td><div id="editButton#{_legalNatureOfProperty.id}"><s:link view="/LegalNatureOfPropertyEdit.xhtml"
+                   value="#{messages.Edit}"
+             propagation="none"
+                      id="legalNatureOfPropertyEdit"
+                rendered="#{empty from}">
+                <f:param name="legalNatureOfPropertyId" value="#{_legalNatureOfProperty.id}"/> </s:link>
+                </div>
+                </td></tr></table>
+               </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/LegalNatureOfPropertyList.xhtml"
+            rendered="#{legalNatureOfPropertyList.previousExists}"
+               value="#{messages.left}#{messages.left} #{messages.First_Page}"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/LegalNatureOfPropertyList.xhtml"
+            rendered="#{legalNatureOfPropertyList.previousExists}"
+               value="#{messages.left} #{messages.Previous_Page}"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{legalNatureOfPropertyList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/LegalNatureOfPropertyList.xhtml"
+            rendered="#{legalNatureOfPropertyList.nextExists}"
+               value="#{messages.Next_page} #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{legalNatureOfPropertyList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/LegalNatureOfPropertyList.xhtml"
+            rendered="#{legalNatureOfPropertyList.nextExists}"
+               value="#{messages.Last_Page} #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{legalNatureOfPropertyList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/LegalNatureOfPropertyEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="#{messages.Create_legalNatureOfProperty}">
+            <f:param name="legalNatureOfPropertyId"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

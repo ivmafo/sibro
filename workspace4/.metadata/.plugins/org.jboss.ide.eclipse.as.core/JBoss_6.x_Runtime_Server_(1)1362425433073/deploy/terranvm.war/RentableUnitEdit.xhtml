@@ -1,0 +1,138 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:a="http://richfaces.org/a4j" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<h:form id="rentableUnit" styleClass="edit">
+
+			<rich:panel>
+				<f:facet name="header">#{rentableUnitHome.managed ? 'Edit' : 'Add'} Rentable unit</f:facet>
+
+
+				<s:decorate id="nameField" template="layout/edit.xhtml">
+					<ui:define name="label">Nombre</ui:define>
+					<h:inputTextarea id="name" cols="30" rows="1" required="true" value="#{rentableUnitHome.instance.name}"  />
+				</s:decorate>
+
+				<s:decorate id="metersField" template="layout/edit.xhtml">
+					<ui:define name="label">area (mts²)</ui:define>
+					<h:inputText value="#{rentableUnitHome.instance.meters}" required="true" />
+				</s:decorate>
+				
+				
+				<s:decorate id="rentableType" template="layout/edit.xhtml">
+					<ui:define name="label">Tipos de Unidades Arrendables</ui:define>
+					<a4j:region id="rentableTypeUnit">
+						<h:selectOneMenu value="#{rentableUnitHome.instance.rentableUnitType}">
+							<s:selectItems value="#{rentableUnitHome.rentableUnitType}" var="types"  label="#{types.types}"></s:selectItems>
+							<s:convertEntity></s:convertEntity>
+							<a4j:support ajaxSingle="true" event="onchange" disableDefault="true" ></a4j:support>
+						</h:selectOneMenu>
+					</a4j:region>
+				</s:decorate>
+				
+				
+				
+				<a4j:region id="areaSelector">
+					<s:decorate id="realPropertyCombo2" template="layout/edit.xhtml">
+						<ui:define name="label">Inmueble</ui:define>
+						<h:selectOneMenu value="#{rentableUnitHome.selectedRealProperty}" required="true">
+							<s:selectItems value="#{rentableUnitHome.realProperties}" var="realP" label="#{realP.nameProperty}" />
+							<s:convertEntity></s:convertEntity>
+							<a4j:support event="onchange" disableDefault="true" ajaxSingle="true" reRender="save,constructionCombo,floorCombo,areaCombo" />
+						</h:selectOneMenu>
+					</s:decorate>
+					<a4j:outputPanel ajaxRendered="true" id="constructionContainer">
+						<s:decorate id="constructionCombo" template="layout/edit.xhtml">
+							<ui:define name="label">Construccion</ui:define>
+							<h:selectOneMenu  required="true" value="#{rentableUnitHome.selectedConstruction}" disabled="#{empty rentableUnitHome.selectedRealProperty.constructions}">
+								<s:selectItems value="#{rentableUnitHome.selectedRealProperty.constructions}" var="construction" label="#{construction.name}" />
+								<s:convertEntity></s:convertEntity>
+								<a4j:support event="onchange" disableDefault="true" ajaxSingle="true" reRender="save,floorCombo,areaCombo" />
+							</h:selectOneMenu>
+						</s:decorate>
+					</a4j:outputPanel>
+					<a4j:outputPanel ajaxRendered="true" id="floorContainer">
+						<s:decorate id="floorCombo" template="layout/edit.xhtml">
+							<ui:define name="label">Piso</ui:define>
+							<h:selectOneMenu required="true" value="#{rentableUnitHome.selectedFloor}" disabled="#{empty rentableUnitHome.selectedConstruction.floors}">
+								<s:selectItems  value="#{rentableUnitHome.selectedConstruction.floors}" var="floor" label="#{floor.floorNumber}" />
+								<s:convertEntity></s:convertEntity>
+								<a4j:support event="onchange" disableDefault="true" ajaxSingle="true" reRender="save,areaCombo" />
+							</h:selectOneMenu>
+						</s:decorate>
+					</a4j:outputPanel>
+					<a4j:outputPanel ajaxRendered="true" id="areaContainer">
+						<s:decorate id="areaCombo" template="layout/edit.xhtml">
+							<ui:define name="label">Area</ui:define>
+							<h:selectOneMenu required="true" value="#{rentableUnitHome.instance.area}" disabled="#{empty rentableUnitHome.selectedFloor.areas}">
+								<s:selectItems value="#{rentableUnitHome.selectedFloor.areas}" var="area" label="#{area.name}" />
+								<s:convertEntity></s:convertEntity>
+								<a4j:support event="onchange" disableDefault="true" ajaxSingle="true" reRender="save" />
+							</h:selectOneMenu>
+						</s:decorate>
+					</a4j:outputPanel>
+				</a4j:region>
+
+
+
+
+				<div style="clear: both"><span class="required">*</span> required fields</div>
+
+			</rich:panel>
+
+			<div class="actionButtons" >
+				<h:commandButton id="save" value="Save" action="#{rentableUnitHome.persist}" disabled="#{!rentableUnitHome.wired}" rendered="#{!rentableUnitHome.managed}" />
+				<h:commandButton id="update" value="Save" action="#{rentableUnitHome.update}" rendered="#{rentableUnitHome.managed}" />
+				<h:commandButton id="delete" value="Delete" action="#{rentableUnitHome.remove}" immediate="true" rendered="#{rentableUnitHome.managed}" />
+				<s:button id="cancelEdit" value="Cancel" propagation="end" view="/RentableUnit.xhtml" rendered="#{rentableUnitHome.managed}" />
+				<s:button id="cancelAdd" value="Cancel" propagation="end" view="/#{empty rentableUnitFrom ? 'RentableUnitList' : rentableUnitFrom}.xhtml" rendered="#{!rentableUnitHome.managed}" />
+			</div>
+		</h:form>
+
+		<rich:tabPanel switchType="ajax">
+
+			<rich:tab label="Rentable unit">
+				<div class="association" id="rentableUnitParent"><h:outputText value="There is no rentableUnit associated with this rentableUnit." rendered="#{rentableUnitHome.instance.rentableUnit == null}" /> <rich:dataTable var="_rentableUnit" value="#{rentableUnitHome.instance.rentableUnit}" rendered="#{rentableUnitHome.instance.rentableUnit != null}" rowClasses="rvgRowOne,rvgRowTwo" id="rentableUnitTable">
+					<h:column>
+						<f:facet name="header">Id</f:facet>
+						<h:outputText value="#{_rentableUnit.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Rentable unit id</f:facet>
+						<h:outputText value="#{_rentableUnit.rentableUnit.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">Area id</f:facet>
+						<h:outputText value="#{_rentableUnit.area.id}" />
+					</h:column>
+				</rich:dataTable></div>
+			</rich:tab>
+
+			<rich:tab label="Rentable units">
+				<h:form styleClass="association" id="rentableUnitsChildren">
+
+					<h:outputText value="There are no rentableUnits associated with this rentableUnit." rendered="#{empty rentableUnitHome.rentableUnits}" />
+
+					<rich:dataTable value="#{rentableUnitHome.rentableUnits}" var="_rentableUnit" rendered="#{not empty rentableUnitHome.rentableUnits}" rowClasses="rvgRowOne,rvgRowTwo" id="rentableUnitsTable">
+						<rich:column sortBy="#{_rentableUnit.id}">
+							<f:facet name="header">Id</f:facet>
+							<h:outputText value="#{_rentableUnit.id}" />
+						</rich:column>
+					</rich:dataTable>
+
+				</h:form>
+
+				<f:subview rendered="#{rentableUnitHome.managed}" id="rentableUnits">
+					<div class="actionButtons"><s:button id="addrentableUnit" value="Add rentableUnit" view="/RentableUnitEdit.xhtml" propagation="none">
+						<f:param name="rentableUnitId" value="#{rentableUnitHome.instance.id}" />
+						<f:param name="rentableUnitFrom" value="RentableUnit" />
+					</s:button></div>
+				</f:subview>
+			</rich:tab>
+
+		</rich:tabPanel>
+	</ui:define>
+
+</ui:composition>

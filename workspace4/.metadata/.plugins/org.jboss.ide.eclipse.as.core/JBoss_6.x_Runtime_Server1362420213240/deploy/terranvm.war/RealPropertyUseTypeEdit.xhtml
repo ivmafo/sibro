@@ -1,0 +1,150 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="realPropertyUseType" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{realPropertyUseTypeHome.managed ? messages.Edit : messages.Add} #{messages.Real_property_use_type}</f:facet>
+
+
+            <s:decorate id="nameField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Name}</ui:define>
+                <h:inputTextarea id="name"
+                               cols="35"
+                               rows="1"
+                           required="true"
+                              value="#{realPropertyUseTypeHome.instance.name}"/>
+            </s:decorate>
+
+
+            <s:decorate id="descriptionField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Description}</ui:define>
+                <h:inputTextarea id="description"
+                               cols="60"
+                               rows="2"
+                              value="#{realPropertyUseTypeHome.instance.description}"/>
+            </s:decorate>
+
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                #{messages.required_fields}
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="#{messages.Save}"
+                         action="#{realPropertyUseTypeHome.persist}"
+                       disabled="#{!realPropertyUseTypeHome.wired}"
+                       rendered="#{!realPropertyUseTypeHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="#{messages.Save}"
+                         action="#{realPropertyUseTypeHome.update}"
+                       rendered="#{realPropertyUseTypeHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="#{messages.Delete}"
+                         action="#{realPropertyUseTypeHome.remove}"
+                      immediate="true"
+                       rendered="false or #{realPropertyUseTypeHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="#{messages.Cancel}"
+             propagation="end"
+                    view="/RealPropertyUseType.xhtml"
+                rendered="#{realPropertyUseTypeHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="#{messages.Cancel}"
+             propagation="end"
+                    view="/#{empty realPropertyUseTypeFrom ? 'RealPropertyUseTypeList' : realPropertyUseTypeFrom}.xhtml"
+                rendered="#{!realPropertyUseTypeHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="#{messages.Real_properties}">
+        <h:form styleClass="association" id="realPropertiesChildren">
+
+            <h:outputText value="#{messages.There_are_no_realProperties_associated_with_this_realPropertyUseType}"
+                       rendered="#{empty realPropertyUseTypeHome.realProperties}"/>
+
+            <rich:dataTable value="#{realPropertyUseTypeHome.realProperties}"
+                           var="_realProperty"
+                      rendered="#{not empty realPropertyUseTypeHome.realProperties}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="realPropertiesTable">
+                <rich:column sortBy="#{_realProperty.id}">
+                    <f:facet name="header">Id</f:facet>
+                    <h:outputText value="#{_realProperty.id}"/>
+                </rich:column>
+                <rich:column sortBy="#{_realProperty.nameProperty}">
+                    <f:facet name="header">#{messages.Name}</f:facet>
+                    <h:outputText value="#{_realProperty.nameProperty}"/>
+                </rich:column>
+                <rich:column sortBy="#{_realProperty.yearBuilt}">
+                    <f:facet name="header">#{messages.Year_built}</f:facet>
+                    <h:outputText value="#{_realProperty.yearBuilt}">
+                        <s:convertDateTime type="date" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_realProperty.constructionLicenses}">
+                    <f:facet name="header">#{messages.Construction_license}</f:facet>
+                    <h:outputText value="#{_realProperty.constructionLicenseses}"/>
+                </rich:column>
+                
+                <rich:column sortBy="#{_realProperty.enrolmentNumber}">
+                    <f:facet name="header">#{messages.Enrolment_number}</f:facet>
+                    <h:outputText value="#{_realProperty.enrolmentNumber}"/>
+                </rich:column>
+                <rich:column sortBy="#{_realProperty.purchaseDate}">
+                    <f:facet name="header">#{messages.Purchase_date}</f:facet>
+                    <h:outputText value="#{_realProperty.purchaseDate}">
+                        <s:convertDateTime type="date" dateStyle="short"/>
+                    </h:outputText>
+                </rich:column>
+                <rich:column sortBy="#{_realProperty.totalSurfaceArea}">
+                    <f:facet name="header">#{messages.Total_surface_area}</f:facet>
+                    <h:outputText value="#{_realProperty.totalSurfaceArea}"/>
+                </rich:column>
+                <rich:column sortBy="#{_realProperty.cadastralId}">
+                    <f:facet name="header">#{messages.Cadastral_id}</f:facet>
+                    <h:outputText value="#{_realProperty.cadastralId}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{realPropertyUseTypeHome.managed}" id="realProperties">
+        <div class="actionButtons">
+            <s:button id="addrealProperty"
+                   value="#{messages.Add_realProperty}"
+                    view="/RealPropertyEdit.xhtml"
+             propagation="none">
+                 <f:param name="realPropertyUseTypeId"
+                         value="#{realPropertyUseTypeHome.instance.id}"/>
+                 <f:param name="realPropertyFrom" value="RealPropertyUseType"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

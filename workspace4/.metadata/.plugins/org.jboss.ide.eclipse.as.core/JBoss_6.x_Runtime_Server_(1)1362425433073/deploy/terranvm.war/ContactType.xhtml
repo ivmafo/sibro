@@ -1,0 +1,101 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">#{messages.Contact_type_Details}</f:facet>
+
+        <s:decorate id="id" template="layout/display.xhtml">
+            <ui:define name="label">Id</ui:define>
+            <h:outputText value="#{contactTypeHome.instance.id}"/>
+        </s:decorate>
+
+        <s:decorate id="name" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Name}</ui:define>
+            <h:outputText value="#{contactTypeHome.instance.name}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/ContactTypeEdit.xhtml"
+                    id="edit"
+                 value="#{messages.Edit}"/>
+
+        <s:button view="/#{empty contactTypeFrom ? 'ContactTypeList' : contactTypeFrom}.xhtml"
+                    id="done"
+                 value="#{messages.Done}"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>#{messages.Contact}</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="contactsChildren">
+
+        <h:outputText value="#{messages.There_are_no_contacts_associated_with_this_contactType}"
+                   rendered="#{empty contactTypeHome.contacts}"/>
+
+        <rich:dataTable value="#{contactTypeHome.contacts}"
+                       var="_contact"
+                  rendered="#{not empty contactTypeHome.contacts}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="contactsTable">
+            <rich:column sortBy="#{_contact.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_contact.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_contact.firstName}">
+                <f:facet name="header">#{messages.First_name}</f:facet>
+                <h:outputText value="#{_contact.firstName}"/>
+            </rich:column>
+            <rich:column sortBy="#{_contact.lastName}">
+                <f:facet name="header">#{messages.Last_name}</f:facet>
+                <h:outputText value="#{_contact.lastName}"/>
+            </rich:column>
+            <rich:column sortBy="#{_contact.idNumber}">
+                <f:facet name="header">#{messages.Id_number}</f:facet>
+                <h:outputText value="#{_contact.idNumber}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">#{messages.Action}</f:facet>
+                <s:link id="selectcontact"
+                     value="#{messages.Select}"
+                      view="/Contact.xhtml">
+                    <f:param name="contactId"
+                            value="#{_contact.id}"/>
+                    <f:param name="contactFrom" value="ContactType"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="#{messages.Add_contact}"
+                view="/ContactEdit.xhtml">
+            <f:param name="contactTypeId"
+                    value="#{contactTypeHome.instance.id}"/>
+            <f:param name="contactFrom" value="ContactType"/>
+        </s:button>
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

@@ -1,0 +1,228 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:a="http://richfaces.org/a4j" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+
+
+	<ui:define name="body">
+
+		<h:form id="project" styleClass="edit">
+
+			<rich:panel>
+				<f:facet name="header">#{projectHome.managed ? messages.Edit : messages.Add} #{messages.Projects}</f:facet>
+
+
+
+				<s:decorate id="nameProjectField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Name}</ui:define>
+					<h:inputTextarea id="nameProject" cols="40" rows="1" required="true" value="#{projectHome.instance.nameProject}">
+						<a4j:support event="onblur" ajaxSingle="true">
+						</a4j:support>
+					</h:inputTextarea>
+
+				</s:decorate>
+
+
+				<s:decorate id="costCenterProjectField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Cost_center_project}</ui:define>
+					<h:inputText id="costCenterProject" cols="50" rows="3" required="true" value="#{projectHome.instance.costCenterProject}">
+						<a4j:support event="onblur" ajaxSingle="true"></a4j:support>
+					</h:inputText>
+				</s:decorate>
+
+				<s:decorate id="prefixProjectField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Prefix_project}</ui:define>
+					<h:inputText id="prefixProject" cols="50" rows="3" required="true" value="#{projectHome.instance.projectPrefix}">
+						<a4j:support event="onblur" ajaxSingle="true" action="#{projectHome.prefixExist()}" reRender="messagePrefixWrong, prefixProjectField"></a4j:support>
+					</h:inputText>
+					<s:label id="messagePrefixWrong" style="color: #FF0000;" value="#{projectHome.messageprefix}" rendered="#{not empty projectHome.messageprefix}">
+					</s:label>
+				</s:decorate>
+
+				<div style="clear: both">
+					<span class="required">*</span> #{messages.required_fields}
+				</div>
+
+			</rich:panel>
+
+			<div class="actionButtons">
+
+				<h:commandButton id="save" value="#{messages.Save}" action="#{projectHome.persistProject()}" disabled="#{!projectHome.wired}" rendered="#{!projectHome.managed}">
+					<a4j:support limitToList="true" ajaxSingle="true" ignoreDupResponses="true" event="onclick" reRender="projectFilterField"></a4j:support>
+				</h:commandButton>
+
+				<h:commandButton id="update" value="#{messages.Save}" action="#{projectHome.update}" rendered="#{projectHome.managed}" />
+
+				<h:commandButton id="delete" value="#{messages.Delete}" action="#{projectHome.remove}" immediate="true" rendered="false or #{projectHome.managed}" />
+
+				<s:button id="cancelEdit" value="#{messages.Cancel}" propagation="end" view="/Project.xhtml" rendered="#{projectHome.managed}" />
+
+				<s:button id="cancelAdd" value="#{messages.Cancel}" propagation="end" view="/#{empty projectFrom ? 'ProjectList' : projectFrom}.xhtml" rendered="#{!projectHome.managed}" />
+
+			</div>
+		</h:form>
+
+		<rich:tabPanel switchType="ajax">
+
+			<rich:tab label="#{messages.Business_entity} *" labelClass="required">
+				<div class="association" id="businessEntityParent">
+
+					<h:outputText value="#{messages.There_is_no_businessEntity_associated_with_this_project}" rendered="#{projectHome.instance.businessEntity == null}" />
+
+					<rich:dataTable var="_businessEntity" value="#{projectHome.instance.businessEntity}" rendered="#{projectHome.instance.businessEntity != null}" rowClasses="rvgRowOne,rvgRowTwo" id="businessEntityTable">
+						<h:column>
+							<f:facet name="header">Id</f:facet>
+							<h:outputText value="#{_businessEntity.id}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Name}</f:facet>
+							<h:outputText value="#{_businessEntity.nameBusinessEntity}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Id_number}</f:facet>
+							<h:outputText value="#{_businessEntity.idNumber}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Verification_number}</f:facet>
+							<h:outputText value="#{_businessEntity.verificationNumber}" />
+						</h:column>
+
+					</rich:dataTable>
+
+					<div class="actionButtons">
+						<s:button id="#{projectHome.instance.businessEntity != null ? 'changeParent' : 'selectParent'}" value="#{projectHome.instance.businessEntity != null ? messages.Change : messages.Select} #{messages.businessEntity}" view="/BusinessEntityList.xhtml">
+							<f:param name="from" value="ProjectEdit" />
+						</s:button>
+					</div>
+
+				</div>
+			</rich:tab>
+
+			<rich:tab label="#{messages.Business_line} *" labelClass="required">
+				<div class="association" id="businessLineParent">
+
+					<h:outputText value="#{messages.There_is_no_businessLine_associated_with_this_project}" rendered="#{projectHome.instance.businessLine == null}" />
+
+					<rich:dataTable var="_businessLine" value="#{projectHome.instance.businessLine}" rendered="#{projectHome.instance.businessLine != null}" rowClasses="rvgRowOne,rvgRowTwo" id="businessLineTable">
+						<h:column>
+							<f:facet name="header">Id</f:facet>
+							<h:outputText value="#{_businessLine.id}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Name}</f:facet>
+							<h:outputText value="#{_businessLine.nameBusinessLine}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Business_entity_id}</f:facet>
+							<h:outputText value="#{_businessLine.businessEntity.nameBusinessEntity}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Cost_center}</f:facet>
+							<h:outputText value="#{_businessLine.costCenterBusinessLine}" />
+						</h:column>
+					</rich:dataTable>
+
+					<div class="actionButtons">
+						<s:button id="#{projectHome.instance.businessLine != null ? 'changeParent1' : 'selectParent1'}" value="#{projectHome.instance.businessLine != null ? messages.Change : messages.Select} #{messages.businessLine}" view="/BusinessLineList.xhtml">
+							<f:param name="from" value="ProjectEdit" />
+						</s:button>
+					</div>
+
+				</div>
+			</rich:tab>
+
+			<rich:tab label="#{messages.Project_properties}">
+				<h:form styleClass="association" id="projectPropertiesChildren">
+
+					<h:outputText value="#{messages.There_are_no_projectProperties_associated_with_this_project}" rendered="#{empty projectHome.projectProperties}" />
+
+					<rich:dataTable value="#{projectHome.projectProperties}" var="_projectProperty" rendered="#{not empty projectHome.projectProperties}" rowClasses="rvgRowOne,rvgRowTwo" id="projectPropertiesTable">
+						<h:column>
+							<f:facet name="header">Id</f:facet>
+							<h:outputText value="#{_projectProperty.id}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Object_of_contract}</f:facet>
+							<h:outputText value="#{_projectProperty.objectOfContract.description}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Business_entity_by_billed_id}</f:facet>
+							<h:outputText value="#{_projectProperty.billed.nameBusinessEntity}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Business_entity_by_biller_id}</f:facet>
+							<h:outputText value="#{_projectProperty.biller.nameBusinessEntity}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.realProperty}</f:facet>
+							<h:outputText value="#{_projectProperty.realProperty.nameProperty}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Rentable_unit}</f:facet>
+							<h:outputText value="#{_projectProperty.rentableUnit.name}" />
+						</h:column>
+					</rich:dataTable>
+
+				</h:form>
+
+				<f:subview rendered="#{projectHome.managed}" id="projectProperties">
+					<div class="actionButtons">
+						<s:button id="addprojectProperty" value="#{messages.Add_projectProperty}" view="/ProjectPropertyEdit.xhtml" propagation="none">
+							<f:param name="projectId" value="#{projectHome.instance.id}" />
+							<f:param name="projectPropertyFrom" value="Project" />
+						</s:button>
+					</div>
+				</f:subview>
+			</rich:tab>
+
+
+			<rich:tab label="#{messages.rounding}">
+				<h:form styleClass="association" id="round">
+
+					<h:outputText value="Seleccione un tipo de Redondeo" />
+
+					<s:decorate id="roundField" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.rounding}</ui:define>
+						<h:selectOneRadio id="rounding" value="#{projectHome.roundType}" styleClass="radio">
+							<f:selectItem itemLabel="Con Redondeo" itemValue="1" />
+							<f:selectItem itemLabel="Sin Redondeo" itemValue="0" />
+							<a4j:support ajaxSingle="true" event="onchange" reRender="roundField, idTypeRound"></a4j:support>
+						</h:selectOneRadio>
+					</s:decorate>
+
+					<s:decorate id="idTypeRound" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.rounding_type} </ui:define>
+						<h:selectOneMenu value="#{projectHome.instance.rounding}" rendered="#{projectHome.withRound()}">
+							<f:selectItem itemValue="null" itemLabel="" />
+							<f:selectItem itemValue="1" itemLabel="Sin Decimales" />
+							<f:selectItem itemValue="10" itemLabel="Redondeo a Decenas" />
+							<f:selectItem itemValue="100" itemLabel="Redondeo a Centenas" />
+							<f:selectItem itemValue="1000" itemLabel="Redondeo a Miles" />
+							<a4j:support event="onchange" ajaxSingle="true" />
+						</h:selectOneMenu>
+					</s:decorate>
+				</h:form>
+			</rich:tab>
+			
+			
+			<rich:tab label="#{messages.project_mandatory_interest}">
+				<h:form styleClass="association">
+
+					<s:decorate id="mandatoryInterestField" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.project_mandatory_interest_liquidation}</ui:define>
+						<h:selectOneRadio value="#{projectHome.instance.mandatoryInterest}" styleClass="radio">
+							<f:selectItem itemLabel="#{messages.project_mandatory_interest_option1}" itemValue="true" />
+							<f:selectItem itemLabel="#{messages.project_mandatory_interest_option2}" itemValue="false" />
+							<a4j:support ajaxSingle="true" event="onchange" ignoreDupResponses="true" limitToList="true" reRender="mandatoryInterestField"></a4j:support>
+						</h:selectOneRadio>
+					</s:decorate>
+
+				</h:form>
+			</rich:tab>
+
+
+
+
+		</rich:tabPanel>
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,209 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<rich:panel>
+			<f:facet name="header">#{messages.Project_Details}</f:facet>
+
+			<s:decorate id="id" template="layout/display.xhtml">
+				<ui:define name="label">Id</ui:define>
+				<h:outputText value="#{projectHome.instance.id}" />
+			</s:decorate>
+
+			<s:decorate id="nameProject" template="layout/display.xhtml">
+				<ui:define name="label">#{messages.Name}</ui:define>
+				<h:outputText value="#{projectHome.instance.nameProject}" />
+			</s:decorate>
+
+			<s:decorate id="costCenterProject" template="layout/display.xhtml">
+				<ui:define name="label">#{messages.Cost_center_project}</ui:define>
+				<h:outputText value="#{projectHome.instance.costCenter()}" />
+			</s:decorate>
+
+			<s:decorate id="prefixProject" template="layout/display.xhtml">
+				<ui:define name="label">#{messages.Prefix_project}</ui:define>
+				<h:outputText value="#{projectHome.instance.projectPrefix}" />
+			</s:decorate>
+
+			<div style="clear: both" />
+
+		</rich:panel>
+
+		<div class="actionButtons">
+		<table>
+			<tr>
+				<td>
+				<div id="editButton"><s:button view="/ProjectEdit.xhtml" id="edit" value="#{messages.Edit}" disabled="#{projectHome.projectListInApprove(projectHome.instance)}" rendered="#{empty makerCheckerId}" /> <rich:toolTip disabled="#{not projectHome.projectListInApprove(projectHome.instance)}" for="editButton">#{messages.You_can_not_edit_pending_approval_of_a_change}</rich:toolTip></div>
+				</td>
+				<td><s:button view="/#{empty projectFrom ? 'ProjectList' : projectFrom}.xhtml" id="done" value="#{messages.Done}" rendered="#{empty makerCheckerId}" /></td>
+			</tr>
+		</table>
+		<s:button view="/MakerCheckerProjectList.xhtml" action="#{projectHome.approveChange()}" id="approved" value="#{messages.ApproveChange}" rendered="#{not empty makerCheckerId}" /> <s:button view="/MakerCheckerProjectList.xhtml" action="#{projectHome.cancelChange()}" id="cancel" value="#{messages.Cancel}" rendered="#{not empty makerCheckerId}" /></div>
+
+		<rich:tabPanel switchType="ajax">
+
+			<rich:tab>
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;" />#{messages.Business_entity}</h:panelGroup>
+				</f:facet>
+				<div class="association" id="businessEntityParent"><h:outputText value="#{messages.There_is_no_businessEntity_associated_with_this_project}" rendered="#{projectHome.instance.businessEntity == null}" /> <rich:dataTable var="_businessEntity" value="#{projectHome.instance.businessEntity}" rendered="#{projectHome.instance.businessEntity != null}" rowClasses="rvgRowOne,rvgRowTwo" id="businessEntityTable">
+					<h:column>
+						<f:facet name="header">Id</f:facet>
+						<h:outputText value="#{_businessEntity.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Name}</f:facet>
+						<h:outputText value="#{_businessEntity.nameBusinessEntity}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Id_number}</f:facet>
+						<h:outputText value="#{_businessEntity.idNumber}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Verification_number}</f:facet>
+						<h:outputText value="#{_businessEntity.verificationNumber}" />
+					</h:column>
+					<h:column styleClass="action">
+						<f:facet name="header">#{messages.Action}</f:facet>
+						<s:link id="viewbusinessEntity" value="#{messages.View}" view="/BusinessEntity.xhtml">
+							<f:param name="businessEntityId" value="#{_businessEntity.id}" />
+						</s:link>
+					</h:column>
+				</rich:dataTable></div>
+			</rich:tab>
+
+			<rich:tab>
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;" />#{messages.Business_line}</h:panelGroup>
+				</f:facet>
+				<div class="association" id="businessLineParent"><h:outputText value="#{messages.There_is_no_businessLine_associated_with_this_project}" rendered="#{projectHome.instance.businessLine == null}" /> <rich:dataTable var="_businessLine" value="#{projectHome.instance.businessLine}" rendered="#{projectHome.instance.businessLine != null}" rowClasses="rvgRowOne,rvgRowTwo" id="businessLineTable">
+					<h:column>
+						<f:facet name="header">Id</f:facet>
+						<h:outputText value="#{_businessLine.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Name}</f:facet>
+						<h:outputText value="#{_businessLine.nameBusinessLine}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Business_entity_id}</f:facet>
+						<h:outputText value="#{_businessLine.businessEntity.nameBusinessEntity}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Cost_center}</f:facet>
+						<h:outputText value="#{_businessLine.costCenterBusinessLine}" />
+					</h:column>
+					<h:column styleClass="action">
+						<f:facet name="header">#{messages.Action}</f:facet>
+						<s:link id="viewbusinessLine" value="#{messages.View}" view="/BusinessLine.xhtml">
+							<f:param name="businessLineId" value="#{_businessLine.id}" />
+						</s:link>
+					</h:column>
+				</rich:dataTable></div>
+			</rich:tab>
+
+			<rich:tab>
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;" />#{messages.Project_properties}</h:panelGroup>
+				</f:facet>
+				<h:form styleClass="association" id="projectPropertiesChildren">
+
+					<h:outputText value="#{messages.There_are_no_projectProperties_associated_with_this_project}" rendered="#{empty projectHome.projectProperties}" />
+
+					<rich:dataTable value="#{projectHome.projectProperties}" var="_projectProperty" rendered="#{not empty projectHome.projectProperties}" rowClasses="rvgRowOne,rvgRowTwo" id="projectPropertiesTable">
+						<h:column>
+							<f:facet name="header">Id</f:facet>
+							<h:outputText value="#{_projectProperty.id}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Object_of_contract}</f:facet>
+							<h:outputText value="#{_projectProperty.objectOfContract.description}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Business_entity_by_billed_id}</f:facet>
+							<h:outputText value="#{_projectProperty.billed.nameBusinessEntity}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Business_entity_by_biller_id}</f:facet>
+							<h:outputText value="#{_projectProperty.biller.nameBusinessEntity}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.realProperty}</f:facet>
+							<h:outputText value="#{_projectProperty.realProperty.nameProperty}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Rentable_unit}</f:facet>
+							<h:outputText value="#{_projectProperty.rentableUnit.name}" />
+						</h:column>
+
+						<h:column>
+							<f:facet name="header">#{messages.Action}</f:facet>
+							<s:link id="selectprojectProperty" value="#{messages.Select}" view="/ProjectProperty.xhtml">
+								<f:param name="projectPropertyId" value="#{_projectProperty.id}" />
+								<f:param name="projectPropertyFrom" value="Project" />
+							</s:link>
+						</h:column>
+					</rich:dataTable>
+
+				</h:form>
+
+				<div class="actionButtons"><s:button value="#{messages.Add_projectProperty}" view="/ProjectPropertyEdit.xhtml">
+					<f:param name="projectId" value="#{projectHome.instance.id}" />
+					<f:param name="projectPropertyFrom" value="Project" />
+				</s:button></div>
+			</rich:tab>
+<rich:tab label="#{messages.rounding}">
+						<h:form styleClass="association" id="round">
+
+							<h:outputText value="Seleccione un tipo de Redondeo" />
+
+							<s:decorate id="roundField" template="layout/edit.xhtml" >
+								<ui:define name="label">#{messages.rounding}</ui:define>
+								<h:selectOneRadio id="rounding" value="#{projectHome.roundType}" styleClass="radio" disabled="true">
+									<f:selectItem itemLabel="Con Redondeo" itemValue="1" />
+									<f:selectItem itemLabel="Sin Redondeo" itemValue="0" />
+								</h:selectOneRadio>
+							</s:decorate>
+
+							<s:decorate id="idTypeRound" template="layout/edit.xhtml">
+								<ui:define name="label">#{messages.rounding_type} </ui:define>
+								<h:selectOneMenu value="#{projectHome.instance.rounding}" rendered="#{projectHome.withRound()}" disabled="true">
+									<f:selectItem itemValue="null" itemLabel="" />
+									<f:selectItem itemValue="1" itemLabel="Sin Decimales" />
+									<f:selectItem itemValue="10" itemLabel="Redondeo a Decenas" />
+									<f:selectItem itemValue="100" itemLabel="Redondeo a Centenas" />
+									<f:selectItem itemValue="1000" itemLabel="Redondeo a Miles" />
+								</h:selectOneMenu>
+							</s:decorate>
+						</h:form>
+					</rich:tab>
+			<rich:tab>
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;" />#{messages.project_mandatory_interest}</h:panelGroup>
+				</f:facet>
+				<h:form styleClass="association">
+
+
+					
+
+					<s:decorate id="mandatoryInterestField" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.project_mandatory_interest_liquidation}</ui:define>
+						<h:selectOneRadio disabled="true" value="#{projectHome.instance.mandatoryInterest}" styleClass="radio">
+							<f:selectItem itemLabel="#{messages.project_mandatory_interest_option1}" itemValue="true" />
+							<f:selectItem itemLabel="#{messages.project_mandatory_interest_option2}" itemValue="false" />
+						</h:selectOneRadio>
+					</s:decorate>
+
+				</h:form>
+			</rich:tab>
+
+		</rich:tabPanel>
+	</ui:define>
+
+</ui:composition>

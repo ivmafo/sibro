@@ -1,0 +1,170 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="retentionRate" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{retentionRateHome.managed ? 'Edit' : 'Add'} Retention rate</f:facet>
+
+
+            <s:decorate id="idField" template="layout/edit.xhtml">
+                <ui:define name="label">Id</ui:define>
+                <h:inputText id="id"
+                       required="true"
+                       disabled="#{retentionRateHome.managed}"
+                          value="#{retentionRateHome.instance.id}">
+                    <a:support event="onblur" reRender="idField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="nameField" template="layout/edit.xhtml">
+                <ui:define name="label">Name</ui:define>
+                <h:inputText id="name"
+                           size="50"
+                      maxlength="50"
+                          value="#{retentionRateHome.instance.name}">
+                    <a:support event="onblur" reRender="nameField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                required fields
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Save"
+                         action="#{retentionRateHome.persist}"
+                       disabled="#{!retentionRateHome.wired}"
+                       rendered="#{!retentionRateHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Save"
+                         action="#{retentionRateHome.update}"
+                       rendered="#{retentionRateHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Delete"
+                         action="#{retentionRateHome.remove}"
+                      immediate="true"
+                       rendered="#{retentionRateHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancel"
+             propagation="end"
+                    view="/RetentionRate.xhtml"
+                rendered="#{retentionRateHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancel"
+             propagation="end"
+                    view="/#{empty retentionRateFrom ? 'RetentionRateList' : retentionRateFrom}.xhtml"
+                rendered="#{!retentionRateHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Retention rate accounts">
+        <h:form styleClass="association" id="retentionRateAccountsChildren">
+
+            <h:outputText value="There are no retentionRateAccounts associated with this retentionRate."
+                       rendered="#{empty retentionRateHome.retentionRateAccounts}"/>
+
+            <rich:dataTable value="#{retentionRateHome.retentionRateAccounts}"
+                           var="_retentionRateAccount"
+                      rendered="#{not empty retentionRateHome.retentionRateAccounts}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="retentionRateAccountsTable">
+                <rich:column sortBy="#{_retentionRateAccount.id}">
+                    <f:facet name="header">Id</f:facet>
+                    <h:outputText value="#{_retentionRateAccount.id}"/>
+                </rich:column>
+                <rich:column sortBy="#{_retentionRateAccount.name}">
+                    <f:facet name="header">Name</f:facet>
+                    <h:outputText value="#{_retentionRateAccount.name}"/>
+                </rich:column>
+                <rich:column sortBy="#{_retentionRateAccount.account}">
+                    <f:facet name="header">Account</f:facet>
+                    <h:outputText value="#{_retentionRateAccount.account}"/>
+                </rich:column>
+                <rich:column sortBy="#{_retentionRateAccount.value}">
+                    <f:facet name="header">Value</f:facet>
+                    <h:outputText value="#{_retentionRateAccount.value}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{retentionRateHome.managed}" id="retentionRateAccounts">
+        <div class="actionButtons">
+            <s:button id="addretentionRateAccount"
+                   value="Add retentionRateAccount"
+                    view="/RetentionRateAccountEdit.xhtml"
+             propagation="none">
+                 <f:param name="retentionRateId"
+                         value="#{retentionRateHome.instance.id}"/>
+                 <f:param name="retentionRateAccountFrom" value="RetentionRate"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+
+    <rich:tab label="Tax configurations">
+        <h:form styleClass="association" id="taxConfigurationsChildren">
+
+            <h:outputText value="There are no taxConfigurations associated with this retentionRate."
+                       rendered="#{empty retentionRateHome.taxConfigurations}"/>
+
+            <rich:dataTable value="#{retentionRateHome.taxConfigurations}"
+                           var="_taxConfiguration"
+                      rendered="#{not empty retentionRateHome.taxConfigurations}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="taxConfigurationsTable">
+                <rich:column sortBy="#{_taxConfiguration.id}">
+                    <f:facet name="header">Id</f:facet>
+                    <h:outputText value="#{_taxConfiguration.id}"/>
+                </rich:column>
+                <rich:column sortBy="#{_taxConfiguration.name}">
+                    <f:facet name="header">Name</f:facet>
+                    <h:outputText value="#{_taxConfiguration.name}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{retentionRateHome.managed}" id="taxConfigurations">
+        <div class="actionButtons">
+            <s:button id="addtaxConfiguration"
+                   value="Add taxConfiguration"
+                    view="/TaxConfigurationEdit.xhtml"
+             propagation="none">
+                 <f:param name="retentionRateId"
+                         value="#{retentionRateHome.instance.id}"/>
+                 <f:param name="taxConfigurationFrom" value="RetentionRate"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

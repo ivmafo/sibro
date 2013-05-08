@@ -1,0 +1,103 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+     xmlns:a4j="http://richfaces.org/a4j"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="ipcMonthly" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{ipcMonthlyHome.managed ? messages.Edit : messages.Add} #{messages.Ipc_monthly}</f:facet>
+
+
+            <s:decorate id="year" template="layout/display.xhtml">
+	            <ui:define name="label">#{messages.Year}</ui:define>
+	            <h:outputText value="#{ipcMonthlyHome.instance.year}"/>
+	        </s:decorate>
+
+
+            <s:decorate id="monthly" template="layout/display.xhtml">
+	            <ui:define name="label">#{messages.Month}</ui:define>
+	            <h:outputText value="#{ipcMonthlyHome.getMonth(ipcMonthlyHome.instance.monthly)}"/>
+       		</s:decorate>
+
+
+            <s:decorate id="valueField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Value} (Porcentaje)</ui:define>
+               	<rich:inputNumberSpinner required="true" value="#{ipcMonthlyHome.value}" step="0.01" minValue="0.00" maxValue="100.00">
+               		<a4j:support ajaxSingle="true" limitToList="true" event="onchange" >     </a4j:support>
+				</rich:inputNumberSpinner>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                #{messages.required_fields}
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+            			   type="button"
+                          value="#{messages.Save}"
+                       disabled="#{!ipcMonthlyHome.wired}"
+                       rendered="#{!ipcMonthlyHome.managed}">
+					<a4j:support event="onclick" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" oncomplete="#{rich:component('ipcConfirmation')}.show()"></a4j:support>
+            </h:commandButton>
+
+            <h:commandButton id="update"
+                          value="#{messages.Save}"
+                         action="#{ipcMonthlyHome.update}"
+                       rendered="#{ipcMonthlyHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="#{messages.Cancel}"
+             propagation="end"
+                    view="/Ipcs.xhtml"
+                rendered="#{ipcMonthlyHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="#{messages.Cancel}"
+             propagation="end"
+                    view="/#{empty ipcMonthlyFrom ? 'Ipcs' : ipcMonthlyFrom}.xhtml"
+                rendered="#{!ipcMonthlyHome.managed}"/>
+
+        </div>
+    </h:form>
+    
+	<rich:modalPanel id="ipcConfirmation" width="420" autosized="true">
+		<f:facet name="header">
+			<h:panelGroup>
+				<a4j:outputPanel ajaxRendered="true">
+					<h:outputText value="Confirmacion"></h:outputText>
+				</a4j:outputPanel>
+			</h:panelGroup>
+		</f:facet>
+		<a4j:outputPanel ajaxRendered="true">
+				<h:panelGrid rendered="true">
+					<h:outputLabel value="Esta seguro de guardar, despues de esta operacion no será posible eliminar o editar la informacion" />
+			</h:panelGrid>
+		</a4j:outputPanel>
+		
+		<h:form>
+			<h:commandButton id="saveIpcConfirmation"  action="#{ipcMonthlyHome.persist}" value="#{messages.Save}" >
+			</h:commandButton>
+	
+			<h:commandButton type="button" id="closeIpcConfirmation" value="#{messages.Close}" >
+					<a4j:support event="onclick" ajaxSingle="true" ignoreDupResponses="true" limitToList="true"  onsubmit="#{rich:component('ipcConfirmation')}.hide()"></a4j:support>
+			</h:commandButton>
+		</h:form>
+	</rich:modalPanel>
+	
+</ui:define>
+
+</ui:composition>

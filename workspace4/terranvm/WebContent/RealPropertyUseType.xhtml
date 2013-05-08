@@ -1,0 +1,128 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">#{messages.Real_property_use_type_Details}</f:facet>
+
+        <s:decorate id="id" template="layout/display.xhtml">
+            <ui:define name="label">Id</ui:define>
+            <h:outputText value="#{realPropertyUseTypeHome.instance.id}"/>
+        </s:decorate>
+
+        <s:decorate id="name" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Name}</ui:define>
+            <h:outputText value="#{realPropertyUseTypeHome.instance.name}"/>
+        </s:decorate>
+
+        <s:decorate id="description" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Description}</ui:define>
+            <h:outputText value="#{realPropertyUseTypeHome.instance.description}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+<table><tr>
+<td><div id="editButton">
+        <s:button view="/RealPropertyUseTypeEdit.xhtml"
+                    id="edit"
+                 value="#{messages.Edit}" disabled="#{realPropertyUseTypeHome.realPropertyUseTypeListInApprove(realPropertyUseTypeHome.instance)}" rendered="#{empty makerCheckerId}"/>
+<rich:toolTip disabled="#{not realPropertyUseTypeHome.realPropertyUseTypeListInApprove(realPropertyUseTypeHome.instance)}" for="editButton">#{messages.You_can_not_edit_pending_approval_of_a_change}</rich:toolTip>
+</div></td>
+
+        <td><s:button view="/#{empty realPropertyUseTypeFrom ? 'RealPropertyUseTypeList' : realPropertyUseTypeFrom}.xhtml"
+                    id="done"
+                 value="#{messages.Done}" rendered="#{empty makerCheckerId}"/></td>
+                 </tr></table>
+                 <s:button view="/MakerCheckerList.xhtml" action="#{realPropertyUseTypeHome.approveChange()}" id="approved" value="#{messages.ApproveChange}" rendered="#{not empty makerCheckerId}"/>
+		 	<s:button view="/MakerCheckerList.xhtml" action="#{realPropertyUseTypeHome.cancelChange()}" id="cancel" value="#{messages.Cancel}" rendered="#{not empty makerCheckerId}"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>#{messages.Real_properties}</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="realPropertiesChildren">
+
+        <h:outputText value="#{messages.There_are_no_realProperties_associated_with_this_realPropertyUseType}"
+                   rendered="#{empty realPropertyUseTypeHome.realProperties}"/>
+
+        <rich:dataTable value="#{realPropertyUseTypeHome.realProperties}"
+                       var="_realProperty"
+                  rendered="#{not empty realPropertyUseTypeHome.realProperties}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="realPropertiesTable">
+            <rich:column sortBy="#{_realProperty.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_realProperty.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_realProperty.nameProperty}">
+                <f:facet name="header">#{messages.Name}</f:facet>
+                <h:outputText value="#{_realProperty.nameProperty}"/>
+            </rich:column>
+            <rich:column sortBy="#{_realProperty.yearBuilt}">
+                <f:facet name="header">#{messages.Year_built}</f:facet>
+                <h:outputText value="#{_realProperty.yearBuilt}">
+                    <s:convertDateTime type="date" dateStyle="short"/>
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_realProperty.enrolmentNumber}">
+                <f:facet name="header">#{messages.Enrolment_number}</f:facet>
+                <h:outputText value="#{_realProperty.enrolmentNumber}"/>
+            </rich:column>
+            <rich:column sortBy="#{_realProperty.purchaseDate}">
+                <f:facet name="header">#{messages.Purchase_date}</f:facet>
+                <h:outputText value="#{_realProperty.purchaseDate}">
+                    <s:convertDateTime type="date" dateStyle="short"/>
+                </h:outputText>
+            </rich:column>
+            <rich:column sortBy="#{_realProperty.totalSurfaceArea}">
+                <f:facet name="header">#{messages.Total_surface_area}</f:facet>
+                <h:outputText value="#{_realProperty.totalSurfaceArea}"/>
+            </rich:column>
+            <rich:column sortBy="#{_realProperty.cadastralId}">
+                <f:facet name="header">#{messages.Cadastral_id}</f:facet>
+                <h:outputText value="#{_realProperty.cadastralId}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Action</f:facet>
+                <s:link id="selectrealProperty"
+                     value="#{messages.Select}"
+                      view="/RealProperty.xhtml">
+                    <f:param name="realPropertyId"
+                            value="#{_realProperty.id}"/>
+                    <f:param name="realPropertyFrom" value="RealPropertyUseType"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="#{messages.Add_realProperty}"
+                view="/RealPropertyEdit.xhtml">
+            <f:param name="realPropertyUseTypeId"
+                    value="#{realPropertyUseTypeHome.instance.id}"/>
+            <f:param name="realPropertyFrom" value="RealPropertyUseType"/>
+        </s:button>
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

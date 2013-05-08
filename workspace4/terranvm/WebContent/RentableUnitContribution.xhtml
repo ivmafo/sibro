@@ -1,0 +1,142 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Rentable unit contribution Details</f:facet>
+
+        <s:decorate id="id" template="layout/display.xhtml">
+            <ui:define name="label">Id</ui:define>
+            <h:outputText value="#{rentableUnitContributionHome.instance.id}"/>
+        </s:decorate>
+
+        <s:decorate id="contributionRate" template="layout/display.xhtml">
+            <ui:define name="label">Contribution rate</ui:define>
+            <h:outputText value="#{rentableUnitContributionHome.instance.contributionRate}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/RentableUnitContributionEdit.xhtml"
+                    id="edit"
+                 value="Edit"/>
+
+        <s:button view="/#{empty rentableUnitContributionFrom ? 'RentableUnitContributionList' : rentableUnitContributionFrom}.xhtml"
+                    id="done"
+                 value="Done"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Rentable unit</h:panelGroup>
+        </f:facet>
+    <div class="association" id="rentableUnitParent">
+
+        <h:outputText value="There is no rentableUnit associated with this rentableUnitContribution."
+                   rendered="#{rentableUnitContributionHome.instance.rentableUnit == null}"/>
+
+        <rich:dataTable var="_rentableUnit"
+                   value="#{rentableUnitContributionHome.instance.rentableUnit}"
+                rendered="#{rentableUnitContributionHome.instance.rentableUnit != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="rentableUnitTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_rentableUnit.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Business entity by owner id</f:facet>
+                <h:outputText value="#{_rentableUnit.businessEntityByOwner.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Rentable unit id</f:facet>
+                <h:outputText value="#{_rentableUnit.rentableUnit.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Business entity by lessee id</f:facet>
+                <h:outputText value="#{_rentableUnit.businessEntityByLessee.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Area id</f:facet>
+                <h:outputText value="#{_rentableUnit.area.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Name</f:facet>
+                <h:outputText value="#{_rentableUnit.name}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Square meters</f:facet>
+                <h:outputText value="#{_rentableUnit.squareMeters}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="viewrentableUnit"
+                     value="View"
+                      view="/RentableUnit.xhtml">
+                    <f:param name="rentableUnitId"
+                           value="#{_rentableUnit.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Contribution module</h:panelGroup>
+        </f:facet>
+    <div class="association" id="contributionModuleParent">
+
+        <h:outputText value="There is no contributionModule associated with this rentableUnitContribution."
+                   rendered="#{rentableUnitContributionHome.instance.contributionModule == null}"/>
+
+        <rich:dataTable var="_contributionModule"
+                   value="#{rentableUnitContributionHome.instance.contributionModule}"
+                rendered="#{rentableUnitContributionHome.instance.contributionModule != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="contributionModuleTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_contributionModule.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Real property id</f:facet>
+                <h:outputText value="#{_contributionModule.realProperty.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Name</f:facet>
+                <h:outputText value="#{_contributionModule.name}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="viewcontributionModule"
+                     value="View"
+                      view="/ContributionModule.xhtml">
+                    <f:param name="contributionModuleId"
+                           value="#{_contributionModule.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

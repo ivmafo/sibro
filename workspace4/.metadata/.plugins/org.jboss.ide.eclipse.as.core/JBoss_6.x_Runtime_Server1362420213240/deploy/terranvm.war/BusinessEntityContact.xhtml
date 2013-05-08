@@ -1,0 +1,137 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+        <div class="actionButtons">
+
+        <s:button view="/BusinessEntityContactEdit.xhtml"
+                    id="edit"
+                 value="#{messages.Edit}"/>
+
+        <s:button view="/#{empty businessEntityContactFrom ? 'BusinessEntityContactList' : businessEntityContactFrom}.xhtml"
+                    id="done"
+                 value="#{messages.Done}"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>#{messages.Business_entity}</h:panelGroup>
+        </f:facet>
+    <div class="association" id="businessEntityParent">
+
+        <h:outputText value="#{messages.There_is_no_businessEntity_associated_with_this_businessEntityContact}"
+                   rendered="#{businessEntityContactHome.instance.businessEntity == null}"/>
+
+        <rich:dataTable var="_businessEntity"
+                   value="#{businessEntityContactHome.instance.businessEntity}"
+                rendered="#{businessEntityContactHome.instance.businessEntity != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="businessEntityTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_businessEntity.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Economic_activity_id}</f:facet>
+                <h:outputText value="#{_businessEntity.economicActivity.code}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Id_type}</f:facet>
+                <h:outputText value="#{_businessEntity.idType}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Id_number}</f:facet>
+                <h:outputText value="#{_businessEntity.idNumber}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Verification_number}</f:facet>
+                <h:outputText value="#{_businessEntity.verificationNumber}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Name}</f:facet>
+                <h:outputText value="#{_businessEntity.nameBusinessEntity}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Email}</f:facet>
+                <h:outputText value="#{_businessEntity.email}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Legal_entity_type}</f:facet>
+                <h:outputText value="#{_businessEntity.legalEntityType}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">#{messages.Action}</f:facet>
+                <s:link id="viewbusinessEntity"
+                     value="#{messages.View}"
+                      view="/BusinessEntity.xhtml">
+                    <f:param name="businessEntityId"
+                           value="#{_businessEntity.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>#{messages.Contacts}</h:panelGroup>
+        </f:facet>
+    <div class="association" id="contactParent">
+
+        <h:outputText value="#{messages.There_is_no_contact_associated_with_this_businessEntityContact}"
+                   rendered="#{businessEntityContactHome.instance.contact == null}"/>
+
+        <rich:dataTable var="_contact"
+                   value="#{businessEntityContactHome.instance.contact}"
+                rendered="#{businessEntityContactHome.instance.contact != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="contactTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_contact.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Contact_type_id}</f:facet>
+                <h:outputText value="#{_contact.contactType.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.First_name}</f:facet>
+                <h:outputText value="#{_contact.firstName}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Last_name}</f:facet>
+                <h:outputText value="#{_contact.lastName}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Id_number}</f:facet>
+                <h:outputText value="#{_contact.idNumber}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">#{messages.Action}</f:facet>
+                <s:link id="viewcontact"
+                     value="#{messages.View}"
+                      view="/Contact.xhtml">
+                    <f:param name="contactId"
+                           value="#{_contact.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

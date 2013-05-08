@@ -1,0 +1,126 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+
+	<ui:define name="body">
+		
+			<rich:panel>
+			<h:form>
+				<f:facet name="header">#{messages.Search_Results} (#{empty makerCheckerProjectPropertyCounterList.resultList ? 0 : (makerCheckerProjectPropertyCounterList.paginated ? makerCheckerProjectPropertyCounterList.resultCount : makerCheckerProjectPropertyCounterList.resultList.size)})</f:facet>
+				<div class="results" id="projectPropertyList"><h:outputText value="#{messages.search_returned_no_results}" rendered="#{empty makerCheckerProjectPropertyCounterList.resultList}" /> 
+				<rich:dataTable id="projectPropertyList" var="_projectProperty" value="#{makerCheckerProjectPropertyCounterList.resultList}" rendered="#{not empty makerCheckerProjectPropertyCounterList.resultList}">
+					<rich:column sortBy="#{_projectProperty.id}" sortOrder="ASCENDING">
+						<f:facet name="header">
+							<ui:include src="layout/sort.xhtml">
+								<ui:param name="entityList" value="#{makerCheckerProjectPropertyCounterList}" />
+								<ui:param name="propertyLabel" value="#{messages.Id}" />
+								<ui:param name="propertyPath" value="projectProperty.id" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_projectProperty.id}" />
+					</rich:column>
+					<rich:column sortBy="#{_projectProperty.billed.nameBusinessEntity}" sortOrder="ASCENDING" filterEvent="onblur">
+						<f:facet name="header">
+						<h:outputLabel value="#{messages.Business_entity_by_billed_id}" />
+						</f:facet>
+						<h:outputText value="#{_projectProperty.billed.nameBusinessEntity}" />
+					</rich:column>
+					<rich:column sortBy="#{_projectProperty.biller.nameBusinessEntity}" sortOrder="ASCENDING" filterEvent="onblur">
+						<f:facet name="header">
+							<ui:include src="layout/sort.xhtml">
+								<ui:param name="entityList" value="#{makerCheckerProjectPropertyCounterList}" />
+								<ui:param name="propertyLabel" value="#{messages.Business_entity_by_biller_id}" />
+								<ui:param name="propertyPath" value="projectProperty.biller.id" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_projectProperty.biller.nameBusinessEntity}" />
+					</rich:column>
+					<rich:column sortBy="#{_projectProperty.contractType.name}" sortOrder="ASCENDING">
+						<f:facet name="header">
+							<ui:include src="layout/sort.xhtml">
+								<ui:param name="entityList" value="#{makerCheckerProjectPropertyCounterList}" />
+								<ui:param name="propertyLabel" value="#{messages.Contract_type_id}" />
+								<ui:param name="propertyPath" value="projectProperty.contractType.id" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_projectProperty.contractType.name}" />
+					</rich:column>
+					<rich:column sortBy="#{_projectProperty.project.nameProject}" sortOrder="ASCENDING">
+						<f:facet name="header">
+							<ui:include src="layout/sort.xhtml">
+								<ui:param name="entityList" value="#{makerCheckerProjectPropertyCounterList}" />
+								<ui:param name="propertyLabel" value="#{messages.Project_id}" />
+								<ui:param name="propertyPath" value="projectProperty.project.id" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_projectProperty.project.nameProject}" />
+					</rich:column>
+					<rich:column  sortBy="#{projectPropertyHome.getNameRealProperty(_projectProperty)}" sortOrder="ASCENDING">
+						<f:facet name="header">
+							<ui:include src="layout/sort.xhtml">
+								<ui:param name="entityList" value="#{projectPropertyList}" />
+								<ui:param name="propertyLabel" value="#{messages.Real_property_id}" />
+								<ui:param name="propertyPath" value="projectProperty.realProperty.id" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{projectPropertyHome.getNameRealProperty(_projectProperty)}" />
+					</rich:column>
+					<rich:column sortBy="#{_projectProperty.subscriptionDate.time}" sortOrder="ASCENDING">
+						<f:facet name="header">
+							<ui:include src="layout/sort.xhtml">
+								<ui:param name="entityList" value="#{makerCheckerProjectPropertyCounterList}" />
+								<ui:param name="propertyLabel" value="#{messages.Subscription_date}" />
+								<ui:param name="propertyPath" value="projectProperty.subscriptionDate" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_projectProperty.subscriptionDate}">
+							<s:convertDateTime type="date" dateStyle="short" />
+						</h:outputText>
+					</rich:column>
+					<rich:column sortBy="#{_projectProperty.expirationDate.time}" sortOrder="ASCENDING">
+						<f:facet name="header">
+							<ui:include src="layout/sort.xhtml">
+								<ui:param name="entityList" value="#{makerCheckerProjectPropertyCounterList}" />
+								<ui:param name="propertyLabel" value="#{messages.Expiration_date}" />
+								<ui:param name="propertyPath" value="projectProperty.expirationDate" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_projectProperty.expirationDate}">
+							<s:convertDateTime type="date" dateStyle="short" />
+						</h:outputText>
+					</rich:column>
+							<rich:column styleClass="action">
+								<f:facet name="header">Action</f:facet>
+							<s:link view="/ProjectProperty.xhtml" value="#{messages.Edit}" propagation="none" id="projectPropertyEdit" rendered="#{empty from and authenticator.validateShowFunction('MakerCheckerProjectPropertyList.xhtml', 'projectPropertyEdit')}">
+
+									<f:param name="projectPropertyId" value="#{_projectProperty.id}" />
+									<f:param name="accounterEdit" value="1" />
+								</s:link>
+										
+					     		</rich:column>
+								</rich:dataTable>
+								</div>
+			</h:form>
+		</rich:panel> 
+
+		<div class="tableControl"><s:link view="/MakerCheckerProjectPropertyList.xhtml" rendered="#{makerCheckerProjectPropertyList.previousExists and authenticator.validateShowFunction('MakerCheckerProjectPropertyList.xhtml', 'firstPage')}" value="#{messages.left}#{messages.left} #{messages.First_Page}" id="firstPage"> <f:param name="firstResult" value="0" />
+		</s:link> 
+		<s:link view="/MakerCheckerProjectPropertyList.xhtml" 	rendered="#{makerCheckerProjectPropertyList.previousExists and authenticator.validateShowFunction('MakerCheckerProjectPropertyList.xhtml', 'previousPage')}" value="#{messages.left} #{messages.Previous_Page}" id="previousPage">
+			<f:param name="firstResult" value="#{makerCheckerList.previousFirstResult}" />
+		</s:link> 
+		<s:link view="/MakerCheckerProjectPropertyList.xhtml" rendered="#{makerCheckerProjectPropertyList.nextExists  and authenticator.validateShowFunction('MakerCheckerProjectPropertyList.xhtml', 'nextPage')}" value="#{messages.Next_page} #{messages.right}" id="nextPage">
+			<f:param name="firstResult" value="#{makerCheckerList.nextFirstResult}" />
+		</s:link>
+		 <s:link view="/MakerCheckerProjectPropertyList.xhtml" rendered="#{makerCheckerProjectPropertyList.nextExists and authenticator.validateShowFunction('MakerCheckerProjectPropertyList.xhtml', 'lastPage')}" value="#{messages.Last_Page} #{messages.right}#{messages.right}" id="lastPage">
+			<f:param name="firstResult" value="#{makerCheckerProjectPropertyList.lastFirstResult}" />
+		</s:link></div>
+
+	</ui:define>
+
+</ui:composition>

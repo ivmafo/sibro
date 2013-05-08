@@ -1,0 +1,155 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Plugin Details</f:facet>
+
+        <s:decorate id="id" template="layout/display.xhtml">
+            <ui:define name="label">Id</ui:define>
+            <h:outputText value="#{pluginHome.instance.id}"/>
+        </s:decorate>
+
+        <s:decorate id="name" template="layout/display.xhtml">
+            <ui:define name="label">Name</ui:define>
+            <h:outputText value="#{pluginHome.instance.name}"/>
+        </s:decorate>
+
+        <s:decorate id="mainUrl" template="layout/display.xhtml">
+            <ui:define name="label">Main url</ui:define>
+            <h:outputText value="#{pluginHome.instance.mainUrl}"/>
+        </s:decorate>
+
+        <s:decorate id="summaryUrl" template="layout/display.xhtml">
+            <ui:define name="label">Summary url</ui:define>
+            <h:outputText value="#{pluginHome.instance.summaryUrl}"/>
+        </s:decorate>
+
+        <s:decorate id="wsdlUrl" template="layout/display.xhtml">
+            <ui:define name="label">Wsdl url</ui:define>
+            <h:outputText value="#{pluginHome.instance.wsdlUrl}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/PluginEdit.xhtml"
+                    id="edit"
+                 value="Edit"/>
+
+        <s:button view="/#{empty pluginFrom ? 'PluginList' : pluginFrom}.xhtml"
+                    id="done"
+                 value="Done"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Concepts</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="conceptsChildren">
+
+        <h:outputText value="There are no concepts associated with this plugin."
+                   rendered="#{empty pluginHome.concepts}"/>
+
+        <rich:dataTable value="#{pluginHome.concepts}"
+                       var="_concept"
+                  rendered="#{not empty pluginHome.concepts}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="conceptsTable">
+            <rich:column sortBy="#{_concept.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_concept.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_concept.description}">
+                <f:facet name="header">Description</f:facet>
+                <h:outputText value="#{_concept.description}"/>
+            </rich:column>
+            <rich:column sortBy="#{_concept.tax}">
+                <f:facet name="header">Tax</f:facet>
+                <h:outputText value="#{_concept.tax}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Action</f:facet>
+                <s:link id="selectconcept"
+                     value="Select"
+                      view="/Concept.xhtml">
+                    <f:param name="conceptId"
+                            value="#{_concept.id}"/>
+                    <f:param name="conceptFrom" value="Plugin"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Add concept"
+                view="/ConceptEdit.xhtml">
+            <f:param name="pluginId"
+                    value="#{pluginHome.instance.id}"/>
+            <f:param name="conceptFrom" value="Plugin"/>
+        </s:button>
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Plugin contract types</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="pluginContractTypesChildren">
+
+        <h:outputText value="There are no pluginContractTypes associated with this plugin."
+                   rendered="#{empty pluginHome.pluginContractTypes}"/>
+
+        <rich:dataTable value="#{pluginHome.pluginContractTypes}"
+                       var="_pluginContractType"
+                  rendered="#{not empty pluginHome.pluginContractTypes}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="pluginContractTypesTable">
+            <rich:column sortBy="#{_pluginContractType.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_pluginContractType.id}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Action</f:facet>
+                <s:link id="selectpluginContractType"
+                     value="Select"
+                      view="/PluginContractType.xhtml">
+                    <f:param name="pluginContractTypeId"
+                            value="#{_pluginContractType.id}"/>
+                    <f:param name="pluginContractTypeFrom" value="Plugin"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Add pluginContractType"
+                view="/PluginContractTypeEdit.xhtml">
+            <f:param name="pluginId"
+                    value="#{pluginHome.instance.id}"/>
+            <f:param name="pluginContractTypeFrom" value="Plugin"/>
+        </s:button>
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

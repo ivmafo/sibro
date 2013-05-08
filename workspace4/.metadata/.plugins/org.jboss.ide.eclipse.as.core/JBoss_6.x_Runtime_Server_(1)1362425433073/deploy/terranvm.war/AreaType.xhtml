@@ -1,0 +1,109 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">#{messages.Area_type_Details}</f:facet>
+
+        <s:decorate id="id" template="layout/display.xhtml">
+            <ui:define name="label">Id</ui:define>
+            <h:outputText value="#{areaTypeHome.instance.id}"/>
+        </s:decorate>
+
+        <s:decorate id="name" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Name}</ui:define>
+            <h:outputText value="#{areaTypeHome.instance.name}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+    <table>
+    <tr>
+    <td><div id="editButton">
+        <s:button view="/AreaTypeEdit.xhtml"
+                    id="edit"
+                 value="#{messages.Edit}" disabled="#{areaTypeHome.areaTypeListInApprove(areaTypeHome.instance)}" 
+                 rendered="#{empty makerCheckerId and authenticator.validateShowFunction('AreaType.xhtml', 'edit')}"/>
+                 <rich:toolTip disabled="#{not areaTypeHome.areaTypeListInApprove(areaTypeHome.instance)}" for="editButton">No se puede editar, pendiente aprobación de un cambio</rich:toolTip>
+                       </div>
+					</td>
+				<td>
+        <s:button view="/#{empty areaTypeFrom ? 'AreaTypeList' : areaTypeFrom}.xhtml"
+                    id="done"
+                 value="#{messages.Done}"
+                 rendered="#{empty makerCheckerId and authenticator.validateShowFunction('AreaType.xhtml', 'done')}"/>
+                 </td>
+                 </tr>
+                 </table>
+         <s:button view="/MakerCheckerList.xhtml" action="#{areaTypeHome.approveChange()}" id="approved" value="#{messages.ApproveChange}" rendered="#{not empty makerCheckerId and authenticator.validateShowFunction('AreaType.xhtml', 'approved')}"/>
+		 <s:button view="/MakerCheckerList.xhtml" action="#{areaTypeHome.cancelChange()}" id="cancel" value="#{messages.Cancel}" rendered="#{not empty makerCheckerId and authenticator.validateShowFunction('AreaType.xhtml', 'cancel')}"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>#{messages.Areas}</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="areasChildren">
+
+        <h:outputText value="#{messages.There_are_no_areas_associated_with_this_areaType}"
+                   rendered="#{empty areaTypeHome.areas}"/>
+
+        <rich:dataTable value="#{areaTypeHome.areas}"
+                       var="_area"
+                  rendered="#{not empty areaTypeHome.areas}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="areasTable">
+            <rich:column sortBy="#{_area.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_area.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_area.name}">
+                <f:facet name="header">#{messages.Name}</f:facet>
+                <h:outputText value="#{_area.name}"/>
+            </rich:column>
+            <rich:column sortBy="#{_area.area}">
+                <f:facet name="header">#{messages.Area}</f:facet>
+                <h:outputText value="#{_area.area}"/>
+            </rich:column>
+            <h:column rendered="#{authenticator.validateShowFunction('AreaType.xhtml', 'selectarea')}">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="selectarea"
+                     value="#{messages.Select}"
+                      view="/Area.xhtml">
+                    <f:param name="areaId"
+                            value="#{_area.id}"/>
+                    <f:param name="areaFrom" value="AreaType"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="#{messages.Add_area}"
+                view="/AreaEdit.xhtml">
+            <f:param name="areaTypeId"
+                    value="#{areaTypeHome.instance.id}"/>
+            <f:param name="areaFrom" value="AreaType"/>
+        </s:button>
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

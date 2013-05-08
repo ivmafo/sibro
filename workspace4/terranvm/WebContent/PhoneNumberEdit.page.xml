@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd"
+      no-conversation-view-id="/PhoneNumberList.xhtml"
+      login-required="true">
+
+   <begin-conversation join="true" flush-mode="MANUAL"/>
+
+   <action execute="#{phoneNumberHome.wire}"/>
+
+   <param name="phoneNumberFrom"/>
+   <param name="phoneNumberId" value="#{phoneNumberHome.phoneNumberId}"/>
+   <param name="businessEntityFrom"/>
+   <param name="businessEntityId" value="#{businessEntityHome.businessEntityId}"/>
+   <param name="economicActivityFrom"/>
+   <param name="economicActivityId" value="#{economicActivityHome.economicActivityId}"/>
+   <param name="economicSectorFrom"/>
+   <param name="economicSectorId" value="#{economicSectorHome.economicSectorId}"/>
+
+
+
+   <param name="contactFrom"/>
+   <param name="contactId" value="#{contactHome.contactId}"/>
+   <param name="contactTypeFrom"/>
+   <param name="contactTypeId" value="#{contactTypeHome.contactTypeId}"/>
+
+
+
+
+   <navigation from-action="#{phoneNumberHome.persist}">
+      <rule if-outcome="persisted">
+         <end-conversation/>
+         <redirect view-id="/PhoneNumber.xhtml"/>
+      </rule>
+   </navigation>
+
+   <navigation from-action="#{phoneNumberHome.update}">
+      <rule if-outcome="updated">
+         <end-conversation/>
+         <redirect view-id="/PhoneNumber.xhtml"/>
+      </rule>
+   </navigation>
+
+   <navigation from-action="#{phoneNumberHome.remove}">
+      <rule if-outcome="removed">
+         <end-conversation/>
+         <redirect view-id="/PhoneNumberList.xhtml"/>
+      </rule>
+   </navigation>
+
+</page>

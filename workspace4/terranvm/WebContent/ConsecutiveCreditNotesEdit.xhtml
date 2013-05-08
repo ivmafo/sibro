@@ -1,0 +1,160 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="consecutiveCreditNotes" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{consecutiveCreditNotesHome.managed ? messages.Edit : messages.Add} #{messages.Consecutive_credit_notes}</f:facet>
+
+            <s:decorate id="prefixField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Prefix}</ui:define>
+                <h:inputText id="prefix"
+                              value="#{consecutiveCreditNotesHome.instance.prefix}"/>
+            </s:decorate>
+
+
+            <s:decorate id="suffixField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Suffix}</ui:define>
+                <h:inputText id="suffix"
+                              value="#{consecutiveCreditNotesHome.instance.suffix}"/>
+            </s:decorate>
+
+
+            <s:decorate id="siigoCodeField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.SIIGO_code}</ui:define>
+                <h:inputText id="siigoCode"
+                              value="#{consecutiveCreditNotesHome.instance.siigoCode}"/>
+            </s:decorate>
+
+            <s:decorate id="minField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.current_position_of_consecutive}</ui:define>
+                <h:inputText id="min"
+                       required="true"
+                          value="#{consecutiveCreditNotesHome.instance.min}">
+                    <a:support event="onblur" reRender="minField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                #{messages.required_fields}
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="#{messages.Save}"
+                         action="#{consecutiveCreditNotesHome.persist}"
+                       disabled="#{!consecutiveCreditNotesHome.wired}"
+                       rendered="#{!consecutiveCreditNotesHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="#{messages.Save}"
+                         action="#{consecutiveCreditNotesHome.update}"
+                       rendered="#{consecutiveCreditNotesHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="#{messages.Delete}"
+                         action="#{consecutiveCreditNotesHome.remove}"
+                      immediate="true"
+                       rendered="#{consecutiveCreditNotesHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="#{messages.Cancel}"
+             propagation="end"
+                    view="/ConsecutiveCreditNotes.xhtml"
+                rendered="#{consecutiveCreditNotesHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="#{messages.Cancel}"
+             propagation="end"
+                    view="/#{empty consecutiveCreditNotesFrom ? 'ConsecutiveCreditNotesList' : consecutiveCreditNotesFrom}.xhtml"
+                rendered="#{!consecutiveCreditNotesHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="#{messages.Business_entity} *" labelClass="required">
+    <div class="association" id="businessEntityParent">
+
+        <h:outputText value="#{messages.There_is_no_businessEntity_associated_with_this_consecutiveCreditNotes}"
+                   rendered="#{consecutiveCreditNotesHome.instance.businessEntity == null}"/>
+
+        <rich:dataTable var="_businessEntity"
+                   value="#{consecutiveCreditNotesHome.instance.businessEntity}"
+                rendered="#{consecutiveCreditNotesHome.instance.businessEntity != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="businessEntityTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_businessEntity.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Economic_activity_id}</f:facet>
+                <h:outputText value="#{_businessEntity.economicActivity.code}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Id_type}</f:facet>
+                <h:outputText value="#{_businessEntity.idType}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Id_number}</f:facet>
+                <h:outputText value="#{_businessEntity.idNumber}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Name}</f:facet>
+                <h:outputText value="#{_businessEntity.nameBusinessEntity}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Email}</f:facet>
+                <h:outputText value="#{_businessEntity.email}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Trade_Name}</f:facet>
+                <h:outputText value="#{_businessEntity.tradeName}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Legal_entity_type}</f:facet>
+                <h:outputText value="#{_businessEntity.legalEntityType}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Verification_number}</f:facet>
+                <h:outputText value="#{_businessEntity.verificationNumber}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Image}</f:facet>
+                <h:outputText value="#{_businessEntity.imagePath}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Tax_liabilities}</f:facet>
+                <h:outputText value="#{_businessEntity.taxLiabilities}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button id="#{consecutiveCreditNotesHome.instance.businessEntity != null ? 'changeParent' : 'selectParent'}" value="#{consecutiveCreditNotesHome.instance.businessEntity != null ? messages.Change : messages.Select} #{messages.businessEntity}"
+                       view="/BusinessEntityList.xhtml">
+                <f:param name="from" value="ConsecutiveCreditNotesEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

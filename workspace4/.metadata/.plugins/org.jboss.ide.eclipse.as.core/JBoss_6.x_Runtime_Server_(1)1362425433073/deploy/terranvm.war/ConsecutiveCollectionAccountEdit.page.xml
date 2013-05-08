@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd"
+      no-conversation-view-id="/ConsecutiveCollectionAccountList.xhtml"
+      login-required="true">
+
+   <begin-conversation join="true" flush-mode="MANUAL"/>
+
+   <action execute="#{consecutiveCollectionAccountHome.wire}"/>
+
+   <param name="consecutiveCollectionAccountFrom"/>
+   <param name="consecutiveCollectionAccountId" value="#{consecutiveCollectionAccountHome.consecutiveCollectionAccountId}"/>
+   <param name="businessEntityFrom"/>
+   <param name="businessEntityId" value="#{businessEntityHome.businessEntityId}"/>
+   <param name="cityFrom"/>
+   <param name="cityId" value="#{cityHome.cityId}"/>
+   <param name="regionFrom"/>
+   <param name="regionId" value="#{regionHome.regionId}"/>
+   <param name="countryFrom"/>
+   <param name="countryId" value="#{countryHome.countryId}"/>
+
+
+
+   <param name="economicActivityFrom"/>
+   <param name="economicSectorFrom"/>
+   <param name="economicSectorId" value="#{economicSectorHome.economicSectorId}"/>
+
+   <navigation from-action="#{consecutiveCollectionAccountHome.persist}">
+      <rule if-outcome="persisted">
+         <end-conversation/>
+         <redirect view-id="/ConsecutiveCollectionAccount.xhtml"/>
+      </rule>
+   </navigation>
+
+   <navigation from-action="#{consecutiveCollectionAccountHome.update}">
+      <rule if-outcome="updated">
+         <end-conversation/>
+         <redirect view-id="/ConsecutiveCollectionAccount.xhtml"/>
+      </rule>
+   </navigation>
+
+   <navigation from-action="#{consecutiveCollectionAccountHome.remove}">
+      <rule if-outcome="removed">
+         <end-conversation/>
+         <redirect view-id="/ConsecutiveCollectionAccountList.xhtml"/>
+      </rule>
+   </navigation>
+
+</page>

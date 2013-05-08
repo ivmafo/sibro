@@ -1,0 +1,4 @@
+eclipse.preferences.version=1
+org.jboss.tools.seam.core.runtime.list=name|jboss-seam-2.2.1.Final|version|2.2|homeDir|/usr/local/jboss-seam-2.2.1.Final|default|true
+seam.packageStructure=editable
+seam.scopePresentation=label

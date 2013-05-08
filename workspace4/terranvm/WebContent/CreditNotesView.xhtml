@@ -1,0 +1,149 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a4j="http://richfaces.org/a4j"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">#{messages.Credit_Notes} Detalles</f:facet>
+
+
+        <s:decorate id="value" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Value}</ui:define>
+            <h:outputText value="#{creditNoteHome.instance.values()}"/>
+        </s:decorate>
+
+        <s:decorate id="date" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Date}</ui:define>
+            <h:outputText value="#{creditNoteHome.instance.creditNoteDate}"/>
+        </s:decorate>
+
+        <s:decorate id="reason" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Reason}</ui:define>
+            <h:outputText value="#{creditNoteHome.instance.reason}"/>
+        </s:decorate>
+
+        <s:decorate id="consecutiveCreditNotes" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Consecutive_credit_notes}</ui:define>
+            <h:outputText value="#{creditNoteHome.instance.consecutive}"/>
+        </s:decorate>
+        
+        
+        <div style="clear: both" >
+	        <table>
+		        <tr>
+		        	<td>
+		        	<h:form>
+		        		<h:commandButton type="button" id="approved" value="#{messages.ApproveChange}" rendered="#{not empty makerCheckerId}" >
+		        			<a4j:support event="onclick" action="#{creditNoteHome.approveChange()}" ajaxSingle="true" ignoreDupResponses="true" reRender="modalPanelPdf" limitToList="true"  oncomplete="#{rich:component('modalPanelPdf')}.show()" >
+		        			</a4j:support>
+		 				</h:commandButton>
+	 				</h:form>       	
+		            </td>
+		            <td>
+		                <s:button view="/MakerCheckerCreditNotesList.xhtml" action="#{creditNoteHome.cancelChange()}" id="cancel" value="#{messages.Cancel}" rendered="#{not empty makerCheckerId}" />
+		            </td>
+		         </tr>
+	        </table>
+	
+	    </div>
+	    
+    </rich:panel> 
+    
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab >
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>#{messages.Concept}</h:panelGroup>
+        </f:facet>
+    <div class="association" id="invoiceConcept">
+
+        <h:outputText value="#{messages.There_is_no_invoiceConcept_associated_with_this_CreditNote}"
+                   rendered="#{creditNoteHome.invoiceConcepts == null}"/>
+
+        <rich:dataTable var="_invoiceConcept"
+                   value="#{creditNoteHome.invoiceConcepts}"
+                rendered="#{creditNoteHome.invoiceConcepts != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="invoiceConceptTable">
+            
+            <h:column >
+                <f:facet name="header">#{messages.Fac_Number} original</f:facet>
+                <h:outputText value="#{_invoiceConcept.invoiceConceptParent.invoice.number}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Concept}</f:facet>
+                <h:outputText value="#{conceptHome.nameInvoiceConcept(_invoiceConcept.invoiceConceptParent)}"/> 
+            </h:column>
+            <h:column>
+                <f:facet name="header">Valor original del Concepto sin Iva</f:facet>
+                <h:outputText value="#{_invoiceConcept.invoiceConceptParent.calculatedCosts}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Tax} del Concepto original</f:facet>
+                <h:outputText value="#{_invoiceConcept.invoiceConceptParent.calculatedTaxes}"/>
+            </h:column>
+             <h:column>
+                <f:facet name="header">Valor Saldo concepto original</f:facet>
+                <h:outputText value="#{_invoiceConcept.invoiceConceptParent.balances}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Credit_Notes_value}</f:facet>
+                <h:outputText value="#{_invoiceConcept.recoverValues}"/>
+            </h:column>
+            
+        </rich:dataTable>
+    </div>
+    </rich:tab>
+
+    </rich:tabPanel>
+    
+    <rich:modalPanel id="modalPanelPdf" width="400" autosized="true" onshow="fadeModal1();">
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText value="#{messages.Credit_Notes}  -  #{messages.Generate_PDF}"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+			<a4j:form ajaxSingle="true" ajaxSubmit="false">  </a4j:form>
+			
+			<a4j:form>
+			<table>
+			<tr>
+				<td>
+					<s:link id="linkSiigo" target="_self" rendered="#{creditNoteHome.linkSiigo != null}" value="#{messages.Download_SIIGO}" action="#{downloadAttachment.download()}" >
+						<f:param name="relativePath" value="#{creditNoteHome.linkSiigo}"></f:param>
+					</s:link>
+				</td>
+				
+				<td>#{'    '}</td>
+				
+				<td>
+					<a4j:outputPanel ajaxRendered="true">
+						<h:outputLink  id="linkPDF" target="_blank" rendered="#{creditNoteHome.linkPDF != null}" value="#{creditNoteHome.linkPDF}" >#{messages.Download_PDF } </h:outputLink>
+					</a4j:outputPanel>
+				</td>
+				
+				<td>#{'    '}</td>
+				
+				<td>
+					<s:button value="#{messages.Close}" view="/MakerCheckerCreditNotesList.xhtml">
+							<a4j:support event="onclick" ajaxSingle="true" ignoreDupResponses="true" limitToList="true"  oncomplete="#{rich:component('modalPanelPdf')}.hide()" ></a4j:support>
+					</s:button>
+				</td>
+    		</tr>
+			</table>
+
+			</a4j:form>
+		</rich:modalPanel>
+    
+</ui:define>
+
+</ui:composition>

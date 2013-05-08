@@ -1,0 +1,278 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:p="http://primefaces.prime.com.tr/ui" xmlns:a4j="http://richfaces.org/a4j" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+	<ui:define name="body">
+		<a4j:keepAlive beanName="portafolioPenaltyHome"></a4j:keepAlive>
+		<h:form>
+
+			<div style="width: 100%; height: 80px; text-align: center; vertical-align: middle;">
+				<a4j:outputPanel id="outputpanelSearch">
+
+					<rich:panel>
+						<table style="width: 100%; text-align: center;">
+							<tr>
+								<td><h:outputLabel style="font-weight:bold;" value="#{messages.bussines_entity_legalName} (#{messages.Billed}): " /> <h:inputText cols="30" rows="1" value="#{portafolioPenaltyHome.searchName}">
+										<a4j:support event="onkeyup" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="cleanButton"></a4j:support>
+									</h:inputText>
+								</td>
+								<td><h:outputLabel style="font-weight:bold;" value="#{messages.nit_cedula}: " /> <h:inputText cols="30" rows="1" value="#{portafolioPenaltyHome.searchId}">
+										<a4j:support event="onkeyup" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="cleanButton"></a4j:support>
+									</h:inputText>
+								</td>
+								<td><h:commandButton type="button" id="searchButton" value="#{messages.Search}">
+										<a4j:support event="onclick" limitToList="true" ajaxSingle="true" action="#{portafolioPenaltyHome.searchInvoicePortafolioPenaltyList()}" ignoreDupResponses="true" reRender="tableInvoicePortafolioPenaltyList,cleanButton,growlPanel,outputpanelButtons"></a4j:support>
+									</h:commandButton>
+								</td>
+								<td><h:commandButton type="button" id="cleanButton" value="#{messages.Clean}" disabled="#{portafolioPenaltyHome.searchFormEmpty()}">
+										<a4j:support event="onclick" limitToList="true" ajaxSingle="true" action="#{portafolioPenaltyHome.cleanSearchForm()}" ignoreDupResponses="true" reRender="outputpanelSearch"></a4j:support>
+									</h:commandButton>
+								</td>
+							</tr>
+						</table>
+					</rich:panel>
+				</a4j:outputPanel>
+			</div>
+
+			<rich:extendedDataTable noDataLabel="#{messages.table_no_data}" binding="#{htmlInvoicePortafolioPenaltyDataTable}" width="100%" height="350px" rows="8" sortMode="multi" tableState="#{portafolioPenaltyHome.portafolioPenaltyListTableState}" value="#{portafolioPenaltyHome.invoicePortafolioPenaltyList}" var="_invoice" id="tableInvoicePortafolioPenaltyList">
+
+				<rich:column width="3%" sortable="true" id="col1" sortBy="#{_invoice.id}" filterBy="#{_invoice.id}" filterEvent="onkeyup" style="text-align: center">
+					<f:facet name="header">
+						<h:outputText value="id" />
+					</f:facet>
+					<h:outputText value="#{_invoice.id}" />
+				</rich:column>
+				<rich:column width="11%" sortable="true" id="col9" sortBy="#{_invoice.projectProperty.rentableUnit.name}" filterBy="#{_invoice.projectProperty.rentableUnit.name}" filterEvent="onkeyup" style="text-align: center">
+					<f:facet name="header">
+						<h:outputText value="#{messages.Rentable_unit}" />
+					</f:facet>
+					<h:outputText value="#{(_invoice.groupNumber!=-1 and _invoice.projectProperty.objectOfContract.id == 2) ? _invoice.projectProperty.rentableUnit.name : ''}" />
+				</rich:column>
+				<rich:column width="20%" sortable="true" id="col2" sortBy="#{_invoice.nameBilled}" filterBy="#{_invoice.nameBilled}" filterEvent="onkeyup" style="text-align: center">
+					<f:facet name="header">
+						<h:outputText value="#{messages.Billed}" />
+					</f:facet>
+					<h:outputText value="#{_invoice.nameBilled}" />
+				</rich:column>
+
+				<rich:column width="8%" sortable="true" id="col3" sortBy="#{_invoice.idNumberBilled}" filterBy="#{_invoice.idNumberBilled}" filterEvent="onkeyup" style="text-align: center">
+					<f:facet name="header">
+						<h:outputText value="#{messages.nit_cedula}" />
+					</f:facet>
+					<h:outputText value="#{_invoice.idNumberBilled}" />
+				</rich:column>
+
+				<rich:column width="10%" sortable="true" id="col4" sortBy="#{_invoice.number}" filterBy="#{_invoice.number}" filterEvent="onkeyup" style="text-align: center">
+					<f:facet name="header">
+						<h:outputText value="#{messages.Fac_Number}" />
+					</f:facet>
+					<h:outputText value="#{_invoice.number}" />
+				</rich:column>
+
+				<rich:column width="10%" sortable="true" id="col5" sortBy="#{_invoice.total()}" filterBy="#{_invoice.total()}" filterEvent="onkeyup" style="text-align: center">
+					<f:facet name="header">
+						<h:outputText value="#{messages.Total}" />
+					</f:facet>
+					<h:outputText value="#{_invoice.total()}">
+						<f:convertNumber currencySymbol="$ " type="currency" />
+					</h:outputText>
+				</rich:column>
+
+				<rich:column width="13%" sortable="true" id="col6" sortBy="#{_invoice.expeditionDate}" filterBy="#{_invoice.expeditionDate}" filterEvent="onkeyup" style="text-align: center">
+					<f:facet name="header">
+						<h:outputText value="#{messages.expediton_date}" />
+					</f:facet>
+					<h:outputText value="#{_invoice.expeditionDate}">
+					</h:outputText>
+				</rich:column>
+
+				<rich:column width="13%" sortable="true" id="col7" sortBy="#{_invoice.expirationDate}" filterBy="#{_invoice.expirationDate}" filterEvent="onkeyup" style="text-align: center">
+					<f:facet name="header">
+						<h:outputText value="#{messages.expiration_date}" />
+					</f:facet>
+					<h:outputText value="#{_invoice.expirationDate}">
+					</h:outputText>
+				</rich:column>
+				<rich:column width="5%" sortable="true" id="colStatus" sortBy="#{portafolioPenaltyHome.getState(_invoice)}" style="text-align: center">
+					<f:facet name="header">
+						<h:outputText value="#{messages.State}" />
+					</f:facet>
+					<h:outputText value="#{portafolioPenaltyHome.getState(_invoice)}">
+					</h:outputText>
+				</rich:column>
+				<rich:column width="7%" sortable="true" id="col8"  style="text-align: center">
+					<f:facet name="header">
+						<h:selectBooleanCheckbox rendered="#{portafolioPenaltyHome.invoicePortafolioPenaltyList.size() > 0}" id="checkAll" value="#{portafolioPenaltyHome.selectAllInvoices}">
+							<a4j:support event="onchange" action="#{portafolioPenaltyHome.checkAllInvoices()}" limitToList="true" ignoreDupResponses="true" ajaxSingle="true" reRender="checkBoxSelected,outputpanelButtons,panelTotalPortafolioPenalty"></a4j:support>
+						</h:selectBooleanCheckbox>
+					</f:facet>
+					<h:selectBooleanCheckbox id="checkBoxSelected" value="#{_invoice.selected}">
+						<a4j:support event="onchange" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="outputpanelButtons,panelTotalPortafolioPenalty"></a4j:support>
+					</h:selectBooleanCheckbox>
+				</rich:column>
+				<f:facet name="footer">
+					<rich:datascroller id="datascroller" rendered="#{portafolioPenaltyHome.invoicePortafolioPenaltyList.size() > 8}" />
+				</f:facet>
+			</rich:extendedDataTable>
+
+
+			<div style="width: 100%; height: 50px; text-align: center;">
+				<a4j:outputPanel id="outputpanelButtons">
+					<table style="width: 100%; text-align: center;">
+						<tr>
+							<td style="width: 200px; width: 40%;"><h:commandButton rendered="#{portafolioPenaltyHome.renderButtonPunishmentBills()}" type="button" value="#{messages.portafolioPenalty_punish_bills}">
+									<a4j:support event="onclick" ajaxSingle="true" action="#{portafolioPenaltyHome.resetInvoiceConceptList()}" limitToList="true" reRender="panelPortafolioPenaltyConcepts" oncomplete="#{rich:component('modalPanelPortafolioPenalty')}.show()" ignoreDupResponses="true"></a4j:support>
+								</h:commandButton>
+							</td>
+
+							<td style="text-align: right; width: 20%;">
+								<table>
+									<tr>
+										<td style="text-align: right;"><h:outputLabel style="font-weight:bold;" value="#{messages.Total}:" rendered="#{portafolioPenaltyHome.invoicePortafolioPenaltyList.size() > 0 and portafolioPenaltyHome.portafolioPenaltyInvoiceListSelectionAcceptable}" />
+										</td>
+										<td style="text-align: left;"><h:outputLabel style="color:blue;font-weight:bold;" value="#{portafolioPenaltyHome.sumInvoice()}" rendered="#{portafolioPenaltyHome.invoicePortafolioPenaltyList.size() > 0 and portafolioPenaltyHome.portafolioPenaltyInvoiceListSelectionAcceptable}">
+												<f:convertNumber currencySymbol="$ " type="currency" />
+											</h:outputLabel>
+										</td>
+									</tr>
+								</table>
+							</td>
+
+							<td style="width: 300px; width: 20%;"><h:outputText style="color:red" value="#{messages.recover_message_invoice_differentBilledSelected}" rendered="#{!portafolioPenaltyHome.portafolioPenaltyInvoiceListSelectionAcceptable}" />
+							</td>
+						</tr>
+					</table>
+					<br />
+				</a4j:outputPanel>
+			</div>
+		</h:form>
+
+
+		<rich:modalPanel id="modalPanelPortafolioPenalty" width="900" autosized="true">
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText value=""></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+			<a4j:form ajaxSubmit="false" ajaxSingle="true">
+				<a4j:outputPanel id="panelPortafolioPenaltyConcepts">
+					<h:panelGrid style="width: 100%;" columns="1">
+
+						<rich:extendedDataTable selectionMode="none"  noDataLabel="#{messages.table_no_data}" binding="#{htmlInvoiceConceptPortafolioPenaltyDataTable}" width="100%" height="300px" rows="0" sortMode="multi" tableState="#{portafolioPenaltyHome.portafolioPenaltyInvoiceConceptListTableState}" value="#{portafolioPenaltyHome.invoiceConceptsPortafolioPenaltyList}" var="_invCon" id="tableInvoiceConceptPortafolioPenaltyList">
+
+							<rich:column width="5%" sortable="true" sortBy="#{_invCon.id}" filterBy="#{_invCon.id}" filterEvent="onchange" style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="id" />
+								</f:facet>
+								<h:outputText value="#{_invCon.id}" />
+							</rich:column>
+							<rich:column width="15%" sortable="true" sortBy="#{_invCon.invoice.number}" filterBy="#{_invCon.invoice.number}" filterEvent="onchange" style="text-align: center">
+								<f:facet name="header">
+									<center>
+										<b>#{messages.MONO_number_capital} #{messages.MONO_of}<br></br>#{messages.MONO_invoice_capital}</b>
+									</center>
+								</f:facet>
+								<h:outputText value="#{_invCon.invoice.number}" />
+							</rich:column>
+							<rich:column width="25%" sortable="true" sortBy="#{_invCon.concept.name}" filterBy="#{_invCon.concept.name}" filterEvent="onchange" style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="#{messages.Concept}" />
+								</f:facet>
+								<h:outputText style="font-weight: bold;font-size:xx-small;" value="#{recoverHome.getLabelMandatoryInterest(_invCon)} " />
+								<h:outputText value=" #{_invCon.concept.name}" />
+								<rich:toolTip>
+									<span style="white-space: nowrap"> #{_invCon.concept.name}</span>
+								</rich:toolTip>
+							</rich:column>
+							<rich:column width="15%" sortable="true" sortBy="#{_invCon.total}" filterBy="#{_invCon.total}" filterEvent="onchange" style="text-align: right;padding-right:3%;">
+								<f:facet name="header">
+									<center>
+										<b>#{messages.MONO_total_capital} #{messages.MONO_ofthe}<br></br>#{messages.MONO_concept_capital}</b>
+									</center>
+								</f:facet>
+								<h:outputText value="#{_invCon.total}">
+									<f:convertNumber currencySymbol="$ " type="currency" />
+								</h:outputText>
+							</rich:column>
+							<rich:column width="15%" sortable="true" sortBy="#{_invCon.balance}" filterBy="#{_invCon.balance}" filterEvent="onchange" style="text-align: right;padding-right:3%;">
+								<f:facet name="header">
+									<h:outputText value="#{messages.balance}" />
+								</f:facet>
+								<h:outputText style="font-weight:bold;padding-right:10px;" value="#{_invCon.balance}">
+									<f:convertNumber currencySymbol="$ " type="currency" />
+								</h:outputText>
+							</rich:column>
+							<rich:column width="15%" sortable="true" sortBy="#{_invCon.penaltyDate}" filterBy="#{_invCon.penaltyDate}" filterEvent="onchange" style="text-align: center;">
+								<f:facet name="header">
+									<center>
+										<b>#{messages.MONO_date_capital} #{messages.MONO_of}<br></br>#{messages.MONO_punishment_capital}</b>
+									</center>
+								</f:facet>
+								<h:outputText value=" #{_invCon.datePenalty()}">
+
+								</h:outputText>
+							</rich:column>
+							<rich:column width="10%" sortable="true" id="colPortafolioPenalty" style="text-align: center">
+								<f:facet name="header">
+									<h:selectBooleanCheckbox value="#{portafolioPenaltyHome.selectAllInvoiceConcepts}">
+										<a4j:support event="onchange" action="#{portafolioPenaltyHome.checkAllInvoiceConcepts()}" limitToList="true" ignoreDupResponses="true" ajaxSingle="true" reRender="panelPortafolioPenaltyConcepts"></a4j:support>
+									</h:selectBooleanCheckbox>
+								</f:facet>
+
+								<h:selectBooleanCheckbox id="checkBoxSelected" disabled="#{_invCon.penaltyDate != null}" value="#{_invCon.selected}">
+									<a4j:support event="onchange" ignoreDupResponses="true" limitToList="true" reRender="panelPortafolioPenaltySave"></a4j:support>
+								</h:selectBooleanCheckbox>
+							</rich:column>
+
+						</rich:extendedDataTable>
+						<a4j:outputPanel style="width:100%;" id="panelPortafolioPenaltySave">
+							<table style="width: 100%;">
+								<tr style="text-align: center;">
+									<td style="width: 50%;"><h:commandButton type="button" value="#{messages.Close}" onclick="#{rich:component('modalPanelPortafolioPenalty')}.hide()">
+										</h:commandButton></td>
+									<td style="width: 50%;"><h:commandButton disabled="#{!portafolioPenaltyHome.selectedAnyInvoiceConcept}" type="button" value="#{messages.portafolioPenalty_punish_concepts}">
+											<a4j:support event="onclick" ajaxSingle="true" ignoreDupResponses="true" limitToList="true" oncomplete="#{rich:component('modalPanelPunishmentConfirmation')}.show()" reRender="tableInvoicePortafolioPenaltyList, growlPanel"></a4j:support>
+										</h:commandButton></td>
+								</tr>
+							</table>
+						</a4j:outputPanel>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</a4j:form>
+		</rich:modalPanel>
+
+
+
+		<rich:modalPanel id="modalPanelPunishmentConfirmation" minWidth="400" autosized="true">
+			<f:facet name="header">
+				<h:panelGroup>
+					<a4j:outputPanel id="titleConceptApprove" ajaxRendered="true">
+						<h:outputText value="#{messages.portafolioPenalty}"></h:outputText>
+					</a4j:outputPanel>
+				</h:panelGroup>
+			</f:facet>
+			<h:form>
+				<h:panelGrid columns="1">
+					<s:decorate template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.MONO_date_capital} #{messages.MONO_of} #{messages.MONO_punishment_capital}</ui:define>
+						<rich:calendar id="expirationDate" value="#{portafolioPenaltyHome.punishmentDate}" datePattern="dd/MM/yyyy">
+							<a4j:support event="onchanged" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="buttonFormOutputPanel"></a4j:support>
+						</rich:calendar>
+					</s:decorate>
+					<h:outputText value="#{messages.Surely_this_development_continue}" />
+					<a4j:outputPanel id="buttonFormOutputPanel">
+						<h:panelGrid columns="2">
+							<h:commandButton type="button" value="#{messages.NOT}" onclick="#{rich:component('modalPanelPunishmentConfirmation')}.hide()">
+							</h:commandButton>
+							<h:commandButton disabled="#{portafolioPenaltyHome.punishmentDate == null}" rendered="#{projectHome.validateApprovePreliquidationsDate()}" id="doApprovePreliquidationButton" type="button" value="#{messages.YES}, #{messages.portafolioPenalty_punish_selected_concepts}">
+								<a4j:support event="onclick" ajaxSingle="true" ignoreDupResponses="true" limitToList="true" oncomplete="#{rich:component('modalPanelPunishmentConfirmation')}.hide()" action="#{portafolioPenaltyHome.savePortafolioPenalty()}" reRender="panelPortafolioPenaltyConcepts,growlPanel,tableInvoicePortafolioPenaltyList"></a4j:support>
+							</h:commandButton>
+						</h:panelGrid>
+					</a4j:outputPanel>
+				</h:panelGrid>
+			</h:form>
+		</rich:modalPanel>
+
+
+	</ui:define>
+
+</ui:composition>

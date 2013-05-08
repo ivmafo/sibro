@@ -1,0 +1,1187 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml"
+	xmlns:a="http://richfaces.org/a4j">
+
+	<ui:define name="body">
+
+		<rich:panel>
+			<f:facet name="header">#{messages.Project_property_Details}</f:facet>
+
+
+			<s:decorate id="contractType" template="layout/display.xhtml">
+				<ui:define name="label">#{messages.Contract_type}</ui:define>
+				<h:outputText
+					value="#{projectPropertyHome.instance.contractType.name}" />
+			</s:decorate>
+
+			<s:decorate id="objectOfContract" template="layout/display.xhtml">
+				<ui:define name="label">#{messages.Object_of_contract}</ui:define>
+				<h:outputText
+					value="#{projectPropertyHome.instance.objectOfContract.description}" />
+			</s:decorate>
+
+			<s:decorate id="subscriptionDate" template="layout/display.xhtml">
+				<ui:define name="label">#{messages.Subscription_date}</ui:define>
+				<h:outputText
+					value="#{projectPropertyHome.instance.subscriptionDate}">
+					<s:convertDateTime type="date" dateStyle="short"
+						pattern="dd/MM/yyyy" />
+				</h:outputText>
+			</s:decorate>
+
+			<s:decorate id="expirationDate" template="layout/display.xhtml">
+				<ui:define name="label">#{messages.Expiration_date}</ui:define>
+				<h:outputText value="#{projectPropertyHome.instance.expirationDate}">
+					<s:convertDateTime type="date" dateStyle="short"
+						pattern="dd/MM/yyyy" />
+				</h:outputText>
+			</s:decorate>
+
+			<s:decorate id="obligationsStartDate" template="layout/display.xhtml">
+				<ui:define name="label">#{messages.Date_of_commencement_of_duties}</ui:define>
+				<h:outputText
+					value="#{projectPropertyHome.instance.obligationsStartDate}">
+					<s:convertDateTime type="date" dateStyle="short"
+						pattern="dd/MM/yyyy" />
+				</h:outputText>
+			</s:decorate>
+
+			<s:decorate id="noticeDate" template="layout/display.xhtml">
+				<ui:define name="label">#{messages.Notice_date}</ui:define>
+				<h:outputText value="#{projectPropertyHome.instance.noticeDate}">
+					<s:convertDateTime type="date" dateStyle="short"
+						pattern="dd/MM/yyyy" />
+				</h:outputText>
+			</s:decorate>
+
+			<s:decorate id="stateField" template="layout/display.xhtml">
+				<ui:define name="label">#{messages.State}</ui:define>
+				<h:outputText rendered="#{projectPropertyHome.approved}"
+					value="Aprobado" />
+				<h:outputText rendered="#{projectPropertyHome.draft}"
+					value="Borrador" />
+				<h:outputText rendered="#{projectPropertyHome.terminated}"
+					value="Terminacion Anticipada" />
+				<h:outputText rendered="#{projectPropertyHome.terminate}"
+					value="Terminado" />
+			</s:decorate>
+
+			<s:decorate id="mandateField" template="layout/display.xhtml">
+				<ui:define name="label">#{messages.mandate}</ui:define>
+				<h:outputText rendered="#{projectPropertyHome.instance.mandate}"
+					value="Si" />
+				<h:outputText rendered="#{!projectPropertyHome.instance.mandate}"
+					value="No" />
+			</s:decorate>
+
+			<s:decorate id="version" template="layout/display.xhtml">
+				<ui:define name="label">#{messages.Version_termSheet}</ui:define>
+				<h:outputText value="#{projectPropertyHome.instance.version}">
+				</h:outputText>
+			</s:decorate>
+
+			<s:decorate id="automaticExtension" template="layout/display.xhtml">
+				<ui:define name="label">#{messages.Automatic_extension}</ui:define>
+				<h:outputText
+					value="#{projectPropertyHome.instance.automaticExtension}" />
+			</s:decorate>
+
+			<s:decorate id="subjectContrat" template="layout/display.xhtml">
+				<ui:define name="label">#{messages.Object_of_the_contract}</ui:define>
+				<rich:editor id="editor" width="800" height="700"
+					value="#{projectPropertyHome.instance.subjectContrat}"
+					useSeamText="false" readonly="true">
+				</rich:editor>
+			</s:decorate>
+
+
+			<s:decorate id="relaPropertyName" template="layout/display.xhtml"
+				rendered="#{projectPropertyHome.instance.contractType.id == 1 or projectPropertyHome.instance.contractType.id == 2}">
+				<ui:define name="label">#{messages.realProperty}</ui:define>
+				<h:outputText
+					value="#{projectPropertyHome.instance.realProperty.nameProperty}" />
+			</s:decorate>
+
+			<s:decorate id="rentableUnitName" template="layout/display.xhtml"
+				rendered="#{projectPropertyHome.instance.contractType.id == 1 or projectPropertyHome.instance.contractType.id == 2}">
+				<ui:define name="label">#{messages.Rentable_unit}</ui:define>
+				<h:outputText
+					value="#{projectPropertyHome.instance.rentableUnit.name}" />
+			</s:decorate>
+
+			<s:decorate id="startDateChanges" template="layout/display.xhtml"
+				rendered="#{projectPropertyHome.instance.contractType.id == 2}">
+				<ui:define name="label">#{messages.Home_modifications}</ui:define>
+				<h:outputText
+					value="#{projectPropertyHome.instance.startDateChanges}">
+					<s:convertDateTime type="date" dateStyle="short"
+						pattern="dd/MM/yyyy" />
+				</h:outputText>
+			</s:decorate>
+
+
+
+			<s:decorate id="purpose" template="layout/display.xhtml"
+				rendered="#{projectPropertyHome.instance.contractType.id == 2}">
+				<ui:define name="label">Destinación</ui:define>
+				<h:outputText value="#{projectPropertyHome.instance.purpose}">
+				</h:outputText>
+			</s:decorate>
+
+			<h:form styleClass="edit">
+				<div style="clear: both">
+					<rich:simpleTogglePanel label="Configuración para facturar"
+						rendered="#{not empty accounterEdit}">
+						<a4j:region>
+							<s:decorate id="billing_resolution" template="layout/edit.xhtml"
+								rendered="#{not empty accounterEdit}">
+								<ui:define name="label">#{messages.Billing_resolutions} </ui:define>
+								<h:selectOneMenu
+									value="#{projectPropertyHome.instance.billingResolution}">
+									<s:selectItems
+										value="#{projectPropertyHome.billingResolutionList}"
+										var="billingResolution"
+										label="#{billingResolution.prefix} #{billingResolution.min} - #{billingResolution.max}" />
+									<s:convertEntity></s:convertEntity>
+									<a4j:support event="onchange" ajaxSingle="true"
+										disableDefault="true"></a4j:support>
+								</h:selectOneMenu>
+							</s:decorate>
+
+							<s:decorate id="accounts_billing" template="layout/edit.xhtml"
+								rendered="#{not empty accounterEdit}">
+								<ui:define name="label">#{messages.Consecutive_Accounts_Billing} </ui:define>
+								<h:selectOneMenu
+									value="#{projectPropertyHome.instance.acountsBilling}">
+									<s:selectItems
+										value="#{projectPropertyHome.consecutiveAccountsBillings()}"
+										var="acountsBilling"
+										label="#{acountsBilling.prefix} #{acountsBilling.min} #{acountsBilling.suffix}" />
+									<s:convertEntity></s:convertEntity>
+									<a4j:support event="onchange" ajaxSingle="true"
+										disableDefault="true"></a4j:support>
+								</h:selectOneMenu>
+							</s:decorate>
+
+							<s:decorate id="credit_notes" template="layout/edit.xhtml"
+								rendered="#{not empty accounterEdit}">
+								<ui:define name="label">#{messages.Consecutive_credit_notes} </ui:define>
+								<h:selectOneMenu required="true"
+									value="#{projectPropertyHome.instance.creditNotes}">
+									<s:selectItems
+										value="#{projectPropertyHome.consecutiveCreditNoteses()}"
+										var="creditNotes"
+										label="#{creditNotes.prefix} #{creditNotes.min} #{creditNotes.suffix}" />
+									<s:convertEntity></s:convertEntity>
+									<a4j:support event="onchange" ajaxSingle="true"
+										disableDefault="true"></a4j:support>
+								</h:selectOneMenu>
+							</s:decorate>
+
+							<s:decorate id="collection_account" template="layout/edit.xhtml"
+								rendered="#{not empty accounterEdit}">
+								<ui:define name="label">#{messages.Consecutive_collection_account} </ui:define>
+								<h:selectOneMenu required="true"
+									value="#{projectPropertyHome.instance.consecutiveCollectionAccount}">
+									<s:selectItems
+										value="#{projectPropertyHome.collectionAccountList}"
+										var="collectionAccount"
+										label="#{collectionAccount.prefix} #{collectionAccount.min} #{collectionAccount.suffix}" />
+									<s:convertEntity></s:convertEntity>
+									<a4j:support event="onchange" ajaxSingle="true"
+										disableDefault="true"></a4j:support>
+								</h:selectOneMenu>
+							</s:decorate>
+						</a4j:region>
+
+
+					</rich:simpleTogglePanel>
+				</div>
+			</h:form>
+
+			<div style="clear: both" />
+
+		</rich:panel>
+
+		<div class="actionButtons">
+			<table>
+				<tr>
+					<td>
+						<div id="editButton">
+							<s:button view="/ProjectPropertyEdit.xhtml" id="edit"
+								value="#{messages.Edit}"
+								disabled="#{projectPropertyHome.projectPropertyListInApprove(projectPropertyHome.instance)}"
+								rendered="#{empty makerCheckerId and authenticator.validateShowFunction('ProjectProperty.xhtml', 'edit') }" />
+							<rich:toolTip
+								disabled="#{not projectPropertyHome.projectPropertyListInApprove(projectPropertyHome.instance)}"
+								for="editButton">#{messages.You_can_not_edit_pending_approval_of_a_change}</rich:toolTip>
+						</div>
+					</td>
+					<td><s:button
+							view="/#{empty projectPropertyFrom ? 'ProjectPropertyList' : projectPropertyFrom}.xhtml"
+							id="done" value="#{messages.Done}"
+							rendered="#{empty makerCheckerId and authenticator.validateShowFunction('ProjectProperty.xhtml', 'done')}" />
+					</td>
+
+					<td>
+						<div id="approveCount">
+							<s:button view="/MakerCheckerProjectPropertyList.xhtml"
+								id="approvedCounter" value="Aprobacion Contador"
+								action="#{projectPropertyHome.approveCounter()}"
+								disabled="#{projectPropertyHome.instance.creditNotes == null || projectPropertyHome.instance.consecutiveCollectionAccount == null || (!projectPropertyHome.validateAccountsXConcept())}"
+								rendered="#{projectPropertyHome.instance.step==1 and not empty accounterEdit}" />
+							<rich:toolTip
+								disabled="#{projectPropertyHome.instance.creditNotes != null || projectPropertyHome.instance.consecutiveCollectionAccount != null}"
+								for="approveCount">Se debe configuarar una nota credito o una cuenta de recaudo a la entidad facturadora</rich:toolTip>
+							<a4j:outputPanel id="countMessage1">
+								<s:label style="color: #FF0000;"
+									value="Falta configurar cuentas contables en los conceptos"
+									rendered="#{projectPropertyHome.instance.step==1 and not empty accounterEdit and (!projectPropertyHome.validateAccountsXConcept())}" />
+							</a4j:outputPanel>
+						</div>
+					</td>
+
+
+				</tr>
+			</table>
+			<s:button view="/MakerCheckerList.xhtml"
+				action="#{projectPropertyHome.approveChange()}" id="approved"
+				value="#{messages.ApproveChange}"
+				rendered="#{not empty makerCheckerId}" />
+			<s:button view="/MakerCheckerList.xhtml"
+				action="#{projectPropertyHome.cancelChange()}" id="cancel"
+				value="#{messages.Cancel}" rendered="#{not empty makerCheckerId}" />
+			<s:button value="#{messages.Generate_PDF}" id="pdf"
+				action="#{projectPropertyHome.createTermSheetPDF()}"></s:button>
+		</div>
+
+
+		<rich:tabPanel switchType="ajax">
+
+			<rich:tab
+				rendered="#{projectPropertyHome.instance.objectOfContract.id != 1}">
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/img/manytoone.gif"
+							stryle="vertical-align: middle; padding-right: 4px;" />#{messages.Billed}</h:panelGroup>
+				</f:facet>
+				<div class="association" id="billedParent">
+					<h:outputText
+						value="#{messages.There_is_no_billed_associated_with_this_projectProperty}"
+						rendered="#{projectPropertyHome.instance.billed == null}" />
+					<rich:dataTable var="_businessEntity"
+						value="#{projectPropertyHome.instance.billed}"
+						rendered="#{projectPropertyHome.instance.billed != null}"
+						rowClasses="rvgRowOne,rvgRowTwo" id="billedTable">
+						<h:column>
+							<f:facet name="header">Id</f:facet>
+							<h:outputText value="#{_businessEntity.id}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Id_type}</f:facet>
+							<h:outputText
+								value="#{businessEntityHome.getIdentificationTypes(_businessEntity)}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Id_number}</f:facet>
+							<h:outputText value="#{_businessEntity.idNumber()}"
+								rendered="#{_businessEntity.idType!=31}" />
+							<h:outputText
+								value="#{_businessEntity.idNumber()} - #{_businessEntity.verificationNumber}"
+								rendered="#{_businessEntity.idType==31}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Name}</f:facet>
+							<h:outputText value="#{_businessEntity.nameBusinessEntity}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Email}</f:facet>
+							<h:outputText value="#{_businessEntity.email}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Trade_Name}</f:facet>
+							<h:outputText value="#{_businessEntity.tradeName}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Legal_entity_type}</f:facet>
+							<h:outputText
+								value="#{businessEntityHome.getLegalEntityType(_businessEntity)}" />
+						</h:column>
+						<h:column styleClass="action">
+							<f:facet name="header">#{messages.Action}</f:facet>
+							<s:link id="viewbusinessEntity" value="#{messages.View}"
+								view="/BusinessEntity.xhtml" rendered="#{empty makerCheckerId}">
+								<f:param name="businessEntityId" value="#{_businessEntity.id}" />
+							</s:link>
+						</h:column>
+					</rich:dataTable>
+				</div>
+			</rich:tab>
+
+			<rich:tab>
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/img/manytoone.gif"
+							style="vertical-align: middle; padding-right: 4px;" />#{messages.Biller}</h:panelGroup>
+				</f:facet>
+				<div class="association" id="billerParent">
+					<h:outputText
+						value="#{messages.There_is_no_biller_associated_with_this_projectProperty}"
+						rendered="#{projectPropertyHome.instance.biller == null}" />
+					<rich:dataTable var="_businessEntity"
+						value="#{projectPropertyHome.instance.biller}"
+						rendered="#{projectPropertyHome.instance.biller != null}"
+						rowClasses="rvgRowOne,rvgRowTwo" id="billerTable">
+						<h:column>
+							<f:facet name="header">Id</f:facet>
+							<h:outputText value="#{_businessEntity.id}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Id_type}</f:facet>
+							<h:outputText
+								value="#{businessEntityHome.getIdentificationTypes(_businessEntity)}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Id_number}</f:facet>
+							<h:outputText value="#{_businessEntity.idNumber()}"
+								rendered="#{_businessEntity.idType!=31}" />
+							<h:outputText
+								value="#{_businessEntity.idNumber()} - #{_businessEntity.verificationNumber}"
+								rendered="#{_businessEntity.idType==31}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Name}</f:facet>
+							<h:outputText value="#{_businessEntity.nameBusinessEntity}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Email}</f:facet>
+							<h:outputText value="#{_businessEntity.email}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Trade_Name}</f:facet>
+							<h:outputText value="#{_businessEntity.tradeName}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Legal_entity_type}</f:facet>
+							<h:outputText
+								value="#{businessEntityHome.getLegalEntityType(_businessEntity)}" />
+						</h:column>
+						<h:column styleClass="action">
+							<f:facet name="header">#{messages.Action}</f:facet>
+							<s:link id="viewbusinessEntity" value="#{messages.View}"
+								view="/BusinessEntity.xhtml" rendered="#{empty makerCheckerId}">
+								<f:param name="businessEntityId" value="#{_businessEntity.id}" />
+							</s:link>
+						</h:column>
+					</rich:dataTable>
+				</div>
+			</rich:tab>
+
+			<rich:tab>
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/img/manytoone.gif"
+							style="vertical-align: middle; padding-right: 4px;" />#{messages.Projects}</h:panelGroup>
+				</f:facet>
+				<div class="association" id="projectParent">
+					<h:outputText
+						value="#{messages.There_is_no_project_associated_with_this_projectProperty}"
+						rendered="#{projectPropertyHome.instance.project == null}" />
+					<rich:dataTable var="_project"
+						value="#{projectPropertyHome.instance.project}"
+						rendered="#{projectPropertyHome.instance.project != null}"
+						rowClasses="rvgRowOne,rvgRowTwo" id="projectTable">
+						<h:column>
+							<f:facet name="header">Id</f:facet>
+							<h:outputText value="#{_project.id}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Business_entity_id}</f:facet>
+							<h:outputText
+								value="#{_project.businessEntity.nameBusinessEntity}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Business_line_id}</f:facet>
+							<h:outputText value="#{_project.businessLine.nameBusinessLine}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Name}</f:facet>
+							<h:outputText value="#{_project.nameProject}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Cost_center_project}</f:facet>
+							<h:outputText value="#{_project.costCenterProject}" />
+						</h:column>
+						<h:column styleClass="action">
+							<f:facet name="header">#{messages.Action}</f:facet>
+							<s:link id="viewproject" value="#{messages.View}"
+								view="/Project.xhtml" rendered="#{empty makerCheckerId}">
+								<f:param name="projectId" value="#{_project.id}" />
+							</s:link>
+						</h:column>
+					</rich:dataTable>
+				</div>
+			</rich:tab>
+
+			<rich:tab>
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/img/onetomany.gif"
+							style="vertical-align: middle; padding-right: 4px;" />#{messages.Concept}</h:panelGroup>
+				</f:facet>
+				<h:form styleClass="association" id="conceptsChildren">
+
+					<h:outputText
+						value="#{messages.There_are_no_concepts_associated_with_this_projectProperty}"
+						rendered="#{empty projectPropertyHome.conceptnotbulkload(projectPropertyHome.concepts)}" />
+
+					<a4j:outputPanel id="conceptsTableOutput">
+						<rich:dataTable
+							value="#{projectPropertyHome.conceptnotbulkload(projectPropertyHome.concepts)}"
+							var="_concept"
+							rendered="#{not empty projectPropertyHome.concepts}"
+							rowClasses="rvgRowOne,rvgRowTwo" id="conceptsTable">
+							<rich:column sortBy="#{_concept.id}" width="8%">
+								<f:facet name="header">Id</f:facet>
+								<h:outputText value="#{_concept.id}" />
+							</rich:column>
+
+							<rich:column width="10%" sortBy="#{_concept.lastModification}">
+								<f:facet name="header">#{messages.LastModification}</f:facet>
+								<h:outputText value="#{_concept.lastModification}" />
+							</rich:column>
+
+							<rich:column width="24%" sortBy="#{_concept.name}">
+								<f:facet name="header">#{messages.Name}</f:facet>
+								<h:outputText value="#{_concept.name}" />
+							</rich:column>
+							<rich:column sortBy="#{_concept.tax}">
+								<f:facet name="header">#{messages.Tax}</f:facet>
+								<h:outputText value="#{_concept.tax.name}" />
+							</rich:column>
+							<rich:column width="14%" sortBy="#{_concept.expression}">
+								<f:facet name="header">#{messages.Expression}</f:facet>
+								<h:outputText value="#{_concept.expression}" />
+							</rich:column>
+							<rich:column width="14%">
+								<f:facet name="header">#{messages.conceptValue}</f:facet>
+								<h:outputText
+									value="#{projectPropertyHome.getConceptValue(_concept)}" />
+							</rich:column>
+
+							<h:column width="6%">
+								<f:facet name="header">#{messages.Action}</f:facet>
+								<h:commandButton type="button" id="editConcept"
+									value=" #{messages.Edit}" rendered="#{not empty accounterEdit}">
+									<a4j:support event="onclick" ajaxSingle="true"
+										oncomplete="#{rich:component('modalPanelEditConcept')}.show()"
+										reRender="modalPanelEditConcept"
+										action="#{projectPropertyHome.setConceptSelected(_concept)}"></a4j:support>
+								</h:commandButton>
+								<h:commandButton type="button" id="viewConcept"
+									value=" #{messages.View}" rendered="#{empty makerCheckerId}">
+									<a4j:support event="onclick" ajaxSingle="true"
+										oncomplete="#{rich:component('viewConceptModalPanel')}.show()"
+										reRender="viewConceptModalPanel"
+										action="#{projectPropertyHome.setConceptSelected(_concept)}"></a4j:support>
+								</h:commandButton>
+							</h:column>
+						</rich:dataTable>
+					</a4j:outputPanel>
+				</h:form>
+			</rich:tab>
+			<rich:tab>
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/img/onetomany.gif"
+							style="vertical-align: middle; padding-right: 4px;" />
+						Archivos Adjuntos
+					</h:panelGroup>
+				</f:facet>
+				<h:form styleClass="association" id="filesChildren">
+					<h:outputText
+						value="No hay archivos asociados a esta hoja de términos"
+						rendered="#{empty projectPropertyHome.files}" />
+					<rich:dataTable value="#{projectPropertyHome.files}" var="_file"
+						rendered="#{not empty projectPropertyHome.files}"
+						rowClasses="rvgRowOne,rvgRowTwo" id="filesTable">
+						<rich:column sortBy="#{_file.date}">
+							<f:facet name="header">#{messages.Id}</f:facet>
+							<h:outputText value="#{_file.id}"></h:outputText>
+						</rich:column>
+						<rich:column sortBy="#{_file.date}">
+							<f:facet name="header">#{messages.Date}</f:facet>
+							<h:outputText value="#{_file.date}">
+								<s:convertDateTime type="date" dateStyle="short" />
+							</h:outputText>
+						</rich:column>
+						<rich:column sortBy="#{_file.name}">
+							<f:facet name="header">#{messages.Name}</f:facet>
+							<h:outputText value="#{_file.name}" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">#{messages.Action}</f:facet>
+							<h:commandButton value="#{messages.Download}" id="pdfDownload"
+								action="#{projectPropertyHome.downloadPDFAttachment(_file)}"></h:commandButton>
+						</rich:column>
+					</rich:dataTable>
+				</h:form>
+			</rich:tab>
+		</rich:tabPanel>
+
+		<rich:modalPanel id="viewConceptModalPanel" autosized="true">
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText value="#{messages.View}"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+
+			<a4j:outputPanel layout="block"
+				style="OVERFLOW: auto; WIDTH: 980px; TOP: 48px; HEIGHT: 350px">
+				<h:form>
+					<s:decorate id="nameConceptField" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Name}</ui:define>
+						<h:outputText value="#{projectPropertyHome.conceptSelected.name}" />
+					</s:decorate>
+
+					<s:decorate id="printDescription" template="layout/display.xhtml">
+						<ui:define name="label">#{messages.Print_description}</ui:define>
+						<h:outputText
+							value="#{projectPropertyHome.conceptSelected.printDescription}" />
+					</s:decorate>
+
+					<s:decorate id="documentTypeField" template="layout/display.xhtml">
+						<ui:define name="label"> #{messages.periodicity_type} </ui:define>
+						<h:outputText value="Factura"
+							rendered="#{projectPropertyHome.conceptSelected.documentType != null and projectPropertyHome.conceptSelected.documentType == 0}" />
+						<h:outputText value="Cuenta de Cobro"
+							rendered="#{projectPropertyHome.conceptSelected.documentType != null and projectPropertyHome.conceptSelected.documentType == 1}" />
+					</s:decorate>
+
+					<s:decorate id="interestArrearsField"
+						template="layout/display.xhtml">
+						<ui:define name="label">#{messages.interestArrears}</ui:define>
+						<h:outputText value="Si"
+							rendered="#{projectPropertyHome.conceptSelected.interestArrears}" />
+						<h:outputText value="No"
+							rendered="#{!projectPropertyHome.conceptSelected.interestArrears}" />
+					</s:decorate>
+
+
+					<s:decorate id="expressionField" template="layout/display.xhtml">
+						<ui:define name="label">#{messages.Expression}</ui:define>
+						<h:outputText
+							value="#{projectPropertyHome.conceptSelected.expression}" />
+					</s:decorate>
+
+					<s:decorate id="paymentFormField3" template="layout/display.xhtml">
+						<ui:define name="label">#{messages.Payment_form}</ui:define>
+						<h:outputText
+							value="#{projectPropertyHome.paymentForm.account} - #{projectPropertyHome.paymentForm.name}"
+							rendered="#{projectPropertyHome.paymentForm!=null}" />
+					</s:decorate>
+
+					<s:decorate id="accountingAccountsRecoverField"
+						template="layout/display.xhtml">
+						<ui:define name="label">#{messages.Bank_Accounts}</ui:define>
+						<h:outputText
+							value="#{projectPropertyHome.accountingAccountsRecover.account}" />
+					</s:decorate>
+
+
+					<s:decorate id="accountingAccountsEarlyPaymentField"
+						template="layout/display.xhtml">
+						<ui:define name="label">#{messages.Discount_Accounts}</ui:define>
+						<h:outputText
+							value="#{projectPropertyHome.accountingAccountsEarlyPayment.account}" />
+					</s:decorate>
+
+					<s:decorate id="accountingCreditAccountsField"
+						template="layout/display.xhtml">
+						<ui:define name="label">#{messages.Income_accounts}</ui:define>
+						<h:outputText
+							value="#{projectPropertyHome.accountingCreditAccounts.account}" />
+					</s:decorate>
+
+					<s:decorate id="isContributionModuleField"
+						template="layout/display.xhtml">
+						<ui:define name="label">#{messages.ContributionModule}</ui:define>
+						<h:outputText
+							value="#{projectPropertyHome.conceptSelected.contributionModule.name}" />
+					</s:decorate>
+
+					<s:decorate id="taxField" template="layout/display.xhtml">
+						<ui:define name="label">#{messages.Tax_Accounts}</ui:define>
+						<h:outputText
+							value="#{projectPropertyHome.conceptSelected.tax.name}" />
+					</s:decorate>
+
+					<s:decorate id="stampTaxField" template="layout/display.xhtml">
+						<ui:define name="label">#{messages.Stamp_Tax_Accounts}</ui:define>
+						<h:outputText
+							value="#{projectPropertyHome.conceptSelected.stamptax.name}" />
+					</s:decorate>
+
+					<s:decorate id="RetentionRateAccountView"
+						template="layout/display.xhtml" rendered="true">
+						<ui:define name="label">#{messages.RetentionRate}:</ui:define>
+						<h:panelGrid width="100%" id="panelRetentionRateAccountView"
+							columns="1">
+							<rich:extendedDataTable width="600px" height="125px"
+								selectionMode="single" rows="0" sortMode="single"
+								rendered="#{projectPropertyHome.listTaxConfiguration != null}"
+								value="#{projectPropertyHome.listTaxConfiguration}" var="report"
+								id="tableRetenetionView">
+
+								<rich:column width="10%" sortable="true" sortBy="#{report[0]}"
+									id="id_#{report[0]}">
+									<f:facet name="header">
+										<h:outputText value="id" />
+									</f:facet>
+									<h:outputText
+										value="#{projectPropertyHome.settRetenetionRateAccount(report[0])}" />
+								</rich:column>
+								<rich:column width="29%" sortable="true" sortBy="#{report[1]}"
+									id="col_name_#{report[0]}">
+									<f:facet name="header">
+										<h:outputText value="#{messages.RetentionRate}" />
+									</f:facet>
+									<h:outputText
+										value="#{projectPropertyHome.getNameRetenetionRate(report[0])}" />
+								</rich:column>
+								<rich:column width="62%" sortable="false"
+									id="col_retention_count_list_#{report[0]}">
+									<f:facet name="header">
+										<h:outputText value="Listado de Reteneciones" />
+									</f:facet>
+									<h:outputText
+										value="#{projectPropertyHome.getConceptRetentionRateAccount(report[0]).retentionRateAccount.value}" />
+								</rich:column>
+							</rich:extendedDataTable>
+						</h:panelGrid>
+					</s:decorate>
+
+					<s:decorate id="interestRetentionRateAccountsView"
+						template="layout/edit.xhtml"
+						rendered="#{projectPropertyHome.conceptSelected.interestArrears}">
+						<ui:define name="label">#{messages.RetentionRateForInterest}:</ui:define>
+						<h:panelGrid width="100%"
+							id="panelInterestRetentionRateAccountsView" columns="1">
+							<rich:extendedDataTable width="600px" height="125px"
+								selectionMode="single" rows="0" sortMode="single"
+								tableState="#{projectPropertyHome.tableInterestRetentionRateAccountState}"
+								rendered="#{projectPropertyHome.listInterestAccountsConfiguration != null}"
+								value="#{projectPropertyHome.listInterestAccountsConfiguration}"
+								var="rrCDOD" id="tableInterestRetentionRateView">
+
+								<rich:column width="10%" sortable="true"
+									sortBy="#{rrCDOD[0].id}" id="col_rrCDOD_0">
+									<f:facet name="header">
+										<h:outputText value="id" />
+									</f:facet>
+									<center>
+										<h:outputText value="#{rrCDOD[0].id}" />
+									</center>
+								</rich:column>
+								<rich:column width="45%" sortable="true"
+									sortBy="#{rrCDOD[0].name}" id="col_rrCDOD_1">
+									<f:facet name="header">
+										<h:outputText value="#{messages.Ledger_Account}" />
+									</f:facet>
+									<center>
+										<h:outputText value="#{rrCDOD[0].name}" />
+									</center>
+								</rich:column>
+								<rich:column width="45%" sortable="true" sortBy="#{rrCDOD[1]}"
+									id="col_rrCDOD_2">
+									<f:facet name="header">
+										<h:outputText value="#{messages.RetentionRateAccountSelected}" />
+									</f:facet>
+									<center>
+										<h:outputText
+											value="#{projectPropertyHome.conceptSelected.searchAccount(rrCDOD[0].id).account} - #{projectPropertyHome.conceptSelected.searchAccount(rrCDOD[0].id).name}" />
+									</center>
+								</rich:column>
+							</rich:extendedDataTable>
+
+						</h:panelGrid>
+					</s:decorate>
+
+					<s:decorate id="buttonConceptCloseViewField"
+						template="layout/display.xhtml">
+						<h:commandButton type="button" id="closeViewConceptModalPanel"
+							value="#{messages.Cancel}">
+							<rich:componentControl for="viewConceptModalPanel"
+								attachTo="closeViewConceptModalPanel" operation="hide"
+								event="onclick" />
+						</h:commandButton>
+					</s:decorate>
+				</h:form>
+			</a4j:outputPanel>
+		</rich:modalPanel>
+
+
+		<rich:modalPanel id="modalPanelEditConcept" width="1000"
+			autosized="true">
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText value="#{messages.Edit_concept}"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+
+			<a4j:outputPanel layout="block"
+				style="OVERFLOW: auto; WIDTH: 980px; TOP: 48px; HEIGHT: 350px">
+				<h:form accept="cuentas">
+					 
+					<a4j:outputPanel>
+					<s:decorate id="template" template="layout/edit.xhtml"> 
+					<ui:define name="label">Plantilla de Configuración: </ui:define>
+						<h:selectOneMenu value="#{projectPropertyHome.templateHasRetentionRateAccount}">
+						<f:selectItem itemValue="#{null}" itemLabel=""/> 
+							<s:selectItems      
+								value="#{projectPropertyHome.templateHasRetentionRateAccounts}"
+								var="_counter" label="#{_counter.name}"></s:selectItems>
+							<s:convertEntity></s:convertEntity>
+							<a4j:support event="onchange" ignoreDupResponses="true" 
+								limitToList="true" reRender="conpEdit,accountingAccountsRecoverField,addConcept,approvedCounter,countMessage,countMessage1,buttonConceptField,tableInterestRetentionRate, tableRetenetion"       
+								ajaxSingle="true"></a4j:support>
+						</h:selectOneMenu>
+					</s:decorate>
+					</a4j:outputPanel>
+  
+					<s:decorate id="nameConceptField" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Name} : #{projectPropertyHome.conceptSelected.name} </ui:define>
+					</s:decorate>
+
+					<s:decorate id="printDescriptionField" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Print_description} : #{projectPropertyHome.conceptSelected.printDescription} </ui:define>
+					</s:decorate>
+
+					<a4j:outputPanel id="documentTypeField">
+						<s:decorate template="layout/edit.xhtml">
+							<ui:define name="label"> #{messages.periodicity_type} </ui:define>
+							<h:selectOneRadio id="documentType"
+								value="#{projectPropertyHome.conceptSelected.documentType}"
+								styleClass="radio">
+								<f:selectItem itemLabel="Factura" itemValue="0" />
+								<f:selectItem itemLabel="Cuenta de Cobro" itemValue="1" />
+								<a4j:support event="onchange" ignoreDupResponses="true"
+									limitToList="true" reRender="documentTypeField"
+									ajaxSingle="true">
+								</a4j:support>
+							</h:selectOneRadio>
+						</s:decorate>
+					</a4j:outputPanel>
+
+					<s:decorate id="expressionField" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Expression} : #{projectPropertyHome.conceptSelected.expression}</ui:define>
+					</s:decorate>
+
+					
+					<a4j:outputPanel id="conpEdit">
+						<s:decorate id="paymentFormField3" template="layout/edit.xhtml">
+							<ui:define name="label">#{messages.Payment_form}:</ui:define>
+							<h:panelGrid columns="2">
+								<h:inputTextarea readonly="true" rows="3"
+									value="#{projectPropertyHome.accountReceivable.account} - #{projectPropertyHome.accountReceivable.name}" />
+								<h:commandButton type="button" value="Escoger">
+									<a4j:support event="onclick" ajaxSingle="true"
+										ignoreDupResponses="true" limitToList="true"
+										oncomplete="#{rich:component('modalPanelAccountTable')}.show()"
+										action="#{projectPropertyHome.updateCountItems(projectPropertyHome.idAccountReceivable)}"
+										reRender="modalPanelAccountTable,buttonConceptField" />
+								</h:commandButton>
+							</h:panelGrid>
+						</s:decorate>
+
+
+						<s:decorate id="accountingAccountsRecoverField"
+							template="layout/edit.xhtml">
+							<ui:define name="label">#{messages.Bank_Accounts}</ui:define>
+							<h:panelGrid columns="2">
+								<h:inputTextarea readonly="true" rows="3"
+									value="#{projectPropertyHome.accountingAccountsRecover.account} - #{projectPropertyHome.accountingAccountsRecover.name}" />
+								<h:commandButton type="button" value="Escoger">
+									<a4j:support event="onclick" ajaxSingle="true"
+										ignoreDupResponses="true" limitToList="true"
+										oncomplete="#{rich:component('modalPanelAccountTable')}.show()"
+										action="#{projectPropertyHome.updateCountItems(projectPropertyHome.idAccountBank)}"
+										reRender="modalPanelAccountTable,buttonConceptField" />
+								</h:commandButton>
+							</h:panelGrid>
+						</s:decorate>
+
+						<s:decorate id="accountingAccountsEarlyPaymentField"
+							template="layout/edit.xhtml">
+							<ui:define name="label">#{messages.Discount_Accounts}</ui:define>
+							<h:panelGrid columns="3" id="descuentosaccount">
+								<h:inputTextarea readonly="true" rows="3"
+									value="#{projectPropertyHome.accountingAccountsEarlyPayment.account} - #{projectPropertyHome.accountingAccountsEarlyPayment.name}" />
+								<h:commandButton type="button" value="Escoger">
+									<a4j:support event="onclick" ajaxSingle="true"
+										ignoreDupResponses="true" limitToList="true"
+										oncomplete="#{rich:component('modalPanelAccountTable')}.show()"
+										action="#{projectPropertyHome.updateCountItems(projectPropertyHome.idAccountDiscuont)}"
+										reRender="modalPanelAccountTable,buttonConceptField" />
+								</h:commandButton>
+								<h:commandButton type="button" value="Limpiar">
+									<a4j:support event="onclick" ajaxSingle="true"
+										ignoreDupResponses="true" limitToList="true"
+										action="#{projectPropertyHome.clean_account(projectPropertyHome.accountingAccountsEarlyPayment.retentionRate.id)}"
+										reRender="modalPanelAccountTable,buttonConceptField,descuentosaccount" />
+								</h:commandButton>
+							</h:panelGrid>
+						</s:decorate>
+
+						<s:decorate id="accountingCreditAccountsField"
+							template="layout/edit.xhtml">
+							<ui:define name="label">#{messages.Income_accounts}</ui:define>
+							<h:panelGrid columns="2">
+								<h:inputTextarea readonly="true" rows="3"
+									value="#{projectPropertyHome.accountingCreditAccounts.account} - #{projectPropertyHome.accountingCreditAccounts.name}" />
+								<h:commandButton type="button" value="Escoger">
+									<a4j:support event="onclick" ajaxSingle="true"
+										ignoreDupResponses="true" limitToList="true"
+										oncomplete="#{rich:component('modalPanelAccountTable')}.show()"
+										action="#{projectPropertyHome.updateCountItems(projectPropertyHome.idAccountIncome)}"
+										reRender="modalPanelAccountTable,buttonConceptField" />
+								</h:commandButton>
+							</h:panelGrid>
+						</s:decorate>
+
+						<s:decorate id="accountingPenaltyPortafolioField"
+							template="layout/edit.xhtml">
+							<ui:define name="label">#{messages.accountingAccountsPenaltyPortafolio}</ui:define>
+							<h:panelGrid columns="3">
+								<h:inputTextarea readonly="true" rows="3"
+									value="#{projectPropertyHome.accountingPenaltyPortafolio.account} - #{projectPropertyHome.accountingPenaltyPortafolio.name}" />
+								<h:commandButton type="button" value="Escoger">
+									<a4j:support event="onclick" ajaxSingle="true"
+										ignoreDupResponses="true" limitToList="true"
+										oncomplete="#{rich:component('modalPanelAccountTable')}.show()"
+										action="#{projectPropertyHome.updateCountItems(projectPropertyHome.idPenaltyPortafolio)}"
+										reRender="modalPanelAccountTable,buttonConceptField" />
+								</h:commandButton>
+								<h:commandButton type="button" value="Limpiar">
+									<a4j:support event="onclick" ajaxSingle="true"
+										ignoreDupResponses="true" limitToList="true"
+										action="#{projectPropertyHome.clean_account(projectPropertyHome.accountingPenaltyPortafolio.retentionRate.id)}"
+										reRender="modalPanelAccountTable,buttonConceptField,accountingPenaltyPortafolioField" />
+								</h:commandButton>
+							</h:panelGrid>
+						</s:decorate>
+
+						<s:decorate id="isContributionModuleField"
+							template="layout/edit.xhtml"
+							rendered="projectPropertyHome.isContributionModule">
+							<ui:define name="label">#{messages.ContributionModule} : #{projectPropertyHome.conceptSelected.contributionModule}</ui:define>
+							<h:selectBooleanCheckbox id="isContributionModule"
+								value="#{projectPropertyHome.isContributionModule}">
+							</h:selectBooleanCheckbox>
+						</s:decorate>
+
+						<s:decorate id="StamptaxList" template="layout/edit.xhtml"
+							rendered="#{projectPropertyHome.instance.step==1}">
+							<ui:define name="label">#{messages.Stamptax}</ui:define>
+							<h:panelGrid columns="3">
+								<h:inputTextarea readonly="true" rows="3"
+									value="#{projectPropertyHome.stamptax.account} - #{projectPropertyHome.stamptax.name}" /> 
+								<h:commandButton type="button" value="Escoger">      
+									<a4j:support event="onclick" ajaxSingle="true"
+										ignoreDupResponses="true" limitToList="true"
+										oncomplete="#{rich:component('modalPanelAccountTable')}.show()"
+										action="#{projectPropertyHome.updateCountItems(projectPropertyHome.idStamptax)}"
+										reRender="modalPanelAccountTable,buttonConceptField" />
+								</h:commandButton>
+								<h:commandButton type="button" value="Limpiar">
+									<a4j:support event="onclick" ajaxSingle="true"
+										ignoreDupResponses="true" limitToList="true"
+										action="#{projectPropertyHome.clean_account(projectPropertyHomestamptax.retentionRate.id)}"
+										reRender="modalPanelAccountTable,buttonConceptField,StamptaxList" />
+								</h:commandButton>
+							</h:panelGrid>
+						</s:decorate>
+
+						<s:decorate id="taxList" template="layout/edit.xhtml"
+							rendered="#{projectPropertyHome.printTaxList()}">
+							<ui:define name="label">#{messages.Tax}</ui:define>
+							<h:panelGrid columns="3"> 
+								<h:inputTextarea readonly="true" rows="3"
+									value="#{projectPropertyHome.tax.account} - #{projectPropertyHome.tax.name}" />
+								<h:commandButton type="button" value="Escoger">
+									<a4j:support event="onclick" ajaxSingle="true"
+										ignoreDupResponses="true" limitToList="true"
+										oncomplete="#{rich:component('modalPanelAccountTable')}.show()"
+										action="#{projectPropertyHome.updateCountItems(projectPropertyHome.idTax)}"
+										reRender="modalPanelAccountTable,buttonConceptField" />
+								</h:commandButton>
+								<h:commandButton type="button" value="Limpiar">
+									<a4j:support event="onclick" ajaxSingle="true"
+										ignoreDupResponses="true" limitToList="true"
+										action="#{projectPropertyHome.clean_account(projectPropertyHome.conceptSelected.tax.retentionRate.id)}"
+										reRender="modalPanelAccountTable,buttonConceptField,taxList" />
+								</h:commandButton>
+							</h:panelGrid>
+						</s:decorate>
+
+
+						<s:decorate id="RetentionRateAccount" template="layout/edit.xhtml"
+							rendered="true">
+							<ui:define name="label">#{messages.RetentionRate}:</ui:define>
+							<h:panelGrid width="100%" id="panelRetentionRateAccount"
+								columns="1">
+								<rich:extendedDataTable width="700px" height="125px"
+									selectionMode="single" rows="0" sortMode="single"
+									tableState="#{projectPropertyHome.tableState}"
+									rendered="#{projectPropertyHome.listTaxConfiguration != null}"
+									value="#{projectPropertyHome.listTaxConfiguration}"
+									var="report" id="tableRetenetion">
+
+									<rich:column width="6%" sortable="true" sortBy="#{report[0]}"
+										id="col_id">
+										<f:facet name="header">
+											<h:outputText value="id" />
+										</f:facet>
+										<h:outputText
+											value="#{projectPropertyHome.settRetenetionRateAccount(report[0])}" />
+									</rich:column>
+
+									<rich:column width="22%" sortable="true" sortBy="#{report[1]}"
+										id="col_name">
+										<f:facet name="header">
+											<h:outputText value="#{messages.RetentionRate}" />
+										</f:facet>
+										<h:outputText
+											value="#{projectPropertyHome.getNameRetenetionRate(report[0])}" />
+									</rich:column>
+
+									<rich:column width="44%" sortable="false"
+										id="col_retention_count_list">
+										<f:facet name="header">
+											<h:outputText
+												value="#{messages.RetentionRateAccountSelected}" />
+										</f:facet>
+										<center>
+											<h:outputText
+												value="#{projectPropertyHome.conceptSelected.searchAccount(report[0]).account} - #{projectPropertyHome.conceptSelected.searchAccount(report[0]).name}" />
+										</center>
+									</rich:column>
+									<rich:column width="13%" sortable="false" id="col_Choos">
+										<center>
+											<h:commandButton type="button" value="Escoger">
+												<a4j:support event="onclick" ajaxSingle="true"
+													ignoreDupResponses="true" limitToList="true"
+													oncomplete="#{rich:component('modalPanelAccountTable')}.show()"
+													action="#{projectPropertyHome.updateCountItems(report[0])}"
+													reRender="modalPanelAccountTable,buttonConceptField" />
+											</h:commandButton>
+										</center>
+									</rich:column>
+									<rich:column width="13%" sortable="false" id="clean_account">
+										<center>
+											<h:commandButton type="button" value="Limpiar">
+												<a4j:support event="onclick" ajaxSingle="true"
+													ignoreDupResponses="true" limitToList="true"
+													action="#{projectPropertyHome.clean_account(report[0])}"
+													reRender="modalPanelAccountTable,buttonConceptField,panelRetentionRateAccount" />
+											</h:commandButton>
+										</center>
+									</rich:column>
+								</rich:extendedDataTable>
+
+							</h:panelGrid>
+						</s:decorate>
+
+						<s:decorate id="interestRetentionRateAccounts"
+							template="layout/edit.xhtml"
+							rendered="#{projectPropertyHome.conceptSelected.interestArrears}">
+							<ui:define name="label">#{messages.RetentionRateForInterest}:</ui:define>
+							<h:panelGrid width="100%" id="panelInterestRetentionRateAccounts"
+								columns="1">
+								<rich:extendedDataTable width="700px" height="125px"
+									selectionMode="single" rows="0" sortMode="single"
+									tableState="#{projectPropertyHome.tableInterestRetentionRateAccountState}"
+									rendered="#{projectPropertyHome.listInterestAccountsConfiguration != null}"
+									value="#{projectPropertyHome.listInterestAccountsConfiguration}"
+									var="rrCDOD" id="tableInterestRetentionRate">
+
+									<rich:column width="6%" sortable="true"
+										sortBy="#{rrCDOD[0].id}" id="col_rrCDOD_0">
+										<f:facet name="header">
+											<h:outputText value="id" />
+										</f:facet>
+										<center>
+											<h:outputText value="#{rrCDOD[0].id}" />
+										</center>
+									</rich:column>
+									<rich:column width="22%" sortable="true"
+										sortBy="#{rrCDOD[0].name}" id="col_rrCDOD_1">
+										<f:facet name="header">
+											<h:outputText value="#{messages.Ledger_Account}" />
+										</f:facet>
+										<center>
+											<h:outputText value="#{rrCDOD[0].name}" />
+										</center>
+									</rich:column>
+									<rich:column width="44%" sortable="true" sortBy="#{rrCDOD[1]}"
+										id="col_rrCDOD_2">
+										<f:facet name="header">
+											<h:outputText
+												value="#{messages.RetentionRateAccountSelected}" />
+										</f:facet>
+										<center>
+											<h:outputText
+												value="#{projectPropertyHome.conceptSelected.searchAccount(rrCDOD[0].id).account} - #{projectPropertyHome.conceptSelected.searchAccount(rrCDOD[0].id).name}" />
+										</center>
+									</rich:column>
+									<rich:column width="13%" sortable="false" id="col_rrCDOD_3">
+										<f:facet name="header">
+											<h:outputText value="" />
+										</f:facet>
+										<center>
+											<h:commandButton type="button" value="Escoger">
+												<a4j:support event="onclick" ajaxSingle="true"
+													ignoreDupResponses="true" limitToList="true"
+													oncomplete="#{rich:component('modalPanelAccountTable')}.show()"
+													action="#{projectPropertyHome.updateCountItems(rrCDOD[0].id)}"
+													reRender="modalPanelAccountTable,buttonConceptField" />
+											</h:commandButton>
+										</center>
+									</rich:column>
+									<rich:column width="13%" sortable="false" id="col_rrCDOD_4">
+										<f:facet name="header">
+											<h:outputText value="" />
+										</f:facet>
+										<center>
+											<h:commandButton type="button" value="Limpiar">
+												<a4j:support event="onclick" ajaxSingle="true"
+													ignoreDupResponses="true" limitToList="true"
+													action="#{projectPropertyHome.clean_account(rrCDOD[0].id)}"
+													reRender="modalPanelAccountTable,buttonConceptField,interestRetentionRateAccounts" />
+											</h:commandButton>
+										</center>
+									</rich:column>
+
+								</rich:extendedDataTable>
+
+							</h:panelGrid>
+						</s:decorate>
+						<a4j:outputPanel id="buttonConceptField">
+							<s:decorate template="layout/edit.xhtml">
+								<h:commandButton type="button" id="addConcept"
+									value="#{messages.Save}"
+									rendered="#{projectPropertyHome.validateAccounts(projectPropertyHome.conceptSelected)}">
+									<a4j:support event="onclick" ajaxSingle="true"
+										reRender="togglePanelConcep, conceptsTableOutput"
+										oncomplete="#{rich:component('modalPanelMessageEditConcept')}.show()"
+										action="#{projectPropertyHome.editConcept()}"></a4j:support>
+								</h:commandButton>
+
+								<h:commandButton type="button"
+									disabled="#{projectPropertyHome.conceptsaved()}"
+									id="closeModalPanelEditConcept" value="#{messages.Cancel}">
+									<rich:componentControl for="modalPanelEditConcept"
+										attachTo="closeModalPanelEditConcept" operation="hide"
+										event="onclick" />
+									<a4j:support event="onclick"
+										action="#{projectPropertyHome.refreshConcept()}"
+										limitToList="true" reRender="approvedCounter,countMessage1"></a4j:support>
+								</h:commandButton>
+
+								<s:label id="countMessage" style="color: #FF0000;"
+									value="Falta configurar cuentas contables"
+									rendered="#{!projectPropertyHome.validateAccounts(projectPropertyHome.conceptSelected)}" />
+							</s:decorate>
+						</a4j:outputPanel>
+					</a4j:outputPanel>
+				</h:form>
+			</a4j:outputPanel>
+		</rich:modalPanel>
+
+
+		<rich:modalPanel id="modalPanelMessageEditConcept" width="420"
+			autosized="true">
+			<f:facet name="header">
+				<h:panelGroup>
+					<a4j:outputPanel ajaxRendered="true">
+						<h:outputText value="#{messages.Edit_concept}"></h:outputText>
+					</a4j:outputPanel>
+				</h:panelGroup>
+			</f:facet>
+			<a4j:outputPanel ajaxRendered="true">
+				<h:panelGrid rendered="true">
+					<h:outputLabel value="Concepto Editado Correctamente" />
+				</h:panelGrid>
+			</a4j:outputPanel>
+			<h:commandButton type="button" id="closeModalPanelMessageEditConcept"
+				value="#{messages.Close}">
+				<rich:componentControl for="modalPanelMessageEditConcept"
+					attachTo="closeModalPanelMessageEditConcept" operation="hide"
+					event="onclick" />
+				<rich:componentControl for="modalPanelEditConcept"
+					attachTo="closeModalPanelMessageEditConcept" operation="hide"
+					event="onclick" />
+			</h:commandButton>
+		</rich:modalPanel>
+
+		<rich:modalPanel id="modalPanelAccountTable" width="420"
+			autosized="true">
+			<f:facet name="header">
+				<h:panelGroup>
+					<a4j:outputPanel ajaxRendered="true">
+						<h:outputText value="#{messages.Edit_concept}"></h:outputText>
+					</a4j:outputPanel>
+				</h:panelGroup>
+			</f:facet>
+			<h:form>
+				<h:panelGrid columns="2">
+					<rich:extendedDataTable binding="#{tableAccountBind}" width="600px"
+						height="100px" selection="#{projectPropertyHome.selectionAccount}"
+						selectionMode="single" rows="0" sortMode="single"
+						tableState="#{projectPropertyHome.tableState}"
+						value="#{projectPropertyHome.accotuntsItems}" var="_account"
+						id="accountTable">
+						<rich:column sortable="true" width="20%"
+							sortBy="#{_account.retentionRateAccount.account}" id="col_2"
+							filterBy="#{_account.retentionRateAccount.account}"
+							filterEvent="onkeyup" label="#{messages.Account_Number}">
+							<f:facet name="header">
+								<h:outputText value="Número de Cuenta" />
+							</f:facet>
+							<h:outputText value="#{_account.retentionRateAccount.account}" />
+						</rich:column>
+						<rich:column sortable="true" width="70%"
+							sortBy="#{_account.retentionRateAccount.name}" id="col_3"
+							filterBy="#{_account.retentionRateAccount.name}"
+							filterEvent="onkeyup" label="#{messages.Concept}">
+							<f:facet name="header">
+								<h:outputText value="Concepto" />
+							</f:facet>
+							<h:outputText value="#{_account.retentionRateAccount.name}" />
+						</rich:column>
+						<a4j:support ajaxSingle="true"
+							reRender="conpEdit,addConcept,approvedCounter,countMessage,countMessage1,buttonConceptField,tableInterestRetentionRate, tableRetenetion"
+							action="#{projectPropertyHome.onSelectionAccountChanged()}"
+							event="onselectionchange"
+							oncomplete="#{rich:component('modalPanelAccountTable')}.hide()" />
+					</rich:extendedDataTable>
+				</h:panelGrid>
+				<h:commandButton type="button" id="closeModalPanelAccountTable"
+					value="#{messages.Cancel}">
+					<rich:componentControl for="modalPanelAccountTable"
+						attachTo="closeModalPanelAccountTable" operation="hide"
+						event="onclick" />
+				</h:commandButton>
+
+			</h:form>
+		</rich:modalPanel>
+	</ui:define>
+
+</ui:composition>

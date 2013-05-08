@@ -1,0 +1,226 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml"
+	xmlns:a4j="http://richfaces.org/a4j">
+
+	<ui:define name="body">
+
+		<h:form id="billingResolution" styleClass="edit">
+
+			<rich:panel>
+				<f:facet name="header">#{billingResolutionHome.managed ? messages.Edit : messages.Add} #{messages.Billing_resolutions}</f:facet>
+
+
+				<rich:simpleTogglePanel switchType="client" label="Información de Resolución">
+
+				<s:decorate id="prefixField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Prefix}</ui:define>
+					<h:inputText id="prefix" required="true"
+						value="#{billingResolutionHome.instance.prefix}">
+						 <a4j:support event="onblur" ajaxSingle="true"></a4j:support>
+						</h:inputText>
+				</s:decorate>
+
+				<s:decorate id="minField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Min}</ui:define>
+					<h:inputText id="min" required="true"
+						value="#{billingResolutionHome.instance.min}">
+						<a:support event="onblur" reRender="minField,save,update,maxField,actual" ajaxSingle="true" action="#{billingResolutionHome.validationResolution()}" />
+					</h:inputText>
+					<a4j:outputPanel ajaxRendered="true">
+						<s:label id="billingResolutionMinValidation"
+							style="color: #FF0000;"
+							value="#{billingResolutionHome.messageLabel1}"
+							rendered="#{not empty billingResolutionHome.messageLabel1}">
+						</s:label>
+					</a4j:outputPanel>
+				</s:decorate>
+
+
+				<s:decorate id="maxField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Max}</ui:define>
+					<h:inputText id="max" required="true"
+						value="#{billingResolutionHome.instance.max}">
+						<a:support event="onblur" reRender="maxField,save,update,minField,actual"
+							ajaxSingle="true"
+							action="#{billingResolutionHome.validationResolution()}" />
+					</h:inputText>
+					<a4j:outputPanel ajaxRendered="true">
+						<s:label id="billingResolutionMaxValidation"
+							style="color: #FF0000;"
+							value="#{billingResolutionHome.messageLabel}"
+							rendered="#{not empty billingResolutionHome.messageLabel}">
+						</s:label>
+					</a4j:outputPanel>
+				</s:decorate>
+				
+				<s:decorate id="dian_NumberField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Dian_Resolution}</ui:define>
+					<h:inputText id="max" required="true"
+						value="#{billingResolutionHome.instance.dian_Number}">
+						 <a4j:support event="onblur" ajaxSingle="true"></a4j:support>
+					</h:inputText>
+				</s:decorate>
+				
+				<s:decorate id="resolutionDateField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Delivery_date}</ui:define>
+					<rich:calendar id="subscriptionDate" required="true"
+						value="#{billingResolutionHome.instance.resolutionDate}"
+						datePattern="dd/MM/yyyy">
+						<a4j:support event="onchanged" reRender="resolutionDateField,endDateField" ajaxSingle="true" action="#{billingResolutionHome.calculateEndDate()}">
+						</a4j:support>
+						</rich:calendar>
+				</s:decorate>
+				
+				<s:decorate id="endDateField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.End_date}</ui:define>
+					<rich:calendar  id="subscriptionDate" required="true"
+						value="#{billingResolutionHome.instance.endDate}"
+						datePattern="dd/MM/yyyy">
+						</rich:calendar>
+				</s:decorate>
+				<s:decorate id="billingType" template="layout/edit.xhtml">
+					<ui:define name="label">Tipos de Facturacion</ui:define>
+					<a4j:region id="billingTypeRegion">
+						<h:selectOneMenu value="#{billingResolutionHome.instance.billingType}">
+							<s:selectItems value="#{billingResolutionHome.billingType}" var="type"  label="#{type.type}"></s:selectItems>
+							<s:convertEntity></s:convertEntity>
+							<a4j:support ajaxSingle="true" event="onchange" disableDefault="true" ></a4j:support>
+							
+						</h:selectOneMenu>
+					</a4j:region>
+				</s:decorate>	
+
+				</rich:simpleTogglePanel>
+
+
+
+				<rich:simpleTogglePanel switchType="client" label="Información de Facturación">
+
+				<s:decorate id="actual" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Current_number}</ui:define>
+					<h:inputText id="max" required="true"
+						value="#{billingResolutionHome.instance.current}">
+						<a:support event="onblur" reRender="maxField,save,update,minField,actual"
+							ajaxSingle="true"
+							action="#{billingResolutionHome.validationResolution()}" />
+					</h:inputText>
+					<a4j:outputPanel ajaxRendered="true">
+						<s:label id="billingResolutionCurrentValidation"
+							style="color: #FF0000;"
+							value="#{billingResolutionHome.messageLabel2}"
+							rendered="#{not empty billingResolutionHome.messageLabel2}">
+						</s:label>
+					</a4j:outputPanel>
+				</s:decorate>
+
+				
+
+				<s:decorate id="siigoCodeField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.SIIGO_code}</ui:define>
+					<h:inputText id="siigoCode"
+						value="#{billingResolutionHome.instance.siigoCode}">
+						 <a4j:support event="onblur" ajaxSingle="true"></a4j:support>
+						</h:inputText>
+				</s:decorate>
+
+				<s:decorate id="observationField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Resolution_observation}</ui:define>
+					<h:inputTextarea id="observation" required="true" 
+						cols="80" rows="4"
+						value="#{billingResolutionHome.instance.observation}" >
+						 <a4j:support event="onblur" ajaxSingle="true"></a4j:support>
+						 <rich:toolTip for="observationField">Información adicional que se imprime en la factura en la parte de observaciones.</rich:toolTip>
+					</h:inputTextarea>
+				</s:decorate>
+			</rich:simpleTogglePanel>
+
+				<div style="clear: both"><span class="required">*</span>
+				#{messages.required_fields}</div>
+				
+				
+			</rich:panel>
+
+			<div class="actionButtons">
+				<h:commandButton id="save" value="#{messages.Save}" action="#{billingResolutionHome.persist}" disabled="#{(!billingResolutionHome.wired) and (!billingResolutionHome.validation())}"
+				rendered="#{!billingResolutionHome.managed  and  authenticator.validateShowFunction('BillingResolutionEdit.xhtml', 'save')}"/> 
+				<h:commandButton
+				id="update" value="#{messages.Save}"
+				action="#{billingResolutionHome.update}"
+				rendered="#{billingResolutionHome.managed and authenticator.validateShowFunction('BillingResolutionEdit.xhtml', 'update')}" /> <h:commandButton
+				id="delete" value="#{messages.Delete}"
+				action="#{billingResolutionHome.remove}" immediate="true"
+				rendered="false or #{billingResolutionHome.managed and authenticator.validateShowFunction('BillingResolutionEdit.xhtml', 'delete')}"/> <s:button
+				id="cancelEdit" value="#{messages.Cancel}" propagation="end"
+				view="/BillingResolution.xhtml"
+				rendered="#{billingResolutionHome.managed and authenticator.validateShowFunction('BillingResolutionEdit.xhtml', 'cancelEdit')}" /> <s:button
+				id="cancelAdd" value="#{messages.Cancel}" propagation="end"
+				view="/#{empty billingResolutionFrom ? 'BillingResolutionList' : billingResolutionFrom}.xhtml"
+				rendered="#{!billingResolutionHome.managed and authenticator.validateShowFunction('BillingResolutionEdit.xhtml', 'cancelAdd')}" /></div>
+		</h:form>
+
+		<rich:tabPanel switchType="ajax">
+
+			<rich:tab label="#{messages.Business_entity} *" labelClass="required">
+				<div class="association" id="businessEntityParent"><h:outputText
+					value="#{messages.There_is_no_businessEntity_associated_with_this_billingResolution}"
+					rendered="#{billingResolutionHome.instance.businessEntity == null}" />
+
+				<rich:dataTable var="_businessEntity"
+					value="#{billingResolutionHome.instance.businessEntity}"
+					rendered="#{billingResolutionHome.instance.businessEntity != null}"
+					rowClasses="rvgRowOne,rvgRowTwo" id="businessEntityTable">
+					<h:column>
+						<f:facet name="header">Id</f:facet>
+						<h:outputText value="#{_businessEntity.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Economic_activity_id}</f:facet>
+						<h:outputText value="#{_businessEntity.economicActivity.code}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Id_type}</f:facet>
+						<h:outputText value="#{_businessEntity.idType}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Id_number}</f:facet>
+						<h:outputText value="#{_businessEntity.idNumber}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Verification_number}</f:facet>
+						<h:outputText value="#{_businessEntity.verificationNumber}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Name}</f:facet>
+						<h:outputText value="#{_businessEntity.nameBusinessEntity}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Email}</f:facet>
+						<h:outputText value="#{_businessEntity.email}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Legal_entity_type}</f:facet>
+						<h:outputText value="#{_businessEntity.legalEntityType}" />
+					</h:column>
+				</rich:dataTable>
+
+				<div class="actionButtons"><s:button
+					id="#{billingResolutionHome.instance.businessEntity != null ? 'changeParent' : 'selectParent'}"
+					value="#{billingResolutionHome.instance.businessEntity != null ? 'Cambiar' : 'Seleccionar'} #{messages.businessEntity}"
+					view="/BusinessEntityList.xhtml" 
+					rendered="#{authenticator.validateShowFunction('BillingResolutionEdit.xhtml', 'Business_entity_change') and authenticator.validateShowFunction('BillingResolutionEdit.xhtml', 'Business_entity_select')}">
+					<f:param name="from" value="BillingResolutionEdit" />
+				</s:button></div>
+
+				</div>
+			</rich:tab>
+		</rich:tabPanel>
+	</ui:define>
+
+</ui:composition>

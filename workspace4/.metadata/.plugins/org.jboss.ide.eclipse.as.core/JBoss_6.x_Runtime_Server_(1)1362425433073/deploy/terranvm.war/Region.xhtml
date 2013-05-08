@@ -1,0 +1,138 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">#{messages.Region_Details}</f:facet>
+
+        <s:decorate id="id" template="layout/display.xhtml">
+            <ui:define name="label">Id</ui:define>
+            <h:outputText value="#{regionHome.instance.id}"/>
+        </s:decorate>
+
+        <s:decorate id="name" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Name}</ui:define>
+            <h:outputText value="#{regionHome.instance.name}"/>
+        </s:decorate>
+
+        <s:decorate id="abbreviation" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Abbreviation}</ui:define>
+            <h:outputText value="#{regionHome.instance.abbreviation}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/RegionEdit.xhtml"
+                    id="edit"
+                 value="#{messages.Edit}"/>
+
+        <s:button view="/#{empty regionFrom ? 'RegionList' : regionFrom}.xhtml"
+                    id="done"
+                 value="#{messages.Done}"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>#{messages.Country}</h:panelGroup>
+        </f:facet>
+    <div class="association" id="countryParent">
+
+        <h:outputText value="#{messages.There_is_no_country_associated_with_this_region}"
+                   rendered="#{regionHome.instance.country == null}"/>
+
+        <rich:dataTable var="_country"
+                   value="#{regionHome.instance.country}"
+                rendered="#{regionHome.instance.country != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="countryTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_country.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Name}</f:facet>
+                <h:outputText value="#{_country.name}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Abbreviation}</f:facet>
+                <h:outputText value="#{_country.abbreviation}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="viewcountry"
+                     value="#{messages.View}"
+                      view="/Country.xhtml">
+                    <f:param name="countryId"
+                           value="#{_country.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>#{messages.Cities}</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="citiesChildren">
+
+        <h:outputText value="#{messages.There_are_no_cities_associated_with_this_region}"
+                   rendered="#{empty regionHome.cities}"/>
+
+        <rich:dataTable value="#{regionHome.cities}"
+                       var="_city"
+                  rendered="#{not empty regionHome.cities}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="citiesTable">
+            <rich:column sortBy="#{_city.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_city.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_city.name}">
+                <f:facet name="header">#{messages.Name}</f:facet>
+                <h:outputText value="#{_city.name}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Action</f:facet>
+                <s:link id="selectcity"
+                     value="#{messages.Select}"
+                      view="/City.xhtml">
+                    <f:param name="cityId"
+                            value="#{_city.id}"/>
+                    <f:param name="cityFrom" value="Region"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="#{messages.Add_city}"
+                view="/CityEdit.xhtml">
+            <f:param name="regionId"
+                    value="#{regionHome.instance.id}"/>
+            <f:param name="cityFrom" value="Region"/>
+        </s:button>
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

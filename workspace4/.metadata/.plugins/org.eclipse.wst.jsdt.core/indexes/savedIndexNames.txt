@@ -1,0 +1,6 @@
+INDEX VERSION 1.122+/home/dvaldivieso/workspace4/.metadata/.plugins/org.eclipse.wst.jsdt.core/indexes
+3751019407.index
+3907407845.index
+1754532286.index
+77074248.index
+2786750879.index

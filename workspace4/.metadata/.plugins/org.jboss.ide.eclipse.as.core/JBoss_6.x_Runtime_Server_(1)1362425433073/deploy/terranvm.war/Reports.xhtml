@@ -1,0 +1,44 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:p="http://primefaces.prime.com.tr/ui" xmlns:a4j="http://richfaces.org/a4j" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+	<ui:define name="body">
+		<a4j:keepAlive beanName="reportsHome"></a4j:keepAlive>
+
+		<rich:simpleTogglePanel id="toggleReport" opened="#{reportsHome.opened}" rendered="true" switchType="client" label="#{messages.report_Reports}">
+			<h:form>
+				<rich:extendedDataTable noDataLabel="#{messages.table_no_data}" binding="#{htmlReportsDataTable}" width="100%" height="350px" rows="6" sortMode="multi" tableState="#{reportsHome.reportsListTableState}" value="#{reportsHome.reportsList}" var="_report" id="tableReportList">
+
+					<rich:column width="20%" sortable="true" id="col1" sortBy="#{_report[1]}" filterBy="#{_report[1]}" filterEvent="onchange" style="text-align: center">
+						<f:facet name="header">
+							<h:outputText value="#{messages.report_name}" />
+						</f:facet>
+						<h:outputText value="#{_report[1]}" />
+					</rich:column>
+					<rich:column width="60%" sortable="true" id="col9" sortBy="#{_report[2]}" filterBy="#{_report[2]}" filterEvent="onchange" style="text-align: center">
+						<f:facet name="header">
+							<h:outputText value="#{messages.report_description}" />
+						</f:facet>
+						<h:outputText value="#{_report[2]}" />
+					</rich:column>
+					<rich:column width="20%" sortable="true" id="col2" style="text-align: center">
+						<h:commandButton type="button" value="Ver reporte">
+							<a4j:support event="onclick" limitToList="true" ignoreDupResponses="true" action="#{reportsHome.instanceSelectedReport(_report)}" reRender="growlPanel,reportIframe,toggleReport"></a4j:support>
+						</h:commandButton>
+					</rich:column>
+					<f:facet name="footer">
+						<rich:datascroller id="datascroller" rendered="#{reportsHome.reportsList.size() > 6}" />
+					</f:facet>
+				</rich:extendedDataTable>
+
+			</h:form>
+		</rich:simpleTogglePanel>
+
+		<a4j:outputPanel id="reportIframe">
+			<rich:simpleTogglePanel rendered="#{reportsHome.selectedReport != null}" switchType="client" label="#{reportsHome.selectedReport[1]}">
+				<a4j:outputPanel>
+					<iframe style="width: 100%; height: 600px;" frameborder="1" src="#{reportsHome.link}"></iframe>
+				</a4j:outputPanel>
+			</rich:simpleTogglePanel>
+		</a4j:outputPanel>
+	</ui:define>
+</ui:composition>

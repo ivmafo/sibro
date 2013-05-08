@@ -1,0 +1,226 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Plantilla de Configuración Contable</f:facet>
+
+        <s:decorate id="id" template="layout/display.xhtml">
+            <ui:define name="label">Id</ui:define>
+            <h:outputText value="#{counterConfigurationTamplateHome.instance.id}"/>
+        </s:decorate>
+
+        <s:decorate id="name" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Name}</ui:define>
+            <h:outputText value="#{counterConfigurationTamplateHome.instance.name}"/>
+        </s:decorate>
+
+        <s:decorate id="projectId1" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Project_id}</ui:define>
+            <h:outputText value="#{counterConfigurationTamplateHome.instance.projectId1}"/>
+        </s:decorate>
+        
+        <s:decorate id="biller" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Biller}</ui:define>
+            <h:outputText value="#{counterConfigurationTamplateHome.nameBiller()}"/>
+        </s:decorate>
+        	<s:decorate id="paymentFormField3" template="layout/edit.xhtml">
+							<ui:define name="label">#{messages.Payment_form}:</ui:define>
+							<h:panelGrid columns="3">
+								<h:inputTextarea readonly="true" rows="1" cols="50"
+								value="#{counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idAccountReceivable).account} - #{counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idAccountReceivable).name}"/>
+							</h:panelGrid>
+						</s:decorate>
+        
+        <s:decorate id="banckAccountField" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Bank_Accounts}</ui:define>
+						<h:panelGrid columns="2">
+							<h:inputTextarea readonly="true" rows="1" cols="50"
+								value="#{counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idAccountBank).account} - #{counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idAccountBank).name}" />
+							</h:panelGrid>
+					</s:decorate>
+					
+					<s:decorate id="accountingAccountsEarlyPaymentField"
+						template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Discount_Accounts}</ui:define>
+						<h:panelGrid columns="3" id="descuentosaccount">
+							<h:inputTextarea readonly="true" rows="1" cols="50"
+								value="#{counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idAccountDiscuont).account} - #{counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idAccountDiscuont).name} " />
+							
+						</h:panelGrid>
+					</s:decorate>
+
+
+					<s:decorate id="accountingCreditAccountsField"
+						template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Income_accounts}</ui:define>
+						<h:panelGrid columns="2">
+							<h:inputTextarea readonly="true" rows="1" cols="50"
+								value="#{counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idAccountIncome).account} - #{counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idAccountIncome).name}" />
+							
+						</h:panelGrid>
+					</s:decorate>
+
+					<s:decorate id="accountingPenaltyPortafolioField"
+						template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.accountingAccountsPenaltyPortafolio}</ui:define>
+						<h:panelGrid columns="3">
+							<h:inputTextarea readonly="true" rows="1" cols="50"
+								value="#{counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idPenaltyPortafolio).account} - #{counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idPenaltyPortafolio).name}" />
+													
+						</h:panelGrid>
+					</s:decorate>
+
+					<s:decorate id="StamptaxList" template="layout/edit.xhtml"
+						rendered="#{projectPropertyHome.instance.step==1}">
+						<ui:define name="label">#{messages.Stamptax}</ui:define>
+						<h:panelGrid columns="3">
+							<h:inputTextarea readonly="true" rows="1" cols="50"
+								value="#{counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idStamptax).account} - #{counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idStamptax).name}" />
+							
+						</h:panelGrid>
+					</s:decorate>
+        
+        <s:decorate id="taxList" template="layout/edit.xhtml"
+						rendered="#{counterConfigurationTamplateHome.printTaxList()}">
+						<ui:define name="label">#{messages.Tax}</ui:define>
+						<h:panelGrid columns="3">
+							<h:inputTextarea readonly="true" rows="1" cols="50"
+								value="#{counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idTax).account} - #{counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idTax).name}" />
+						</h:panelGrid>
+					</s:decorate>
+					
+					<s:decorate id="RetentionRateAccount" template="layout/edit.xhtml"
+						rendered="true">
+						<ui:define name="label">#{messages.RetentionRate}:</ui:define>
+						<h:panelGrid width="100%" id="panelRetentionRateAccount"
+							columns="1">
+							<rich:extendedDataTable width="700px" height="125px"
+								selectionMode="single" rows="0" sortMode="single"
+								tableState="#{counterConfigurationTamplateHome.tableState}"
+								rendered="#{counterConfigurationTamplateHome.listTaxConfiguration != null}"
+								value="#{counterConfigurationTamplateHome.listTaxConfiguration}"
+								var="report" id="tableRetenetion">
+
+								<rich:column width="10%" sortable="true" sortBy="#{report[0]}"
+									id="col_id">
+									<f:facet name="header">
+										<h:outputText value="id" />
+									</f:facet>
+									<h:outputText
+										value="#{projectPropertyHome.settRetenetionRateAccount(report[0])}" />
+								</rich:column>
+
+								<rich:column width="30%" sortable="true" sortBy="#{report[1]}"
+									id="col_name">
+									<f:facet name="header">
+										<h:outputText value="#{messages.RetentionRate}" />
+									</f:facet>
+									<h:outputText
+										value="#{projectPropertyHome.getNameRetenetionRate(report[0])}" />
+								</rich:column>
+
+								<rich:column width="60%" sortable="false"
+									id="col_retention_count_list">
+									<f:facet name="header">
+										<h:outputText value="#{messages.RetentionRateAccountSelected}" />
+									</f:facet>
+									<center>
+										<h:outputText
+											value="#{counterConfigurationTamplateHome.instance.searchAccount(report[0]).account} - #{counterConfigurationTamplateHome.instance.searchAccount(report[0]).name}" />
+									</center>
+								</rich:column>
+								
+								
+							</rich:extendedDataTable>
+
+						</h:panelGrid>
+					</s:decorate>
+					
+					
+					<s:decorate id="interestRetentionRateAccounts"
+						template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.RetentionRateForInterest}:</ui:define>
+						<h:panelGrid width="100%" id="panelInterestRetentionRateAccounts"
+							columns="1">
+							<rich:extendedDataTable width="700px" height="125px"
+								selectionMode="single" rows="0" sortMode="single"
+								tableState="#{projectPropertyHome.tableInterestRetentionRateAccountState}"
+								rendered="#{counterConfigurationTamplateHome.listInterestAccountsConfiguration != null}"
+								value="#{counterConfigurationTamplateHome.listInterestAccountsConfiguration}"
+								var="rrCDOD" id="tableInterestRetentionRate">
+
+								<rich:column width="10%" sortable="true" sortBy="#{rrCDOD[0].id}"
+									id="col_rrCDOD_0">
+									<f:facet name="header">
+										<h:outputText value="id" />
+									</f:facet>
+									<center>
+										<h:outputText value="#{rrCDOD[0].id}" />
+									</center>
+								</rich:column>
+								<rich:column width="30%" sortable="true"
+									sortBy="#{rrCDOD[0].name}" id="col_rrCDOD_1">
+									<f:facet name="header">
+										<h:outputText value="#{messages.Ledger_Account}" />
+									</f:facet>
+									<center>
+										<h:outputText value="#{rrCDOD[0].name}" />
+									</center>
+								</rich:column>
+								<rich:column width="60%" sortable="true" sortBy="#{rrCDOD[1]}"
+									id="col_rrCDOD_2">
+									<f:facet name="header">
+										<h:outputText value="#{messages.RetentionRateAccountSelected}" />
+									</f:facet>
+									<center>
+										<h:outputText
+											value="#{counterConfigurationTamplateHome.instance.searchAccount(rrCDOD[0].id).account} - #{counterConfigurationTamplateHome.instance.searchAccount(rrCDOD[0].id).name}" />
+									</center>
+								</rich:column>
+								
+
+							</rich:extendedDataTable>
+
+						</h:panelGrid>
+					</s:decorate>
+					
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/CounterConfigurationTamplateEdit.xhtml"
+                    id="edit"
+                 value="#{messages.Edit}"/>
+
+        <s:button view="/#{empty counterConfigurationTamplateFrom ? 'CounterConfigurationTamplateList' : counterConfigurationTamplateFrom}.xhtml"
+                    id="done"
+                 value="#{messages.Done}"/>
+
+    </div>
+
+    
+        <f:facet name="label">
+            <h:panelGroup>Plantilla de Configuración Contable</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="counterTemplateHasRetentionRateAccountsChildren">
+
+           </h:form>
+
+    <div class="actionButtons">
+       
+    </div>
+</ui:define>
+
+</ui:composition>

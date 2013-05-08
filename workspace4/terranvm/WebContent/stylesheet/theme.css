@@ -1,0 +1,464 @@
+.column3 { width: 5px;max-width: 5px; }
+
+html {
+	overflow-y: scroll;
+}
+
+body {
+	font-size: 12px;
+	margin: 0px;
+	background-color: #FFF;
+	background-attachment: fixed;
+	padding: 0px;
+}
+
+a {
+       font-family: Tahom;
+       font-size: 11px;
+       font-weight: bold;
+       color: #F90;
+       text-decoration: none;
+}
+
+a img {
+	border: none;
+}
+
+h1 {
+	font-size: 1.6em;
+	margin-top: 0;
+}
+
+input[type=submit], input[type=button] {
+	font-size: 11px;
+	margin: 5px 5px 5px 0;
+	cursor: pointer;
+}
+
+input[type=text], input[type=password], textarea {
+	font-size: 12px;
+	padding-left: 1px;
+}
+
+select {
+	font-size: 13px;
+}
+
+.tableControl, .actionButtons {
+	width: 100%;
+}
+
+.tableControl a {
+	padding-left: 10px;
+}
+
+.tableControl {
+	text-align: right;
+}
+
+.footer {
+	text-align: center;
+	font-size: 10px;
+	font-color: #FFF;
+	color: #FFF;
+	background-color: #333;
+	padding: 5px;
+	font-family: Tahoma, Helvetica, sans-serif;
+	position: relative;
+	bottom: 0px;
+	width: 100%;
+}
+
+.rich-table {
+	width: 100%;
+}
+
+.rich-table-cell,.rich-table,.rich-table-thead{
+	border-color: #DDD;
+}
+
+.rich-table-subheadercell{
+       font-family: Tahoma;
+       font-size: 11px;
+       font-weight: bold;
+       color: #333;
+       text-decoration: none;
+}
+
+.rich-table-subheader{
+	background-color: #CCC;
+}
+
+.columnHeader{
+	font-family: Tahoma;
+       font-size: 11px;
+       font-weight: bold;
+       color: #333;
+       text-decoration: underline;
+}
+
+.body {
+	padding: 10px;
+}
+.message {
+	padding: 5px;
+	list-style: none;
+	border: 0;
+	background: none;
+	padding: 0;
+	color: #000000;
+	margin: 5px 0 8px 0;
+	font-size: 12px;
+}
+
+.message li {
+	background: no-repeat left center;
+	padding-top: 1px;
+	padding-left: 20px;
+	margin-left: 3px;
+}
+
+.message li.infomsg {
+	background-image: url(../img/msginfo.png);
+}
+
+.message li.errormsg {
+	background-image: url(../img/msgerror.png);
+}
+
+.message li.warnmsg {
+	background-image: url(../img/msgwarn.png);
+}
+
+.name {
+	vertical-align: top;
+	font-weight: bold;
+	width: 115px;
+	float: left;
+	padding: 5px;
+	margin-top: 3px;
+	clear: left;
+}
+
+.value {
+	float: left;
+	padding: 5px;
+}
+
+.error {
+	float: left;
+	padding: 5px;
+}
+
+.errors {
+	color: #FF0000;
+	vertical-align: middle;
+}
+
+img.errors {
+	padding-right: 5px;
+}
+
+.errors input, .errors textarea, .errors select {
+	border: 1px solid red !important;
+}
+
+.required {
+	color: #FF0000;
+	padding-left: 2px;
+}
+
+.rich-stglpanel-body {
+	overflow: auto;
+} 
+
+/* the specificity here is necessary to override the defaults */
+/*
+.rich-panel .rich-panel-header,
+.rich-stglpanel .rich-stglpanel-header {
+	padding: 2px 3px;
+}*/
+
+.rich-stglpanel-header, .rich-panel-header, .rich-stglpanel-body, .rich-table-cell, input[type="submit"], input[type="button"], .rich-mpnl-text, .rich-mpnl-body, .extdt-subheadercell, .extdt-cell {
+	font-family: Tahoma,Verdana,sans-serif
+}
+
+.rich-panel input[type=submit], .rich-panel input[type=button],
+.rich-tabpanel input[type=submit], .rich-tabpanel input[type=button] {
+	margin-bottom: 0;
+}
+
+.tableControl input[type=submit], .tableControl input[type=button], .tableControl select {
+	margin: 5px 0 5px 5px;
+}
+
+/* I don't know why this is necessary, but the select is off by a pixel on the top and is padding too much on the left */
+.tableControl select {
+	margin-left: 2px;
+	position: relative;
+	top: 1px;
+}
+
+.actionButtons {
+	padding-left: 1px;
+}
+
+.actionButtons select {
+	margin: 5px 5px 5px 0;
+	vertical-align: bottom;
+}
+
+.rich-datalist {
+	list-style: square;
+	margin: 6px 0 1px 0;
+	padding-left: 18px;
+}
+
+.rich-list-item {
+	padding-bottom: 4px;
+}
+
+div.info {
+	font-size: 1.2em;
+}
+
+ul.bullets {
+	list-style: square;
+}
+
+ul.bullets li {
+	padding-bottom: 2px;
+}
+
+td.action {
+	text-align: center;
+	width: 8em;
+	white-space: nowrap;
+}
+
+td.action a {
+	padding-left: 1px;
+	padding-right: 1px;
+}
+
+table.radio {
+   border: 0;
+}
+
+table.radio td {
+   padding: 0 2px;
+}
+
+table.radio input[type=radio] {
+   vertical-align: bottom;
+}
+
+.rich-toolbar{
+	padding:0;
+	background-color:#333;
+	height: 100px;
+	background-image: url(../img/logo_terranvm.jpg);	
+	background-repeat: no-repeat;
+	border: 1px solid #000000;
+}
+
+.rich-toolbar-item a {
+	color:#fff;
+}
+.rich-toolbar-item a:hover {
+	color:#fff;
+	text-decoration: underline;
+}
+
+.rich-panel{
+	border-color: #DDD;
+}
+
+.rich-stglpanel, .rich-panel-header, 
+.rich-table-subheadercell, .rich-stglpanel
+{
+	background-image: none;
+	background-color: #fff;
+	border-color: #DDD;	
+}
+
+.rich-stglpanel-header,.rich-panel-header{
+	padding: 5px;
+	background-color: #F90;
+	background-image: none;
+	border-color: #fff;
+}
+
+.rich-stglpanel
+{
+	color: #333;
+}
+
+.rich-toolbar-item{
+       font-size:11px;
+       color:#FFF;
+       font-weight:bold;
+       font-family:Tahoma, Verdana, sans-serif;
+       white-space:nowrap;
+       padding-top: 0px;
+       padding-right: 10px;
+       padding-bottom: 5px;
+       padding-left: 10px;
+       vertical-align: bottom;
+}
+
+.rich-toolbar-item a {
+    color: #FF9900;
+}
+
+.rich-menu-list-border {
+       border:1px solid;
+       float:left;
+       position:absolute;
+}
+.rich-menu-list-bg {
+       border-top-style:solid;
+       border-left-style:solid;
+       border-right-style:solid;
+       border-top-width:1px;
+       border-left-width:1px;
+       border-right-width:1px;
+       background:repeat-y left;
+}
+
+.rich-menu-separator {
+font-size:0;
+border-top:1px solid;
+margin:2px 0 2px 24px;
+cursor:default;
+}
+.rich-menu-item, .rich-menu-group {
+padding:1px 35px 1px 1px;
+white-space:nowrap;
+position:relative;
+}
+.rich-menu-item-enabled, .rich-menu-group-enabled {
+border:0 solid transparent;
+padding:2px 36px 2px 2px;
+}
+.rich-menu-item-hover, .rich-menu-group-hover {
+border:1px solid;
+cursor:pointer;
+}
+.rich-menu-item-disabled, .rich-menu-group-disabled {
+border:0 solid transparent;
+cursor:default;
+}
+.rich-menu-item-icon, .rich-menu-group-icon {
+margin-right:10px;
+}
+.rich-menu-item-icon img, .rich-menu-group-icon img {
+vertical-align:middle;
+}
+.rich-menu-item a, .rich-menu-group a {
+text-decoration:none;
+}
+.rich-menu-node {
+position:absolute;
+width:16px;
+height:16px;
+font-size:1px;
+top:1px;
+right:1px;
+}
+.rich-menu-item-disabled .rich-menu-node, .rich-menu-group-disabled .rich-menu-node {
+background-position:bottom;
+}
+.rich-menu-list-border {
+border:1px solid;
+float:left;
+position:absolute;
+}
+.rich-menu-list-bg {
+border-top-style:solid;
+border-left-style:solid;
+border-right-style:solid;
+border-top-width:1px;
+border-left-width:1px;
+border-right-width:1px;
+background:repeat-y left;
+}
+.rich-ddmenu-label, .rich-ddmenu-label-disabled {
+left:0;
+top:0;
+padding:2px 5px 2px 5px;
+white-space:nowrap;
+width:auto;
+height:auto;
+}
+.rich-ddmenu-label-unselect {
+border:0 solid transparent;
+padding:3px 6px;
+}
+.rich-ddmenu-label-select {
+border:1px solid;
+cursor:pointer;
+}
+.rich-menu-list-strut {
+font-size:0;
+border:0;
+margin:0;
+position:relative;
+}
+.underneath_iframe {
+position:absolute;
+z-index:90;
+visibility:hidden;
+left:0;
+top:0;
+height:1px;
+width:1px;
+}
+.rich-menu-separator {
+border-top-color:#CCC;
+}
+.rich-menu-item, .rich-menu-item a, .rich-menu-item a:hover, .rich-menu-item a:visited, .rich-menu-group, .rich-menu-group a, .rich-menu-group a:hover, .rich-menu-group a:visited {
+color:#333;
+font-family:Tahoma, Verdana, sans-serif;
+font-size:11px;
+text-decoration: none;
+}
+.rich-menu-item-disabled, .rich-menu-group-disabled {
+color:#999;
+}
+.rich-menu-item-hover, .rich-menu-group-hover {
+background-position:top left;
+background-repeat:repeat-x;
+border-color:#F90;
+background-color:#CCC;
+}
+
+.rich-label-text-decor {
+font-weight:bold;
+}
+.rich-menu-list-border {
+border-color:#CCC;
+background-color:#D9D9D9;
+}
+.rich-menu-list-bg {
+border-top-color:#D9D9D9;
+border-left-color:#D9D9D9;
+border-right-color:#D9D9D9;
+}
+.rich-ddmenu-label, .rich-ddmenu-label-disabled {
+font-family:Tahoma, Verdana, sans-serif;
+font-size:11px;
+}
+.rich-ddmenu-label-select {
+border-color:#CCC;
+background-color:#CCC;
+color:#333;
+}
+
+.footerColumn1 {
+}
+
+.footerColumn2 {
+	width: 10%;
+	text-align:right;
+}

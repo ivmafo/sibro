@@ -1,0 +1,1214 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:a4j="http://richfaces.org/a4j" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:a="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+
+
+	<ui:define name="body">
+		<h:form id="projectProperty" styleClass="edit">
+			<rich:panel>
+				<f:facet name="header">#{projectPropertyHome.managed ? messages.Edit : messages.Add} #{messages.Project_property}</f:facet>
+				<a4j:region>
+					<s:decorate id="contractType" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Contract_type}</ui:define>
+						<h:selectOneMenu id="contractType" required="true" value="#{projectPropertyHome.instance.contractType}" defaultLabel="Haga Click para escojer el tipo de Contrato">
+							<s:selectItems value="#{projectPropertyHome.contractTypeList}" var="contractType" label="#{contractType.name}" /> 
+							<s:convertEntity></s:convertEntity>
+							<a4j:support event="onchange" ignoreDupResponses="true" limitToList="true" reRender="isContributionModule,isContributionModuleField,contributionModulePanel" ajaxSingle="true"></a4j:support>
+						</h:selectOneMenu>
+					</s:decorate> 
+				</a4j:region>
+
+				<s:decorate id="pluginField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Object_of_contract}</ui:define>
+					<h:selectOneMenu required="true" value="#{projectPropertyHome.objectOfContract}" defaultLabel="Haga Click para escojer el objeto del contrato">
+						<s:selectItems value="#{projectPropertyHome.objectOfContractList}" var="objectContract" label="#{objectContract.description}" />
+						<s:convertEntity></s:convertEntity>
+						<a4j:support event="onchange" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="panelRentableUnit,conceptRegion,billedTab,contributionModule, costCenterField,responsaibleField,save,isContributionModuleField"></a4j:support>
+					</h:selectOneMenu>
+				</s:decorate> 
+
+				<s:decorate id="subscriptionDateField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Subscription_date}</ui:define>
+					<rich:calendar id="subscriptionDate" required="true" value="#{projectPropertyHome.instance.subscriptionDate}" datePattern="dd/MM/yyyy">
+						<a4j:support event="onchanged" action="#{projectPropertyHome.ObligationsStartDateValidation()}" limitToList="true" reRender="obligationsStartDateField,subscriptionDateField,messageDateWrong" ignoreDupResponses="true" ajaxSingle="true"></a4j:support>
+					</rich:calendar>
+				</s:decorate>
+
+
+				<s:decorate id="periodField1" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Contract_length}</ui:define>
+					<h:inputText id="period" required="true" value="#{projectPropertyHome.instance.periodicity}">
+						<a4j:support event="onchange" action="#{projectPropertyHome.instance.getEndDate()}" reRender="periodField1,expirationDateField" ajaxSingle="true" />
+					</h:inputText>
+					<h:selectOneMenu value="#{projectPropertyHome.instance.periodicityType}">
+						<f:selectItems value="#{projectPropertyHome.periodicityTypeItemsProjectProperty}" />
+						<a4j:support event="onchange" action="#{projectPropertyHome.instance.getEndDate()}" reRender="periodField1,expirationDateField" ajaxSingle="true" />
+					</h:selectOneMenu>
+				</s:decorate>
+
+				<s:decorate id="expirationDateField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Expiration_date}</ui:define>
+					<h:outputText value="#{projectPropertyHome.instance.expirationDate}">
+						<s:convertDateTime type="date" pattern="dd/MM/yyyy" />
+						<a4j:support event="onchange" reRender="endDateField" action="#{projectPropertyHome.renewConceptEndDate()}" ajaxSingle="true" />
+					</h:outputText>
+				</s:decorate>
+
+
+				<s:decorate id="obligationsStartDateField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Date_of_commencement_of_duties}</ui:define>
+					<rich:calendar id="obligationsStartDate" required="true" value="#{projectPropertyHome.instance.obligationsStartDate}" datePattern="dd/MM/yyyy">
+						<a4j:support event="onchanged" ajaxSingle="true" action="#{projectPropertyHome.ObligationsStartDateValidation()}" ignoreDupResponses="true" limitToList="true" reRender="messageDateWrong,obligationsStartDateField,subscriptionDateField,immediatePayment,buttonConceptField,configWhenNotImmediatePayment">
+						</a4j:support>
+					</rich:calendar>
+					<a:outputPanel ajaxRendered="true">
+						<s:label id="messageDateWrong" style="color: #FF0000;" value="#{projectPropertyHome.messageDate}" rendered="#{not empty projectPropertyHome.messageDate }">
+						</s:label>
+					</a:outputPanel>
+				</s:decorate>
+
+				<s:decorate id="noticeDateField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Notice_date}</ui:define>
+					<rich:calendar id="noticeDate" required="true" value="#{projectPropertyHome.instance.noticeDate}" datePattern="dd/MM/yyyy">
+						<a4j:support event="onchanged" ignoreDupResponses="true" ajaxSingle="true"></a4j:support>
+					</rich:calendar>
+				</s:decorate>
+				<a4j:outputPanel id="stateField">
+					<s:decorate template="layout/display.xhtml">
+						<ui:define name="label">#{messages.State}</ui:define>
+						<h:outputText rendered="#{projectPropertyHome.approved}" value="Aprobado" />
+						<h:outputText rendered="#{projectPropertyHome.draft}" value="Borrador" />
+						<h:outputText rendered="#{projectPropertyHome.terminated}" value="Terminacion Anticipada" />
+						<h:outputText rendered="#{projectPropertyHome.terminate}" value="Terminado" />
+					</s:decorate>
+				</a4j:outputPanel>
+
+				<s:decorate id="version" template="layout/display.xhtml">
+					<ui:define name="label">#{messages.Version_termSheet}</ui:define>
+					<h:outputText value="#{projectPropertyHome.instance.version}">
+					</h:outputText>
+				</s:decorate>
+
+
+				<s:decorate id="automaticExtensionField3" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Automatic_extension}</ui:define>
+					<h:selectOneRadio id="extensionType" value="#{projectPropertyHome.instance.automaticExtension}" styleClass="radio">
+						<f:selectItem itemLabel="Si" itemValue="true" />
+						<f:selectItem itemLabel="No" itemValue="false" />
+						<a4j:support event="onclick" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="extensionPeriodFieldIncreased">
+						</a4j:support>
+					</h:selectOneRadio>
+				</s:decorate>
+
+
+				<a4j:outputPanel id="extensionPeriodFieldIncreased">
+					<h:panelGroup rendered="#{projectPropertyHome.validationExtension()}">
+
+						<s:decorate id="periodExtensionField" template="layout/edit.xhtml">
+							<ui:define name="label">#{messages.periodicity}</ui:define>
+							<h:inputText id="extensionPeriod" required="false" value="#{projectPropertyHome.instance.periodicityExtension}">
+								<a4j:support event="onblur" limitToList="true" ignoreDupResponses="true" ajaxSingle="true" />
+							</h:inputText>
+							<h:selectOneMenu value="#{projectPropertyHome.instance.periodicityTypeExtension}">
+								<f:selectItems value="#{projectPropertyHome.periodicityTypeItemsExtensionProjectProperty}" />
+								<a4j:support event="onchange" limitToList="true" ignoreDupResponses="true" ajaxSingle="true" />
+							</h:selectOneMenu>
+						</s:decorate>
+
+						<s:decorate id="numberEstensioPeriodsField" template="layout/edit.xhtml">
+							<ui:define name="label">#{messages.number_periods}</ui:define>
+							<h:inputText id="extensionNumberPeriods" required="false" value="#{projectPropertyHome.instance.numberPeriodsExtension}">
+								<a4j:support event="onblur" limitToList="true" ignoreDupResponses="true" ajaxSingle="true" />
+							</h:inputText>
+						</s:decorate>
+					</h:panelGroup>
+				</a4j:outputPanel>
+
+
+				<s:decorate id="mandateField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.mandate}</ui:define>
+					<h:selectOneRadio id="mandateType" value="#{projectPropertyHome.instance.mandate}" styleClass="radio">
+						<f:selectItem itemLabel="Si" itemValue="true" />
+						<f:selectItem itemLabel="No" itemValue="false" />
+						<a4j:support event="onclick" reRender="billerTable, billerParent, shipping_addres" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" action="#{projectPropertyHome.selectBiller()}">
+						</a4j:support>
+					</h:selectOneRadio>
+				</s:decorate>
+
+				<div style="clear: both"><span class="required">*</span> #{messages.required_fields}</div>
+			</rich:panel>
+
+			<rich:simpleTogglePanel label="Agregar texto hoja de terminos" opened="false" switchType="client">
+				<rich:editor id="editor" theme="advanced" width="1200" height="400" value="#{projectPropertyHome.instance.subjectContrat}" plugins="save,paste" useSeamText="false" viewMode="true">
+					<f:param name="theme_advanced_buttons1" value="bold,italic,underline,|,cut,copy,paste,pasteword,|,justifyleft,justifycenter,justifyright,justifyfull" />
+					<f:param name="theme_advanced_toolbar_location" value="top" />
+					<f:param name="theme_advanced_toolbar_align" value="left" />
+					<a4j:support ajaxSingle="true" limitToList="true" ignoreDupResponses="true" event="onchange"></a4j:support>
+				</rich:editor>
+				<a4j:outputPanel ajaxRendered="true">
+				</a4j:outputPanel>
+			</rich:simpleTogglePanel>
+
+			<a4j:outputPanel id="panelRentableUnit">
+				<rich:simpleTogglePanel opened="true" switchType="client" label="Información de la Unidad arrendable" rendered="#{(projectPropertyHome.instance.objectOfContract.id == 1) || (projectPropertyHome.instance.objectOfContract.id == 2)}">
+					<s:decorate id="startDateChangesField" template="layout/edit.xhtml" rendered="#{projectPropertyHome.instance.objectOfContract.id == 2}">
+						<ui:define name="label">#{messages.Home_modifications}</ui:define>
+						<rich:calendar id="startDateChanges" value="#{projectPropertyHome.instance.startDateChanges}" datePattern="dd/MM/yyyy">
+							<a4j:support event="onchanged" ajaxSingle="true"></a4j:support>
+
+						</rich:calendar>
+					</s:decorate>
+  
+					<s:decorate id="rentableUnitDecorate" template="layout/edit.xhtml">
+					
+						<ui:define name="label">#{messages.Real_property}</ui:define>
+						<h:selectOneMenu value="#{projectPropertyHome.instance.realProperty}">   
+							<s:selectItems value="#{projectPropertyHome.realPropertyList()}" var="_realProperty" label="#{_realProperty.nameProperty}"></s:selectItems>
+							<s:convertEntity></s:convertEntity>
+							<a4j:support ajaxSingle="true" event="onchange" action="#{projectPropertyHome.clearRentableUnit()}" disableDefault="true" reRender="rentablesUnits,contributionModule,isContributionModuleField,contributionModulePanel"></a4j:support>
+						</h:selectOneMenu>
+
+
+						<h:selectOneMenu id="rentablesUnits" value="#{projectPropertyHome.instance.rentableUnit}" rendered="#{projectPropertyHome.instance.objectOfContract.id == 2}">
+							<s:selectItems value="#{projectPropertyHome.rentableUnitList()}" var="_rentableUnit" label="#{_rentableUnit.name}"></s:selectItems>
+							<s:convertEntity></s:convertEntity>
+							<a4j:support ajaxSingle="true" event="onchange" disableDefault="true" reRender="contributionModule"></a4j:support>
+						</h:selectOneMenu>
+					</s:decorate>
+
+					<s:decorate id="purposeField" template="layout/edit.xhtml" rendered="#{projectPropertyHome.instance.objectOfContract.id == 2}">
+						<ui:define name="label">Destinación</ui:define>
+						<h:inputTextarea id="purpose" cols="80" rows="3" value="#{projectPropertyHome.instance.purpose}">
+							<a4j:support event="onblur" ignoreDupResponses="true" ajaxSingle="true"></a4j:support>
+
+						</h:inputTextarea>
+					</s:decorate>
+
+				</rich:simpleTogglePanel>
+			</a4j:outputPanel>
+
+			<rich:simpleTogglePanel label="Información del facturador" opened="false" switchType="client" rendered="#{projectPropertyHome.instance.biller != null}">
+				<a4j:region>
+
+					<s:decorate id="shipping_addres" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Street_address} **</ui:define>
+						<h:selectOneMenu required="true" value="#{projectPropertyHome.instance.billerAddress}">
+							<s:selectItems value="#{projectPropertyHome.instance.biller.addresses}" var="address" label="#{address.toString()}" />
+							<s:convertEntity></s:convertEntity>
+							<a4j:support event="onchange" ajaxSingle="true" disableDefault="true"></a4j:support>
+						</h:selectOneMenu>
+					</s:decorate>
+
+					<s:decorate id="phone_number_biller" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Phone_numbers}</ui:define>
+						<h:selectOneMenu required="true" value="#{projectPropertyHome.instance.phoneNumberByPhoneBiller}">
+							<s:selectItems value="#{projectPropertyHome.instance.biller.phoneNumbers}" var="phone" label="(#{phone.indicative})  #{phone.number} - #{phone.extension}" />
+							<s:convertEntity></s:convertEntity>
+							<a4j:support event="onchange" ajaxSingle="true" disableDefault="true"></a4j:support>
+						</h:selectOneMenu>
+					</s:decorate>
+				</a4j:region>
+
+			</rich:simpleTogglePanel>
+			<rich:simpleTogglePanel label="Información del Cliente" opened="false" switchType="client" rendered="#{projectPropertyHome.instance.billed != null}">
+				<a4j:region>
+
+					<s:decorate id="shipping_addres_billed" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Street_address}</ui:define>
+						<h:selectOneMenu required="true" value="#{projectPropertyHome.instance.billedAddress}">
+							<s:selectItems value="#{projectPropertyHome.instance.billed.addresses}" var="address" label="#{address.toString()}" />
+							<s:convertEntity></s:convertEntity>
+							<a4j:support event="onchange" ajaxSingle="true" disableDefault="true"></a4j:support>
+						</h:selectOneMenu>
+					</s:decorate>
+
+					<s:decorate id="phone_number" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Phone_numbers}</ui:define>
+						<h:selectOneMenu required="true" value="#{projectPropertyHome.instance.phoneNumber}">
+							<s:selectItems value="#{projectPropertyHome.instance.billed.phoneNumbers}" var="phone" label="(#{phone.indicative})  #{phone.number} - #{phone.extension}" />
+							<s:convertEntity></s:convertEntity>
+							<a4j:support event="onchange" ajaxSingle="true" disableDefault="true"></a4j:support>
+						</h:selectOneMenu>
+					</s:decorate>
+				</a4j:region>
+
+			</rich:simpleTogglePanel>
+
+
+			<rich:simpleTogglePanel rendered="#{projectPropertyHome.instance.id > 0}" ajaxSingle="true" switchType="client" opened="false" label="#{messages.add_concepts}" id="togglePanelConcep">
+				<a4j:outputPanel id="conceptRegion">
+					<s:decorate id="templateConceptField" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Concept_Template}</ui:define>
+						<h:selectOneMenu value="#{projectPropertyHome.template}">
+							<s:selectItems value="#{projectPropertyHome.concepTemplateList}" var="conceptTemplate" label="#{conceptTemplate.name}"></s:selectItems>
+							<a4j:support event="onchange" action="#{projectPropertyHome.FillTemplate()}" reRender="nameConceptField, printDescriptionField, expressionField, isContributionModuleField, isEarlyPaymentField" ajaxSingle="true" />
+							<s:convertEntity></s:convertEntity>
+						</h:selectOneMenu>
+					</s:decorate>
+
+
+					<s:decorate id="nameConceptField" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Name}</ui:define>
+						<h:inputTextarea id="nameConcept" cols="60" rows="1" required="false" size="50" maxlength="50" value="#{projectPropertyHome.concept.name}">
+							<a4j:support event="onblur" ajaxSingle="true" action="#{projectPropertyHome.validateLenghtName()}" ignoreDupResponses="true" limitToList="true" reRender="buttonConceptField,conceptsChildren,validatename"></a4j:support>
+						</h:inputTextarea>
+						<a4j:outputPanel id="validatename">
+							<h:outputLabel style="color:red" rendered="#{projectPropertyHome.nameLenghtOK}" value="#{projectPropertyHome.validatelenght}" />
+						</a4j:outputPanel>
+					</s:decorate>
+
+					<s:decorate id="printDescriptionField" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Print_description}</ui:define>
+						<h:inputTextarea id="printDescription" cols="80" rows="3" required="false" value="#{projectPropertyHome.concept.printDescription}">
+							<a4j:support event="onblur" ajaxSingle="true" action="#{projectPropertyHome.validatelenghtsub()}" ignoreDupResponses="true" limitToList="true" reRender="buttonConceptField,validatePrintCreateConcept"></a4j:support>
+						</h:inputTextarea>
+						<a4j:outputPanel id="validatePrintCreateConcept">
+							<h:outputLabel style="color:red" rendered="#{projectPropertyHome.printDescriptionOk}" value="#{projectPropertyHome.validatelenght}" />
+						</a4j:outputPanel>
+					</s:decorate>
+
+
+					<s:decorate id="isContributionModuleField" template="layout/edit.xhtml" rendered="#{(projectPropertyHome.instance.objectOfContract.id == 1) || (projectPropertyHome.instance.objectOfContract.id == 2)}">
+						<ui:define name="label">#{messages.IsContributionModule}</ui:define>
+						<h:selectBooleanCheckbox id="isContributionModule" disabled="#{projectPropertyHome.instanceObjectOfContractRealProperty}" value="#{projectPropertyHome.isContributionModule}">
+							<a4j:support event="onchange" ajaxSingle="true" ignoreDupResponses="true" limitToList="true" reRender="contributionModulePanel"></a4j:support>
+						</h:selectBooleanCheckbox>
+					</s:decorate>
+
+
+					<a4j:outputPanel id="contributionModulePanel">
+						<s:decorate template="layout/edit.xhtml" rendered="#{((projectPropertyHome.instance.objectOfContract.id == 1) || (projectPropertyHome.instance.objectOfContract.id == 2)) and projectPropertyHome.isContributionModule}">
+							<ui:define name="label">#{messages.ContributionModule}</ui:define>
+							<h:selectOneMenu value="#{projectPropertyHome.concept.contributionModule}">	 
+								<s:selectItems value="#{projectPropertyHome.contributionModuleList()}" var="_contributionModule" label="#{_contributionModule.name}"></s:selectItems>
+								<s:convertEntity></s:convertEntity>
+								<a4j:support ajaxSingle="true" event="onchange" disableDefault="true" reRender="buttonConceptField, contributionModule"></a4j:support>
+								<a4j:support ajaxSingle="true" event="onblur" disableDefault="true" reRender="buttonConceptField, contributionModule"></a4j:support>
+							</h:selectOneMenu>
+						</s:decorate>
+					</a4j:outputPanel>
+								<a4j:outputPanel id="isShowPeriodConcep">
+								<s:decorate id="isShowPeriodConcept" template="layout/edit.xhtml">
+									<ui:define name="label">#{messages.IsShowPeriodConcept}</ui:define>
+									<h:selectBooleanCheckbox id="isShowPeriods" value="#{projectPropertyHome.concept.showBilledPeriod}">
+										<a4j:support event="onchange" ajaxSingle="true" limitToList="true" ignoreDupResponses="true" reRender="discountMonth2"></a4j:support>
+									</h:selectBooleanCheckbox>
+								</s:decorate>
+							</a4j:outputPanel>
+								<a4j:outputPanel rendered="#{projectPropertyHome.conceptSelected.showBilledPeriod}" id="discountMonth2">
+									<s:decorate template="layout/edit.xhtml" rendered="#{projectPropertyHome.concept.showBilledPeriod}" id="discountMonth">
+										<ui:define name="label">#{messages.DiscountMonths} </ui:define>
+										<rich:inputNumberSpinner width="40px"  value="#{projectPropertyHome.concept.discountMounths}" clientErrorMessage="#{messages.Invalid_value}" showToolTip="false">
+								<a4j:support event="onchange" limitToList="true" ajaxSingle="true" ignoreDupResponses="true" reRender="buttonConceptField"></a4j:support>
+							</rich:inputNumberSpinner>
+							</s:decorate>
+							</a4j:outputPanel>
+
+					<s:decorate id="immediatePayment" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.concept_immediate_payment}</ui:define>
+						<h:selectBooleanCheckbox disabled="#{projectPropertyHome.immediatePaymentDisabled}" id="isImmediatePayment" value="#{projectPropertyHome.immediatePaymentConceptCreation}">
+							<a4j:support event="onchange" ajaxSingle="true" ignoreDupResponses="true" limitToList="true" reRender="configWhenNotImmediatePayment,buttonConceptField,isIncreased,periodFieldIncreased"></a4j:support>
+						</h:selectBooleanCheckbox>
+						<h:outputLabel rendered="#{projectPropertyHome.immediatePaymentDisabled}" value="#{messages.concept_immediate_payment_invalid_message}" />
+					</s:decorate>
+
+					<a4j:outputPanel id="configWhenNotImmediatePayment">
+						<a4j:outputPanel rendered="#{!projectPropertyHome.immediatePaymentConceptCreation}">
+							<s:decorate id="startDateField" template="layout/edit.xhtml">
+								<ui:define name="label">#{messages.Start_date}</ui:define>
+								<rich:calendar id="startDate" required="false" value="#{projectPropertyHome.concept.startDate}" datePattern="dd/MM/yyyy" ajaxSingle="true" bypassUpdates="true" reRender="startDateField,endDateField">
+									<a4j:support event="onchanged" limitToList="true" ignoreDupResponses="true" reRender="endDateField,buttonConceptField" ajaxSingle="true" />
+								</rich:calendar>
+							</s:decorate>
+
+							<s:decorate id="periodField" template="layout/edit.xhtml">
+								<ui:define name="label">#{messages.periodicity}</ui:define>
+								<h:inputText id="period" required="false" value="#{projectPropertyHome.concept.periodicity}">
+									<a4j:support event="onblur" limitToList="true" ignoreDupResponses="true" reRender="endDateField, buttonConceptField" ajaxSingle="true" />
+								</h:inputText>
+								<h:selectOneMenu value="#{projectPropertyHome.concept.periodicityType}">
+									<f:selectItems value="#{projectPropertyHome.periodicityTypeItemsConcept}" />
+									<a4j:support event="onchange" limitToList="true" ignoreDupResponses="true" reRender="endDateField,buttonConceptField" ajaxSingle="true" />
+								</h:selectOneMenu>
+							</s:decorate>
+
+							<s:decorate id="numberPeriodsField" template="layout/edit.xhtml">
+								<ui:define name="label">#{messages.number_periods}</ui:define>
+								<h:inputText id="numberPeriods" required="false" value="#{projectPropertyHome.concept.numberPeriods}">
+									<a4j:support event="onblur" limitToList="true" ignoreDupResponses="true" reRender="endDateField,buttonConceptField" ajaxSingle="true" />
+								</h:inputText>
+							</s:decorate>
+
+							<a4j:outputPanel id="endDateField">
+								<s:decorate template="layout/edit.xhtml">
+									<ui:define name="label">#{messages.end_date}</ui:define>
+									<h:inputText style="font-weight:bold;" value="#{projectPropertyHome.concept.endDateView}" readonly="true">
+										<s:convertDateTime type="date" pattern="dd/MM/yyyy" />
+									</h:inputText>
+									<s:label id="messageConceptDateWrong" style="color: #FF0000;" value=" #{projectPropertyHome.messagedateEndConcept}" rendered="#{not empty projectPropertyHome.messagedateEndConcept}" />
+								</s:decorate>
+							</a4j:outputPanel>
+							
+
+							<s:decorate id="isEarlyPaymentField" template="layout/edit.xhtml">
+								<ui:define name="label">#{messages.Is_early_payment}</ui:define>
+								<h:selectBooleanCheckbox id="isEarlyPayment" value="#{projectPropertyHome.concept.earlyPayment}">
+									<a4j:support event="onchange" ajaxSingle="true" limitToList="true" ignoreDupResponses="true" reRender="buttonConceptField"></a4j:support>
+								</h:selectBooleanCheckbox>
+							</s:decorate>
+
+						</a4j:outputPanel>
+					</a4j:outputPanel>
+
+
+
+
+					<s:decorate id="priority" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.priority}</ui:define>
+						<rich:inputNumberSlider width="400px" showArrows="true" showBoundaryValues="true" value="#{projectPropertyHome.concept.priority}" clientErrorMessage="#{messages.Invalid_value}" maxValue="5" minValue="1" step="1" showToolTip="true">
+							<a4j:support event="onchange" limitToList="true" ajaxSingle="true" ignoreDupResponses="true" reRender="buttonConceptField"></a4j:support>
+						</rich:inputNumberSlider>
+						<rich:toolTip for="priority">#{messages.priorityHelp}</rich:toolTip>
+					</s:decorate>
+
+					<a4j:outputPanel id="responsaibleField" rendered="#{projectPropertyHome.instance.objectOfContract.id != projectPropertyHome.ObjectOfContract()}">
+						<s:decorate template="layout/edit.xhtml">
+							<ui:define name="label">#{messages.concept_responsaible}</ui:define>
+							<h:selectOneRadio id="responsaible" value="#{projectPropertyHome.concept.responsible}" styleClass="radio">
+								<f:selectItem itemLabel="Arrendatario" itemValue="0" />
+								<f:selectItem itemLabel="Propietario" itemValue="1" />
+								<a4j:support event="onchange" ignoreDupResponses="true" limitToList="true" reRender="buttonConceptField" ajaxSingle="true"></a4j:support>
+							</h:selectOneRadio>
+						</s:decorate>
+					</a4j:outputPanel>
+
+					<a4j:outputPanel id="SystemVariableFields">
+						<s:decorate template="layout/edit.xhtml">
+							<ui:define name="label">#{messages.Expression}</ui:define>
+							<h:panelGrid rendered="true" columns="2">
+								<a4j:outputPanel id="expressionField">
+									<h:inputTextarea cols="100" rows="9" required="false" value="#{projectPropertyHome.concept.expression}">
+										<a4j:support event="onchange" ajaxSingle="true" action="#{projectPropertyHome.validateExpression()}" limitToList="true" ignoreDupResponses="true" reRender="buttonConceptField,resultValidate"></a4j:support>
+									</h:inputTextarea>
+								</a4j:outputPanel>
+								<rich:extendedDataTable binding="#{tablesSystemVAriableBind}" width="400px" height="150px" selectionMode="single" rows="0" sortMode="single" selection="#{projectPropertyHome.systemVaribleSelection}" tableState="#{projectPropertyHome.tableState}" value="#{projectPropertyHome.systemVariable}" var="_systemvariable" id="tablesystemvariable">
+
+									<rich:column sortable="true" width="15%" sortBy="#{_systemvariable.id}" id="col_1" filterBy="#{_systemvariable.id}" filterEvent="onchange" label="#{messages.Code}">
+										<f:facet name="header">
+											<h:outputText value="Id" />
+										</f:facet>
+										<h:outputText value="#{_systemvariable.id}" />
+									</rich:column>
+									<rich:column sortable="true" width="25%" sortBy="#{_systemvariable.name}" id="col_2" filterBy="#{_systemvariable.name}" filterEvent="onchange" label="#{messages.Account_Number}">
+										<f:facet name="header">
+											<h:outputText value="Nombre" />
+										</f:facet>
+										<h:outputText value="#{_systemvariable.name}" />
+									</rich:column>
+									<rich:column sortable="true" width="60%" sortBy="#{_systemvariable.sintax}" id="col_3" filterBy="#{_systemvariable.sintax}" filterEvent="onchange" label="#{messages.Concept}">
+										<f:facet name="header">
+											<h:outputText value="Sintaxis" />
+										</f:facet>
+										<h:outputText value="#{_systemvariable.sintax}" />
+									</rich:column>
+									<a4j:support ajaxSingle="true" reRender="expressionField,resultValidate" limitToList="true" ignoreDupResponses="true" action="#{projectPropertyHome.onSelectionChangedSystemVariable}" event="onselectionchange" />
+								</rich:extendedDataTable>
+							</h:panelGrid>
+						</s:decorate>
+					</a4j:outputPanel>
+
+					<a4j:outputPanel id="resultValidate">
+						<s:decorate template="layout/edit.xhtml" style="color:red">
+							<h:outputText style="#{projectPropertyHome.errorOnConceptExpresion ? 'color:red':'color:blue' }" value="#{projectPropertyHome.validateExpression}">
+								<f:convertNumber currencySymbol="$ " type="currency" />
+							</h:outputText>
+						</s:decorate>
+					</a4j:outputPanel>
+
+					<s:decorate id="interestArrearsField" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.interestArrears}</ui:define>
+						<h:selectOneRadio id="interestArrears" value="#{projectPropertyHome.concept.interestArrears}" required="true" styleClass="radio">
+							<f:selectItem itemLabel="Si" itemValue="true" />
+							<f:selectItem itemLabel="No" itemValue="false" />
+							<a4j:support event="onclick" ignoreDupResponses="true" limitToList="true" ajaxSingle="true">
+							</a4j:support>
+						</h:selectOneRadio>
+					</s:decorate>
+
+					<a4j:outputPanel id="conceptCostCenterPanel" style="border:5px;">
+						<s:decorate rendered="true" template="layout/edit.xhtml">
+							<ui:define name="label">#{messages.Cost_center}</ui:define>
+							<h:selectOneRadio id="myRadio" value="#{projectPropertyHome.concept.costCenterType}">
+								<f:selectItems value="#{projectPropertyHome.costCenterTypes}" />
+								<a4j:support event="onchange" ajaxSingle="true" reRender="buttonConceptField,conceptCostcenterField" limitToList="true" ignoreDupResponses="true"></a4j:support>
+							</h:selectOneRadio>
+							<a4j:outputPanel id="conceptCostcenterField">
+								<h:inputText rendered="#{projectPropertyHome.concept.costCenterType == projectPropertyHome.concept.costCenterTypeConcept}" required="true" value="#{projectPropertyHome.concept.costCenter}">
+									<a4j:support event="onblur" limitToList="true" ignoreDupResponses="true" ajaxSingle="true" reRender="conceptCostcenterField" />
+								</h:inputText>
+							</a4j:outputPanel>
+						</s:decorate>
+					</a4j:outputPanel>
+
+
+					<s:decorate id="fixedValueField" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.fixedValue}</ui:define>
+						<h:inputText id="fixedValueField" required="false" value="#{projectPropertyHome.concept.fixedValue}">
+							<a4j:support event="onblur" ajaxSingle="true" action="#{projectPropertyHome.changeisincreased()}" ignoreDupResponses="true" limitToList="true" reRender="isIncreased,buttonConceptField,periodFieldIncreased"></a4j:support>
+						</h:inputText>
+					</s:decorate>
+
+
+					<a4j:outputPanel id="isIncreased">
+						<s:decorate rendered="#{projectPropertyHome.concept.fixedValue != null and !projectPropertyHome.immediatePaymentConceptCreation}" template="layout/edit.xhtml">
+							<ui:define name="label">#{messages.IsIncreased}</ui:define>
+							<h:selectBooleanCheckbox id="isInCreased" value="#{projectPropertyHome.isInCreased}">
+								<a4j:support event="onchange" ajaxSingle="true" reRender="periodFieldIncreased,buttonConceptField" limitToList="true" ignoreDupResponses="true"></a4j:support>
+							</h:selectBooleanCheckbox>
+						</s:decorate>
+					</a4j:outputPanel>
+
+
+
+					<a4j:outputPanel id="periodFieldIncreased">
+						<h:panelGroup rendered="#{projectPropertyHome.isInCreased and !projectPropertyHome.immediatePaymentConceptCreation}">
+
+							<s:decorate template="layout/edit.xhtml" rendered="#{projectPropertyHome.isInCreased ==  true}">
+								<ui:define name="label">#{messages.periodicityIncreased}</ui:define>
+								<h:inputText id="period" required="false" value="#{projectPropertyHome.increased.periodicity}" rerender="#{projectPropertyHome.increased.periodicity} != null">
+									<a4j:support event="onblur" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="buttonConceptField" />
+								</h:inputText>
+								<h:selectOneMenu id="periodType" value="#{projectPropertyHome.increased.periodicityType}">
+									<f:selectItems value="#{projectPropertyHome.periodicityTypeItemsConcept}" />
+									<a4j:support event="onchange" ignoreDupResponses="true" limitToList="true" reRender="buttonConceptField" ajaxSingle="true" />
+								</h:selectOneMenu>
+							</s:decorate>
+
+							<s:decorate id="dateIncrement" template="layout/edit.xhtml" rendered="#{projectPropertyHome.isInCreased ==  true}">
+								<ui:define name="label">#{messages.Start_date_Increased}</ui:define>
+								<rich:calendar id="startDate" required="false" value="#{projectPropertyHome.increased.nextIncreased}" datePattern="dd/MM/yyyy" ajaxSingle="true" bypassUpdates="true">
+									<a4j:support event="onchanged" ignoreDupResponses="true" limitToList="true" reRender="buttonConceptField" ajaxSingle="true" />
+								</rich:calendar>
+							</s:decorate>
+
+							<s:decorate id="expressionFieldIncrement" template="layout/edit.xhtml" rendered="#{projectPropertyHome.isInCreased ==  true}">
+								<ui:define name="label">#{messages.ExpressionIncreased}</ui:define>
+								<h:panelGrid rendered="true" columns="2">
+									<h:inputTextarea id="expressionField" cols="100" rows="9" required="false" value="#{projectPropertyHome.increased.expression}">
+										<a4j:support event="onchange" ajaxSingle="true" action="#{projectPropertyHome.IsvalidateExpressionIncreased()}" limitToList="true" ignoreDupResponses="true" reRender="resultValidateIncreased,buttonConceptField"></a4j:support>
+									</h:inputTextarea>
+
+
+									<rich:extendedDataTable binding="#{tablesSystemVAriableIncreaseBind}" width="400px" height="150px" selectionMode="single" rows="0" sortMode="single" selection="#{projectPropertyHome.systemVaribleSelectionIncrease}" tableState="#{projectPropertyHome.tableState}" value="#{projectPropertyHome.systemVariable}" var="_systemvariable1" id="tablesystemvariable1">
+
+										<rich:column sortable="true" width="15%" sortBy="#{_systemvariable1.id}" id="col1" filterBy="#{_systemvariable1.id}" filterEvent="onchange" label="#{messages.Code}">
+											<f:facet name="header">
+												<h:outputText value="Id" />
+											</f:facet>
+											<h:outputText value="#{_systemvariable.id}" />
+										</rich:column>
+										<rich:column sortable="true" width="25%" sortBy="#{_systemvariable1.name}" id="col2" filterBy="#{_systemvariable1.name}" filterEvent="onchange" label="#{messages.Account_Number}">
+											<f:facet name="header">
+												<h:outputText value="Nombre" />
+											</f:facet>
+											<h:outputText value="#{_systemvariable1.name}" />
+										</rich:column>
+										<rich:column sortable="true" width="60%" sortBy="#{_systemvariable1.sintax}" id="col3" filterBy="#{_systemvariable1.sintax}" filterEvent="onchange" label="#{messages.Concept}">
+											<f:facet name="header">
+												<h:outputText value="Sintaxis" />
+											</f:facet>
+											<h:outputText value="#{_systemvariable1.sintax}" />
+										</rich:column>
+										<a4j:support ajaxSingle="true" reRender="buttonConceptField,expressionFieldIncrement,resultValidateIncreased" limitToList="true" ignoreDupResponses="true" action="#{projectPropertyHome.onSelectionChangedSystemVariableIncrease()}" event="onselectionchange" />
+									</rich:extendedDataTable>
+								</h:panelGrid>
+
+							</s:decorate>
+
+
+							<s:decorate template="layout/edit.xhtml" style="color:red" id="resultValidateIncreased">
+								<h:outputText style="#{projectPropertyHome.errorOnConceptExpresionIncreased ? 'color:red':'color:blue' }" value="#{projectPropertyHome.validateExpressionIncreased}" />
+							</s:decorate>
+						</h:panelGroup>
+
+					</a4j:outputPanel>
+
+
+
+
+
+					<a4j:outputPanel id="buttonConceptField">
+						<s:decorate template="layout/edit.xhtml">
+							<h:commandButton disabled="#{projectPropertyHome.conceptDisabled || projectPropertyHome.errorOnConceptExpresion || projectPropertyHome.errorOnConceptExpresionIncreased}" type="button" id="addConcept" value="#{messages.Add_concept}">
+								<a4j:support event="onclick" ajaxSingle="true" limitToList="true" ignoreDupResponses="true" action="#{projectPropertyHome.addConcept()}" oncomplete="#{rich:component('togglePanelConcep')}.close()" reRender="togglePanelConcep,growlPanel,outputpanelListOfConcepts,startDateField,periodField,numberPeriodsField,endDateField"></a4j:support>
+							</h:commandButton>
+						</s:decorate>
+					</a4j:outputPanel>
+				</a4j:outputPanel>
+			</rich:simpleTogglePanel>
+
+
+			<a4j:outputPanel id="statusField">
+				<rich:simpleTogglePanel ajaxSingle="true" switchType="client" label="Aprobación" rendered="#{(not projectPropertyHome.approved or projectPropertyHome.draftBefore) and projectPropertyHome.instance.id > 0}">
+
+					<s:decorate template="layout/edit.xhtml" rendered="#{(not projectPropertyHome.approved or projectPropertyHome.draftBefore) and projectPropertyHome.instance.id > 0}">
+						<ui:define name="label">#{messages.Would_you_like_to_adopt_this_term_sheet}</ui:define>
+						<h:selectBooleanCheckbox value="#{projectPropertyHome.approved}">
+							<a4j:support event="onclick"  action="#{projectPropertyHome.approveTermSheet()}" />
+						</h:selectBooleanCheckbox>
+					</s:decorate>
+				</rich:simpleTogglePanel>
+			</a4j:outputPanel>
+
+
+
+			<rich:separator lineType="solid" height="8px" />
+
+			<div id="actionButtons"><h:commandButton id="save" value="#{messages.Save}" action="#{projectPropertyHome.persist}" disabled="#{!projectPropertyHome.wired}" rendered="#{!projectPropertyHome.managed}" /> <h:commandButton id="update1" type="button" value="#{messages.Save}" rendered="#{projectPropertyHome.managed}" disabled="#{!projectPropertyHome.validateExpiration()}">
+				<a4j:support event="onclick" action="#{projectPropertyHome.update}" ajaxSingle="true" limitToList="true" reRender="growlPanel" ignoreDupResponses="true"></a4j:support>
+			</h:commandButton> <h:commandButton id="delete" value="#{messages.Delete}" action="#{projectPropertyHome.remove}" immediate="true" rendered="false or #{projectPropertyHome.managed} and #{projectPropertyHome.instance.step==0}" /> <s:button id="cancelEdit" value="#{messages.Cancel}" propagation="end" view="/#{(projectPropertyHome.instance.step==1) ? 'MakerCheckerProjectPropertyList' : 'ProjectProperty'}.xhtml" rendered="#{projectPropertyHome.managed}" /> <s:button id="cancelAdd" value="#{messages.Cancel} " propagation="end" view="/#{empty projectPropertyFrom ? 'ProjectPropertyList' : projectPropertyFrom}.xhtml" rendered="#{!projectPropertyHome.managed}" /> <s:button view="/MakerCheckerProjectPropertyList.xhtml" id="aproved" value="Aprobacion Contador" rendered="#{projectPropertyHome.instance.step==1}">
+				<a4j:support event="onclick" action="#{projectPropertyHome.approveCounter()}" ignoreDupResponses="true"></a4j:support>
+			</s:button> <rich:toolTip for="actionButtons" disabled="#{projectPropertyHome.validateExpiration()}">
+                Esta hoja de términos no puede ser editada ya que su estado es <strong>Terminado o Terminación Anticipada</strong>
+				<br />
+			</rich:toolTip></div>
+			<h:commandButton id="terminate" value="Terminacion anticipada" type="button">
+				<a4j:support event="onclick" action="#{projectPropertyHome.terminate()}" rendered="true" ajaxSingle="true" reRender="stateField">
+				</a4j:support>
+			</h:commandButton>
+		</h:form>
+
+		<a4j:outputPanel id="billedTab">
+			<rich:tabPanel switchType="client" id="tabPanelpp">
+
+
+				<rich:tab label="#{messages.Billed} *" labelClass="required" rendered="#{projectPropertyHome.instance.objectOfContract.id != 1}">
+					<div class="association" id="billedParent"><h:outputText value="#{messagesThere_is_no_billed_associated_with_this_projectProperty}" rendered="#{projectPropertyHome.instance.billed == null}" /> <rich:dataTable var="_businessEntity" value="#{projectPropertyHome.instance.billed}" rendered="#{projectPropertyHome.instance.billed != null}" rowClasses="rvgRowOne,rvgRowTwo" id="billedTable">
+						<h:column>
+							<f:facet name="header">Id</f:facet>
+							<h:outputText value="#{_businessEntity.id}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Id_type}</f:facet>
+							<h:outputText value="#{businessEntityHome.getIdentificationTypes(_businessEntity)}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Id_number}</f:facet>
+							<h:outputText value="#{_businessEntity.idNumber()}" rendered="#{_businessEntity.idType!=31}" />
+							<h:outputText value="#{_businessEntity.idNumber()} - #{_businessEntity.verificationNumber}" rendered="#{_businessEntity.idType==31}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Name}</f:facet>
+							<h:outputText value="#{_businessEntity.nameBusinessEntity}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Email}</f:facet>
+							<h:outputText value="#{_businessEntity.email}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Trade_Name}</f:facet>
+							<h:outputText value="#{_businessEntity.tradeName}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Legal_entity_type}</f:facet>
+							<h:outputText value="#{businessEntityHome.getLegalEntityType(_businessEntity)}" />
+						</h:column>
+					</rich:dataTable>
+
+					<div class="actionButtons"><s:button id="#{projectPropertyHome.instance.billed != null ? 'changeParent' : 'selectParent'}" value="#{projectPropertyHome.instance.billed != null ? messages.Change : messages.Select} #{messages.Billed}" view="/BusinessEntityList.xhtml">
+						<f:param name="from" value="ProjectPropertyEdit" />
+						<f:param name="fromTab" value="billed"></f:param>
+					</s:button></div>
+
+					</div>
+				</rich:tab>
+				<rich:tab label="#{messages.Projects} *" labelClass="required">
+					<div class="association" id="projectParent"><h:outputText value="#{messages.There_is_no_project_associated_with_this_projectProperty}" rendered="#{projectPropertyHome.instance.project == null}" /> <rich:dataTable var="_project" value="#{projectPropertyHome.instance.project}" rendered="#{projectPropertyHome.instance.project != null}" rowClasses="rvgRowOne,rvgRowTwo" id="projectTable">
+						<h:column>
+							<f:facet name="header">Id</f:facet>
+							<h:outputText value="#{_project.id}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Business_entity_id}</f:facet>
+							<h:outputText value="#{_project.businessEntity.nameBusinessEntity}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Business_line_id}</f:facet>
+							<h:outputText value="#{_project.businessLine.nameBusinessLine}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Name}</f:facet>
+							<h:outputText value="#{_project.nameProject}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Cost_center_project}</f:facet>
+							<h:outputText value="#{_project.costCenterProject}" />
+						</h:column>
+					</rich:dataTable>
+
+					<div class="actionButtons"><s:button id="#{projectPropertyHome.instance.project != null ? 'changeParent3' : 'selectParent3'}" value="#{projectPropertyHome.instance.project != null ? messages.Change : messages.Select} #{messages.Projects}" view="/ProjectList.xhtml">
+						<f:param name="from" value="ProjectPropertyEdit" />
+					</s:button></div>
+					</div>
+				</rich:tab>
+
+
+				<rich:tab label="#{messages.Biller}  *" labelClass="required">
+					<div class="association" id="billerParent"><h:outputText value="#{messages.There_is_no_biller_associated_with_this_projectProperty}" rendered="#{projectPropertyHome.instance.biller == null}" /> <rich:dataTable var="_businessEntity" value="#{projectPropertyHome.instance.biller}" rendered="#{projectPropertyHome.instance.biller != null}" rowClasses="rvgRowOne,rvgRowTwo" id="billerTable">
+						<h:column>
+							<f:facet name="header">Id</f:facet>
+							<h:outputText value="#{_businessEntity.id}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Id_type}</f:facet>
+							<h:outputText value="#{businessEntityHome.getIdentificationTypes(_businessEntity)}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Id_number}</f:facet>
+							<h:outputText value="#{_businessEntity.idNumber()}" rendered="#{_businessEntity.idType!=31}" />
+							<h:outputText value="#{_businessEntity.idNumber()} - #{_businessEntity.verificationNumber}" rendered="#{_businessEntity.idType==31}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Name}</f:facet>
+							<h:outputText value="#{_businessEntity.nameBusinessEntity}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Email}</f:facet>
+							<h:outputText value="#{_businessEntity.email}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Trade_Name}</f:facet>
+							<h:outputText value="#{_businessEntity.tradeName}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Legal_entity_type}</f:facet>
+							<h:outputText value="#{businessEntityHome.getLegalEntityType(_businessEntity)}" />
+						</h:column>
+					</rich:dataTable></div>
+				</rich:tab>
+
+
+				<rich:tab id="coceptsTab" label="#{messages.Concepts}">
+					<a4j:outputPanel id="outputpanelListOfConcepts" ajaxRendered="true">
+						<h:form styleClass="association" id="conceptsChildren">
+							<h:outputText value="#{messages.There_are_no_concepts_associated_with_this_projectProperty}" rendered="#{empty projectPropertyHome.instance.concepts}" />
+
+							<rich:extendedDataTable height="300px" rows="#{projectPropertyHome.conceptList.size()}" width="100%" value="#{projectPropertyHome.conceptnotbulkload(projectPropertyHome.conceptList)}" var="_concept" rendered="#{not empty projectPropertyHome.conceptnotbulkload(projectPropertyHome.conceptList)}" id="conceptsTable">
+								<rich:column width="8%" sortBy="#{_concept.id}">
+									<f:facet name="header">#{messages.id}</f:facet>
+									<h:outputText value="#{_concept.id}" />
+								</rich:column>
+								
+								<rich:column width="10%" sortBy="#{_concept.lastModification}">								
+									<f:facet name="header">#{messages.LastModification}</f:facet>
+									<h:outputText value="#{_concept.lastModification}" />
+								</rich:column>
+								
+								<rich:column width="24%" sortBy="#{_concept.name}">
+									<f:facet name="header">#{messages.Name}</f:facet>
+									<h:outputText value="#{_concept.name}" />
+								</rich:column>
+
+								<rich:column width="10%" sortBy="#{_concept.tax}">
+									<f:facet name="header">#{messages.Tax}</f:facet>
+									<h:outputText value="#{_concept.tax.name}" />
+								</rich:column>
+
+								<rich:column width="14%" sortBy="#{_concept.expression}">
+									<f:facet name="header">#{messages.Expression}</f:facet>
+									<h:outputText value="#{_concept.expression}" />
+								</rich:column>
+								<rich:column width="14%">
+									<f:facet name="header">#{messages.conceptValue}</f:facet>
+									<h:outputText value="#{projectPropertyHome.getConceptValue(_concept)}" />
+								</rich:column>
+								<rich:column width="14%" sortBy="#{_concept.groupNumber}">
+									<f:facet name="header">#{messages.GroupNumber}</f:facet>
+									<h:selectOneMenu value="#{_concept.groupNumber}" disabled="#{projectPropertyHome.agroupingDisable(_concept)}">
+										<f:selectItems value="#{projectPropertyHome.groupNumbersConcepts(_concept)}" />
+										<a4j:support event="onchange" ignoreDupResponses="true" limitToList="true" reRender="growlPanel" ajaxSingle="true"></a4j:support>
+									</h:selectOneMenu>
+								</rich:column>
+
+
+								<rich:column width="8%" styleClass="action">
+									<f:facet name="header">#{messages.Action}</f:facet>
+									<h:commandButton type="button" id="editConcept" value=" #{messages.Edit}" disabled="#{projectPropertyHome.isValidateImmediatePaymentState(_concept)}"> 
+										<a4j:support event="onclick" ajaxSingle="true" ignoreDupResponses="true" limitToList="true" oncomplete="#{rich:component('modalPanelEditConcept')}.show()" reRender="conceptRegionEdit, isIncreased1,configWhenNotImmediatePaymentEdit" action="#{projectPropertyHome.instanceSelectedConcept(_concept)}"></a4j:support>
+									</h:commandButton>
+								</rich:column>
+							</rich:extendedDataTable>
+						</h:form>
+
+						<f:subview id="saveConceptsAgrouping" rendered="false">
+							<h:form>
+								<div><h:commandButton type="button" id="saveGrouping" value="#{messages.Save_grouping}">
+									<a4j:support event="onclick" ignoreDupResponses="true" limitToList="true" reRender="growlPanel" ajaxSingle="true" action="#{projectPropertyHome.saveConceptsAgrouping()}" oncomplete="#{rich:component('agroupingConfirmation')}.show()"></a4j:support>
+								</h:commandButton></div>
+							</h:form>
+						</f:subview>
+
+					</a4j:outputPanel>
+					<rich:modalPanel id="agroupingConfirmation" autosized="true">
+						<f:facet name="header">
+							<h:panelGroup>
+								<h:outputText value="Agrupación"></h:outputText>
+							</h:panelGroup>
+						</f:facet>
+						<h:outputLabel value="Agrupación realizada exitosamente" />
+						<br />
+						<br />
+						<h:commandButton type="button" id="closeAgroupingConfirmation" value="#{messages.Close}" view="/RealPropertyEdit.xhtml">
+							<a4j:support event="onclick" ajaxSingle="true" ignoreDupResponses="true" limitToList="true" reRender="growlPanel" onsubmit="#{rich:component('agroupingConfirmation')}.hide()"></a4j:support>
+						</h:commandButton>
+					</rich:modalPanel>
+
+					<rich:modalPanel id="panelConceptsSummary" autosized="true">
+						<f:facet name="header">
+							<h:panelGroup>
+								<h:outputText value="Detalles del Concepto"></h:outputText>
+							</h:panelGroup>
+						</f:facet>
+						<a4j:outputPanel ajaxRendered="true" id="iframePanel">
+							<h:panelGrid columns="1">
+								<iframe id="iframe2" width="800" height="400" src="#{projectPropertyHome.summaryUrl}">
+								<p>Este navegador no soporta IFRAMES</p>
+								</iframe>
+								<h:commandButton type="button" id="addConcept" action="#{projectPropertyHome.id}" value="#{messages.Close}">
+									<rich:componentControl for="panelConceptsSummary" attachTo="addConcept" operation="hide" event="onclick" />
+								</h:commandButton>
+							</h:panelGrid>
+						</a4j:outputPanel>
+
+					</rich:modalPanel>
+
+					<f:subview rendered="#{projectPropertyHome.managed}" id="concepts">
+						<!--				The button below is disabled-->
+						<div class="actionButtons"><s:button rendered="false" id="addconcept" value="#{messages.Add_concept}" view="/ConceptEdit.xhtml" propagation="none">
+							<f:param name="projectPropertyId" value="#{projectPropertyHome.instance.id}" />
+							<f:param name="conceptFrom" value="ProjectProperty" />
+						</s:button></div>
+					</f:subview>
+ 
+				</rich:tab>
+
+
+
+				<rich:tab id="creditNotesTab" label="#{messages.Credit_Notes}" rendered="#{authenticator.validateShowFunction('ProjectPropertyEdit.xhtml', 'creditNotesTab')}">
+					<a4j:outputPanel id="outputpanelListCreditNotes" ajaxRendered="true">
+						<h:form styleClass="association" id="creditNotesChildren">
+							<h:outputText value="#{messages.There_are_no_credit_notes_associated_with_this_projectProperty}" rendered="#{empty projectPropertyHome.invoiceConcepts}" />
+
+							<rich:extendedDataTable height="300px" rows="#{projectPropertyHome.invoiceConcepts.size()}" width="100%" value="#{projectPropertyHome.invoiceConcepts}" var="_invconcept" rendered="#{not empty projectPropertyHome.invoiceConcepts}" id="invconceptsTable">
+
+								<rich:column width="10%" sortBy="#{_invconcept.id}">
+									<f:facet name="header">#{messages.id}</f:facet>
+									<h:outputText value="#{_invconcept.id}" />
+								</rich:column>
+
+								<rich:column width="18%" sortBy="#{_invconcept.invoice.number}">
+									<f:facet name="header">#{messages.Number_Bill}</f:facet>
+									<h:outputText value="#{_invconcept.invoice.number}" />
+								</rich:column>
+
+								<rich:column width="18%" sortBy="#{_invconcept.concept.name}">
+									<f:facet name="header">#{messages.Concept_Name}</f:facet>
+									<h:outputText value="#{_invconcept.concept.name}" />
+								</rich:column>
+
+								<rich:column width="18%" sortBy="#{_invconcept.reason}">
+									<f:facet name="header">#{messages.Reason}</f:facet>
+									<h:outputText value="#{_invconcept.reason}" />
+								</rich:column>
+
+								<rich:column width="18%">
+									<f:facet name="header">#{messages.Type}</f:facet>
+									<h:outputText value="#{projectPropertyHome.discount(_invconcept)}" />
+								</rich:column>
+
+								<rich:column width="18%" sortBy="#{_invconcept.balance}">
+									<f:facet name="header">#{messages.Credit_Notes_value}</f:facet>
+									<h:outputText value="#{_invconcept.balance2}" />
+								</rich:column>
+
+								<f:facet name="footer">
+									<rich:datascroller id="datascroller" />
+								</f:facet>
+
+							</rich:extendedDataTable>
+							<a4j:outputPanel rendered="#{projectPropertyHome.invoiceConcepts.size()> 0}" style="height:50px">
+								<div style="width: 100%; text-align: right;"><h:commandLink id="linkComparable" action="#{org.jboss.seam.excel.exporter.excelExporter.export('creditNotesChildren:invconceptsTable')}">
+									<h:graphicImage value="/img/excel_32px.png" />
+								</h:commandLink></div>
+							</a4j:outputPanel>
+
+						</h:form>
+					</a4j:outputPanel>
+				</rich:tab>
+
+				<rich:tab label="Archivos Adjuntos">
+					<f:subview rendered="#{projectPropertyHome.managed}" id="files">
+						<h:form enctype="multipart/form-data">
+							<div class="actionButtons"><h:panelGrid columns="2">
+								<s:decorate template="layout/edit.xhtml">
+									<ui:define name="label">Adjunta PDF</ui:define>
+									<s:fileUpload accept="application/pdf" data="#{projectPropertyHome.pdfsAttach}" fileName="#{projectPropertyHome.nameFile}" fileSize="#{projectPropertyHome.fileSize}">
+									</s:fileUpload>
+								</s:decorate>
+								<h:commandButton value="#{messages.Add}" action="#{projectPropertyHome.attachProcess()}" />
+							</h:panelGrid></div>
+						</h:form>
+					</f:subview>
+					<h:form styleClass="association" id="filesChildren">
+						<a4j:outputPanel id="filesTableOut">
+							<h:outputText value="No hay archivos asociados a esta hoja de términos" rendered="#{empty projectPropertyHome.files}" />
+
+							<rich:dataTable value="#{projectPropertyHome.files}" var="_file" rendered="#{not empty projectPropertyHome.files}" rowClasses="rvgRowOne,rvgRowTwo" id="filesTable">
+								<rich:column sortBy="#{_file.date}">
+									<f:facet name="header">#{messages.Id}</f:facet>
+									<h:outputText value="#{_file.id}"></h:outputText>
+								</rich:column>
+								<rich:column sortBy="#{_file.date}">
+									<f:facet name="header">#{messages.Date}</f:facet>
+									<h:outputText value="#{_file.date}">
+										<s:convertDateTime type="date" dateStyle="short" />
+									</h:outputText>
+								</rich:column>
+								<rich:column sortBy="#{_file.name}">
+									<f:facet name="header">#{messages.Name}</f:facet>
+									<h:outputText value="#{_file.name}" />
+								</rich:column>
+								<rich:column>
+									<f:facet name="header">#{messages.Action}</f:facet>
+									<h:commandButton value="#{messages.Download}" id="pdfDownload" action="#{projectPropertyHome.downloadPDFAttachment(_file)}"></h:commandButton>
+									<h:commandButton type="button" value="#{messages.Delete}">
+										<a4j:support event="onclick" action="#{projectPropertyHome.deletePDFAttachment(_file)}" reRender="filesTableOut" ajaxSingle="true" limitToList="true" ignoreDupResponses="true"></a4j:support>
+									</h:commandButton>
+								</rich:column>
+							</rich:dataTable>
+						</a4j:outputPanel>
+					</h:form>
+				</rich:tab>
+			</rich:tabPanel>
+		</a4j:outputPanel>
+
+
+		<rich:modalPanel id="modalPanelEditConcept" width="1200" autosized="true">
+
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText value="#{messages.Edit_concept}"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+
+			<h:form>
+				<a4j:outputPanel id="conceptRegionEdit" layout="block" style="OVERFLOW: auto; WIDTH: 1300px; TOP: 48px; HEIGHT: 450px">
+					<s:decorate id="nameConceptField" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Name}</ui:define>
+						<h:inputTextarea id="nameConcept" cols="60" rows="1" required="false" value="#{projectPropertyHome.conceptSelected.name}">
+							<a4j:support event="onblur" ajaxSingle="true" action="#{projectPropertyHome.validateLenghtNameEdit()}" ignoreDupResponses="true" limitToList="true" reRender="buttonConceptField,validatenameEdit">
+							</a4j:support>
+						</h:inputTextarea>
+						<a4j:outputPanel id="validatenameEdit">
+							<h:outputLabel style="color:red" rendered="#{projectPropertyHome.nameLenghtOKEdit}" value="#{projectPropertyHome.validatelenght}" />
+						</a4j:outputPanel>
+					</s:decorate>
+
+					<s:decorate id="printDescriptionField" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Print_description}</ui:define>
+						<h:inputTextarea id="printDescription" cols="80" rows="3" required="false" value="#{projectPropertyHome.conceptSelected.printDescription}">
+							<a4j:support event="onblur" action="#{projectPropertyHome.validatelenghtsubEdit()}" ajaxSingle="true" ignoreDupResponses="true" limitToList="true" reRender="buttonConceptField,validatePrintEdit"></a4j:support>
+						</h:inputTextarea>
+						<a4j:outputPanel id="validatePrintEdit">
+							<h:outputLabel style="color:red" rendered="#{projectPropertyHome.printDescriptionOkEdit}" value="#{projectPropertyHome.validatelenghtEdit}" />
+						</a4j:outputPanel>
+					</s:decorate>
+
+					<s:decorate id="isContributionModuleFieldEdit" template="layout/edit.xhtml" rendered="#{(projectPropertyHome.instance.objectOfContract.id == 1) || (projectPropertyHome.instance.objectOfContract.id == 2)}">
+						<ui:define name="label">#{messages.IsContributionModule}</ui:define>
+						<h:selectBooleanCheckbox id="isContributionModule" disabled="#{projectPropertyHome.instanceObjectOfContractRealProperty}" value="#{projectPropertyHome.isContributionModule}">
+							<a4j:support event="onchange" ajaxSingle="true" ignoreDupResponses="true" limitToList="true" reRender="contributionModulePanelEdit,buttonConceptField"></a4j:support>
+						</h:selectBooleanCheckbox>
+					</s:decorate>
+
+					<a4j:outputPanel id="contributionModulePanelEdit">
+						<s:decorate template="layout/edit.xhtml" rendered="#{((projectPropertyHome.instance.objectOfContract.id == 1) || (projectPropertyHome.instance.objectOfContract.id == 2)) and projectPropertyHome.isContributionModule}">
+							<ui:define name="label">#{messages.ContributionModule}</ui:define>
+							<h:selectOneMenu value="#{projectPropertyHome.conceptSelected.contributionModule}">
+								<s:selectItems value="#{projectPropertyHome.contributionModuleList()}" var="_contributionModule" label="#{_contributionModule.name}"></s:selectItems>
+								<s:convertEntity></s:convertEntity>
+								<a4j:support ajaxSingle="true" event="onchange" disableDefault="true"></a4j:support>
+							</h:selectOneMenu>
+						</s:decorate>
+					</a4j:outputPanel>
+
+					<a4j:outputPanel id="isShowPeriodConcep2">
+							<s:decorate id="isShowPeriodConcept" template="layout/edit.xhtml">
+								<ui:define name="label">#{messages.IsShowPeriodConcept}</ui:define>
+								<h:selectBooleanCheckbox id="isShowPeriods" value="#{projectPropertyHome.conceptSelected.showBilledPeriod}">
+									<a4j:support event="onchange" ajaxSingle="true" limitToList="true" ignoreDupResponses="true" reRender="isShowPeriodConcep2"></a4j:support>
+								</h:selectBooleanCheckbox>
+							</s:decorate>
+						<s:decorate template="layout/edit.xhtml" rendered="#{projectPropertyHome.conceptSelected.showBilledPeriod}" id="discountMonth">
+							<ui:define name="label">#{messages.DiscountMonths} </ui:define>
+							<rich:inputNumberSpinner width="40px"  value="#{projectPropertyHome.conceptSelected.discountMounths}" clientErrorMessage="#{messages.Invalid_value}" showToolTip="false">
+								<a4j:support event="onchange" limitToList="true" ajaxSingle="true" ignoreDupResponses="true" reRender="buttonConceptField"></a4j:support>
+							</rich:inputNumberSpinner>
+						</s:decorate>
+					</a4j:outputPanel>
+					<s:decorate id="immediatePaymentEdit" template="layout/edit.xhtml" rendered="#{projectPropertyHome.immediatePaymentConceptEdit}">
+						<ui:define name="label">#{messages.concept_immediate_payment}</ui:define>
+						<h:selectBooleanCheckbox disabled="true" id="isImmediatePayment" value="#{projectPropertyHome.immediatePaymentConceptEdit}">
+							<a4j:support event="onchange" ajaxSingle="true" ignoreDupResponses="true" limitToList="true" reRender="configWhenNotImmediatePaymentEdit,buttonConceptField,isIncreased1,periodFieldIncreasedEdit"></a4j:support>
+						</h:selectBooleanCheckbox>
+						<h:outputLabel rendered="#{projectPropertyHome.immediatePaymentDisabled}" value="#{messages.concept_immediate_payment_invalid_message}" />
+					</s:decorate>
+
+					<a4j:outputPanel id="configWhenNotImmediatePaymentEdit">
+						<a4j:outputPanel rendered="#{!projectPropertyHome.immediatePaymentConceptEdit}">
+							<s:decorate id="startDateField" template="layout/edit.xhtml">
+								<ui:define name="label">#{messages.Start_date}</ui:define>
+								<rich:calendar id="startDate" required="false" value="#{projectPropertyHome.conceptSelected.startDate}" datePattern="dd/MM/yyyy" ajaxSingle="true" bypassUpdates="true" reRender="startDateField,endDateField">
+									<a4j:support event="onchanged" limitToList="true" ignoreDupResponses="true" reRender="endDateField,buttonConceptField" ajaxSingle="true" />
+								</rich:calendar>
+							</s:decorate>
+
+							<s:decorate id="periodField" template="layout/edit.xhtml">
+								<ui:define name="label">#{messages.periodicity}</ui:define>
+								<h:inputText id="period" required="false" value="#{projectPropertyHome.conceptSelected.periodicity}">
+									<a4j:support event="onblur" limitToList="true" ignoreDupResponses="true" reRender="endDateField, buttonConceptField" ajaxSingle="true" />
+								</h:inputText>
+								<h:selectOneMenu value="#{projectPropertyHome.conceptSelected.periodicityType}">
+									<f:selectItems value="#{projectPropertyHome.periodicityTypeItemsConcept}" />
+									<a4j:support event="onchange" limitToList="true" ignoreDupResponses="true" reRender="endDateField,buttonConceptField" ajaxSingle="true" />
+								</h:selectOneMenu>
+							</s:decorate>
+
+							<s:decorate id="numberPeriodsField" template="layout/edit.xhtml">
+								<ui:define name="label">#{messages.number_periods}</ui:define>
+								<h:inputText id="numberPeriods" required="false" value="#{projectPropertyHome.conceptSelected.numberPeriods}">
+									<a4j:support event="onblur" limitToList="true" ignoreDupResponses="true" reRender="endDateField,buttonConceptField" ajaxSingle="true" />
+								</h:inputText>
+							</s:decorate>
+
+							<a4j:outputPanel id="endDateField">
+								<s:decorate template="layout/edit.xhtml">
+									<ui:define name="label">#{messages.end_date}</ui:define>
+									<h:inputText style="font-weight:bold;" value="#{projectPropertyHome.conceptSelected.endDateView}" readonly="true">
+										<s:convertDateTime type="date" pattern="dd/MM/yyyy" />
+									</h:inputText>
+									<s:label id="messageConceptDateWrong" style="color: #FF0000;" value="#{projectPropertyHome.editMessagedateEndConcept}" rendered="#{not empty projectPropertyHome.editMessagedateEndConcept}" />
+								</s:decorate>
+							</a4j:outputPanel>
+
+							<s:decorate id="isEarlyPaymentField" template="layout/edit.xhtml">
+								<ui:define name="label">#{messages.Is_early_payment}</ui:define>
+								<h:selectBooleanCheckbox rendered="#{projectPropertyHome.conceptSelected != null}" id="isEarlyPayment" value="#{projectPropertyHome.conceptSelected.earlyPayment}">
+									<a4j:support event="onchange" ajaxSingle="true" limitToList="true" ignoreDupResponses="true" reRender="buttonConceptField"></a4j:support>
+								</h:selectBooleanCheckbox>
+							</s:decorate>
+						</a4j:outputPanel>
+					</a4j:outputPanel>
+
+
+
+
+					<a4j:outputPanel id="priority">
+						<s:decorate id="priorityAux" template="layout/edit.xhtml">
+							<ui:define name="label">#{messages.priority}</ui:define>
+							<rich:inputNumberSlider width="400px" showArrows="true" showBoundaryValues="true" value="#{projectPropertyHome.conceptSelected.priority}" clientErrorMessage="#{messages.Invalid_value}" maxValue="5" minValue="1" step="1" showToolTip="false">
+								<a4j:support event="onchange" limitToList="true" ajaxSingle="true" ignoreDupResponses="true" reRender="buttonConceptField"></a4j:support>
+							</rich:inputNumberSlider>
+							<rich:toolTip for="priorityAux">#{messages.priorityHelp}</rich:toolTip>
+						</s:decorate>
+					</a4j:outputPanel>
+
+					<a4j:outputPanel id="responsaibleField" rendered="#{projectPropertyHome.instance.objectOfContract.id != projectPropertyHome.ObjectOfContract()}">
+						<s:decorate template="layout/edit.xhtml"> 
+							<ui:define name="label">#{messages.concept_responsaible}</ui:define>
+							<h:selectOneRadio id="responsaible" value="#{projectPropertyHome.conceptSelected.responsible}" styleClass="radio">
+								<f:selectItem itemLabel="Arrendatario" itemValue="0" />
+								<f:selectItem itemLabel="Propietario" itemValue="1" />
+								<a4j:support event="onchange" ignoreDupResponses="true" limitToList="true" reRender="buttonConceptField" ajaxSingle="true"></a4j:support>
+							</h:selectOneRadio>
+						</s:decorate>
+					</a4j:outputPanel>
+
+
+					<a4j:outputPanel id="SystemVariableFields">
+						<s:decorate template="layout/edit.xhtml">
+							<ui:define name="label">#{messages.Expression}</ui:define>
+							<h:panelGrid rendered="true" columns="2">
+								<a4j:outputPanel id="expressionField">
+									<h:inputTextarea cols="100" rows="9" required="false" value="#{projectPropertyHome.conceptSelected.expression}">
+										<a4j:support event="onblur" ajaxSingle="true" action="#{projectPropertyHome.validateExpressionConceptSelect()}" limitToList="true" ignoreDupResponses="true" reRender="buttonConceptField,resultValidate"></a4j:support>
+									</h:inputTextarea>
+								</a4j:outputPanel>
+								<rich:extendedDataTable binding="#{tablesSystemVAriableBindEdit}" width="400px" height="150px" selectionMode="single" rows="0" sortMode="single" selection="#{projectPropertyHome.systemVaribleSelection}" tableState="#{projectPropertyHome.tableState}" value="#{projectPropertyHome.systemVariable}" var="_systemvariable" id="tablesystemvariable">
+
+									<rich:column sortable="true" width="15%" sortBy="#{_systemvariable.id}" filterBy="#{_systemvariable.id}" filterEvent="onchange" label="#{messages.Code}">
+										<f:facet name="header">
+											<h:outputText value="Id" />
+										</f:facet>
+										<h:outputText value="#{_systemvariable.id}" />
+									</rich:column>
+									<rich:column sortable="true" width="25%" sortBy="#{_systemvariable.name}" filterBy="#{_systemvariable.name}" filterEvent="onchange" label="#{messages.Account_Number}">
+										<f:facet name="header">
+											<h:outputText value="Nombre" />
+										</f:facet>
+										<h:outputText value="#{_systemvariable.name}" />
+									</rich:column>
+									<rich:column sortable="true" width="60%" sortBy="#{_systemvariable.sintax}" filterBy="#{_systemvariable.sintax}" filterEvent="onchange" label="#{messages.Concept}">
+										<f:facet name="header">
+											<h:outputText value="Sintaxis" />
+										</f:facet>
+										<h:outputText value="#{_systemvariable.sintax}" />
+									</rich:column>
+									<a4j:support ajaxSingle="true" reRender="expressionField,resultValidate, buttonConceptField" limitToList="true" ignoreDupResponses="true" action="#{projectPropertyHome.onSelectionChangedSystemVariableEdit()}" event="onselectionchange" />
+								</rich:extendedDataTable>
+							</h:panelGrid>
+						</s:decorate>
+					</a4j:outputPanel>
+
+					<a4j:outputPanel id="resultValidate">
+						<s:decorate template="layout/edit.xhtml" style="color:red">
+							<h:outputText style="#{projectPropertyHome.errorOnConceptExpresion ? 'color:red':'color:blue' }" value="#{projectPropertyHome.validateExpression}" />
+						</s:decorate>
+					</a4j:outputPanel>
+					<a4j:outputPanel id="interestArrearsField">
+						<s:decorate template="layout/edit.xhtml">
+							<ui:define name="label">#{messages.interestArrears}</ui:define>
+							<h:selectOneRadio id="interestArrears" value="#{projectPropertyHome.conceptSelected.interestArrears}" styleClass="radio">
+								<f:selectItem itemLabel="Si" itemValue="true" />
+								<f:selectItem itemLabel="No" itemValue="false" />
+								<a4j:support event="onclick" ignoreDupResponses="true" limitToList="true" reRender="buttonConceptField" ajaxSingle="true">
+								</a4j:support>
+							</h:selectOneRadio>
+						</s:decorate>
+					</a4j:outputPanel>
+
+					<a4j:outputPanel id="conceptCostCenterPanelEdit" style="border:5px;">
+						<s:decorate rendered="true" template="layout/edit.xhtml">
+							<ui:define name="label">#{messages.Cost_center}</ui:define>
+							<h:selectOneRadio id="myRadioEdit" value="#{projectPropertyHome.conceptSelected.costCenterType}">
+								<f:selectItems value="#{projectPropertyHome.costCenterTypes}" />
+								<a4j:support event="onchange" ajaxSingle="true" reRender="buttonConceptField,conceptCostcenterField" limitToList="true" ignoreDupResponses="true"></a4j:support>
+							</h:selectOneRadio>
+							<a4j:outputPanel id="conceptCostcenterField">
+								<h:inputText rendered="#{projectPropertyHome.conceptSelected.costCenterType == projectPropertyHome.conceptSelected.costCenterTypeConcept}" required="true" value="#{projectPropertyHome.conceptSelected.costCenter}">
+									<a4j:support event="onblur" limitToList="true" ignoreDupResponses="true" ajaxSingle="true" reRender="conceptCostcenterField" />
+								</h:inputText>
+							</a4j:outputPanel>
+						</s:decorate>
+					</a4j:outputPanel>
+
+					<s:decorate id="fixedValueField" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.fixedValue}</ui:define>
+						<h:inputText id="fixedValueField" required="false" value="#{projectPropertyHome.conceptSelected.formatFixedValue}">
+							<a4j:support event="onblur" ajaxSingle="true" ignoreDupResponses="true" limitToList="true" action="#{projectPropertyHome.changeisincreasedEdit()}" reRender="isIncreased1,buttonConceptField,periodFieldIncreasedEdit"></a4j:support>
+						</h:inputText>
+					</s:decorate>
+					
+
+					<a4j:outputPanel id="isIncreased1">
+						<s:decorate rendered="#{projectPropertyHome.conceptSelected.fixedValue != null and !projectPropertyHome.immediatePaymentConceptEdit}" template="layout/edit.xhtml">
+							<ui:define name="label">#{messages.IsIncreased}"</ui:define>
+							<h:selectBooleanCheckbox id="isInCreased" value="#{projectPropertyHome.isInCreasedEdit}">
+								<a4j:support event="onchange" ajaxSingle="true" reRender="periodFieldIncreasedEdit,EditConcept" limitToList="true" ignoreDupResponses="true"></a4j:support>
+							</h:selectBooleanCheckbox>
+						</s:decorate>
+					</a4j:outputPanel>
+
+					<a4j:outputPanel id="periodFieldIncreasedEdit">
+						<h:panelGroup rendered="#{projectPropertyHome.isInCreasedEdit and !projectPropertyHome.immediatePaymentConceptEdit}">
+
+
+							<s:decorate template="layout/edit.xhtml">
+								<ui:define name="label">#{messages.periodicityIncreased}</ui:define>
+								<h:inputText id="period" required="false" value="#{projectPropertyHome.increasedEdit.periodicity}">
+									<a4j:support event="onblur" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="buttonConceptField" />
+								</h:inputText>
+								<h:selectOneMenu value="#{projectPropertyHome.increasedEdit.periodicityType}">
+									<f:selectItems value="#{projectPropertyHome.periodicityTypeItemsConcept}" />
+									<a4j:support event="onchange" ignoreDupResponses="true" limitToList="true" reRender="buttonConceptField" ajaxSingle="true" />
+								</h:selectOneMenu>
+							</s:decorate>
+
+							<s:decorate id="dateIncrement" template="layout/edit.xhtml">
+								<ui:define name="label">#{messages.next_date_Increased}</ui:define>
+								<rich:calendar id="startDate" required="false" value="#{projectPropertyHome.increasedEdit.nextIncreased}" datePattern="dd/MM/yyyy" ajaxSingle="true" bypassUpdates="true">
+									<a4j:support event="onchanged" ignoreDupResponses="true" limitToList="true" reRender="buttonConceptField" ajaxSingle="true" />
+								</rich:calendar>
+							</s:decorate>
+
+							<s:decorate id="expressionFieldIncrement1" template="layout/edit.xhtml">
+								<ui:define name="label">#{messages.ExpressionIncreased}</ui:define>
+								<h:panelGrid rendered="true" columns="2">
+
+									<a4j:outputPanel id="expressionField">
+										<h:inputTextarea cols="100" rows="9" required="false" value="#{projectPropertyHome.increasedEdit.expression}">
+											<a4j:support event="onblur" ignoreDupResponses="true" limitToList="true" reRender="buttonConceptField, resultValidate1" ajaxSingle="true" action="#{projectPropertyHome.onSelectionChangedSystemVariableIncreaseEdit()}"></a4j:support>
+										</h:inputTextarea>
+									</a4j:outputPanel>
+
+									<rich:extendedDataTable binding="#{tablesSystemVAriableIncreaseBindEdit}" width="400px" height="150px" selectionMode="single" rows="0" sortMode="single" selection="#{projectPropertyHome.systemVaribleSelectionIncrease}" tableState="#{projectPropertyHome.tableState}" value="#{projectPropertyHome.systemVariable}" var="_systemvariable1" id="tablesystemvariable1">
+										<rich:column sortable="true" width="15%" sortBy="#{_systemvariable1.id}" id="col11" filterBy="#{_systemvariable1.id}" filterEvent="onchange" label="#{messages.Code}">
+											<f:facet name="header">
+												<h:outputText value="Id" />
+											</f:facet>
+											<h:outputText value="#{_systemvariable1.id}" />
+										</rich:column>
+										<rich:column sortable="true" width="25%" sortBy="#{_systemvariable1.name}" id="col22" filterBy="#{_systemvariable1.name}" filterEvent="onchange" label="#{messages.Account_Number}">
+											<f:facet name="header">
+												<h:outputText value="Nombre" />
+											</f:facet>
+											<h:outputText value="#{_systemvariable1.name}" />
+										</rich:column>
+										<rich:column sortable="true" width="60%" sortBy="#{_systemvariable1.sintax}" id="col33" filterBy="#{_systemvariable1.sintax}" filterEvent="onchange" label="#{messages.Concept}">
+											<f:facet name="header">
+												<h:outputText value="Sintaxis" />
+											</f:facet>
+											<h:outputText value="#{_systemvariable1.sintax}" />
+										</rich:column>
+										<a4j:support ajaxSingle="true" reRender="expressionFieldIncrement1, resultValidate1, buttonConceptField" limitToList="true" ignoreDupResponses="true" action="#{projectPropertyHome.onSelectionChangedSystemVariableIncreaseEdit()}" event="onselectionchange" />
+									</rich:extendedDataTable>
+								</h:panelGrid>
+							</s:decorate>
+
+
+							<a4j:outputPanel id="resultValidate1">
+								<s:decorate template="layout/edit.xhtml" style="color:red">
+									<h:outputText style="#{projectPropertyHome.errorOnConceptExpresionIncreased ? 'color:red':'color:blue' }" value="#{projectPropertyHome.validateExpressionIncreased}" />
+								</s:decorate>
+							</a4j:outputPanel>
+
+						</h:panelGroup>
+					</a4j:outputPanel>
+
+
+
+					<a4j:outputPanel id="buttonConceptField">
+						<s:decorate template="layout/edit.xhtml">
+							<h:commandButton type="button" id="EditConcept" disabled="#{projectPropertyHome.conceptEditButtonDisabled || projectPropertyHome.errorOnConceptExpresion || projectPropertyHome.errorOnConceptExpresionIncreased}" value="#{messages.MONO_accept_capital}">
+								<a4j:support event="onclick" ignoreDupResponses="true" oncomplete="#{rich:component('modalPanelEditConcept')}.hide()" limitToList="true" reRender="growlPanel,outputpanelListOfConcepts" action="#{projectPropertyHome.showMessagesGrow('Edicion de Concepto','Edicion de Concepto Exitosa')}" ajaxSingle="true" /> 
+							</h:commandButton>
+							<h:commandButton type="button" disabled="#{projectPropertyHome.conceptsaved()}" id="closeModalPanelEditConcept" value="Devolver cambios">
+								<a4j:support event="onclick" ignoreDupResponses="true" oncomplete="#{rich:component('modalPanelEditConcept')}.hide()" limitToList="true" reRender="outputpanelConceptsTable" action="#{projectPropertyHome.refreshConcept()}" ajaxSingle="true" />
+							</h:commandButton>
+							<h:commandButton rendered="false" type="button" value="#{messages.Close}">
+								<a4j:support event="onclick" ignoreDupResponses="true" oncomplete="#{rich:component('modalPanelEditConcept')}.hide()" limitToList="true" reRender="outputpanelConceptsTable" ajaxSingle="true" />
+							</h:commandButton>
+						</s:decorate>
+
+					</a4j:outputPanel>
+
+
+				</a4j:outputPanel>
+
+
+			</h:form>
+		</rich:modalPanel>
+
+	</ui:define>
+
+</ui:composition>

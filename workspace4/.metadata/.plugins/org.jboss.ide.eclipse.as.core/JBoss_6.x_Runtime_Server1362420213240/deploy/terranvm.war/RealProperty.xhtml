@@ -1,0 +1,1989 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a="http://richfaces.org/a4j" xmlns:a4j="http://richfaces.org/a4j"
+	template="layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<rich:panel>
+			<f:facet name="header">#{messages.Real_property_details}</f:facet>
+
+			<s:decorate id="id" template="layout/display.xhtml">
+				<ui:define name="label">Id</ui:define>
+				<h:outputText value="#{realPropertyHome.instance.id}" />
+			</s:decorate>
+
+			<s:decorate id="namePropertyRealProperty"
+				template="layout/display.xhtml">
+				<ui:define name="label">#{messages.Name}</ui:define>
+				<h:outputText value="#{realPropertyHome.instance.nameProperty}" />
+			</s:decorate>
+
+			<s:decorate id="yearBuiltRealProperty"
+				template="layout/display.xhtml">
+				<ui:define name="label">#{messages.Year_built}</ui:define>
+				<h:outputText value="#{realPropertyHome.instance.yearBuilt}">
+					<s:convertDateTime type="date" dateStyle="short"
+						pattern="dd/MM/yyyy" />
+				</h:outputText>
+			</s:decorate>
+
+			<s:decorate id="purchaseDate" template="layout/display.xhtml">
+				<ui:define name="label">#{messages.Purchase_date}</ui:define>
+				<h:outputText value="#{realPropertyHome.instance.purchaseDate}">
+					<s:convertDateTime type="date" dateStyle="short"
+						pattern="dd/MM/yyyy" />
+				</h:outputText>
+			</s:decorate>
+
+			<s:decorate id="cadastralId" template="layout/display.xhtml">
+				<ui:define name="label">#{messages.Cadastral_id}</ui:define>
+				<h:outputText value="#{realPropertyHome.instance.cadastralId}" />
+			</s:decorate>
+
+
+			<s:decorate id="totalSurfaceAreaRealProperty"
+				template="layout/display.xhtml">
+				<ui:define name="label">#{messages.Total_surface_area}</ui:define>
+				<h:outputText value="#{realPropertyHome.instance.totalSurfaceArea}" />
+			</s:decorate>
+
+			<s:decorate id="totalContructionArea" template="layout/display.xhtml">
+				<ui:define name="label">#{messages.Total_contruction_area} (mts²)</ui:define>
+				<h:outputText
+					value="#{realPropertyHome.instance.totalContructionArea}" />
+			</s:decorate>
+
+			<s:decorate id="totalRentableArea" template="layout/display.xhtml">
+				<ui:define name="label">#{messages.Total_rentable_area}</ui:define>
+				<h:outputText value="#{realPropertyHome.instance.totalRentableArea}" />
+			</s:decorate>
+
+			<s:decorate id="legalNatureOfPropertyId"
+				template="layout/display.xhtml">
+				<ui:define name="label">#{messages.Legal_nature_of_property}</ui:define>
+				<h:outputText
+					value="#{realPropertyHome.instance.legalNatureOfProperty.name}" />
+			</s:decorate>
+
+			<s:decorate id="porcentPropertyId" template="layout/display.xhtml"
+				rendered="#{realPropertyHome.checkProindiviso2()}">
+				<ui:define name="label">#{messages.Porcentaje_de_Propiedad_PEI}</ui:define>
+				<h:outputText value="#{realPropertyHome.instance.propertyPorcent}" />
+			</s:decorate>
+
+			<s:decorate id="useType" template="layout/display.xhtml">
+				<ui:define name="label">#{messages.Real_property_use_type}</ui:define>
+				<h:outputText
+					value="#{realPropertyHome.instance.realPropertyUseType.name}" />
+			</s:decorate>
+
+			<s:decorate id="enrolmentNumberRealProperty"
+				template="layout/display.xhtml">
+				<ui:define name="label">#{messages.Enrolment_number}</ui:define>
+				<h:outputText value="#{realPropertyHome.instance.enrolmentNumber}" />
+			</s:decorate>
+
+			<a4j:outputPanel id="motiveRealProperty">
+				<s:decorate  template="layout/edit.xhtml" >
+				<ui:define name="label">#{messages.General_Motive_change}</ui:define>
+				<h:inputTextarea id="taRealProperty" value="#{realPropertyHome.motive}" cols="60" rows="5" readonly="true">
+				</h:inputTextarea>
+				</s:decorate>
+			</a4j:outputPanel>
+
+			<div style="clear: both" />
+
+		</rich:panel>
+
+		<div class="actionButtons">
+		<table>  
+			<tr>
+				<td>    
+				<div id="editButton"><s:button view="/RealPropertyEdit.xhtml"
+					id="edit" value="#{messages.Edit}"  disabled="#{realPropertyHome.realPropertyListInApprove()}"/>   
+					<rich:toolTip
+					disabled="#{not realPropertyHome.realPropertyListInApprove(realPropertyHome.instance)}"
+					for="editButton">#{messages.You_can_not_edit_pending_approval_of_a_change}</rich:toolTip>
+					
+				</div>
+				</td>
+				<td><s:button
+					view="/#{empty realPropertyFrom ? 'RealPropertyList' : realPropertyFrom}.xhtml"
+					id="done" value="#{messages.Done}"
+					rendered="#{empty makerCheckerId  and authenticator.validateShowFunction('RealProperty.xhtml', 'done')}" />
+				</td>
+			</tr>
+		</table>
+		<s:button view="/MakerCheckerRealPropertyList.xhtml"
+			action="#{realPropertyHome.approveChange()}" id="approved"
+			value="#{messages.ApproveChange}"
+			rendered="#{not empty makerCheckerId}" /> <s:button
+			view="/MakerCheckerRealPropertyList.xhtml"
+			action="#{realPropertyHome.cancelChange()}" id="cancel"
+			value="#{messages.Cancel}" rendered="#{not empty makerCheckerId}" />
+		</div>
+
+		<rich:tabPanel switchType="ajax">
+
+
+
+			<rich:tab label="#{messages.Projects}">
+				<h:form styleClass="association"
+					id="projectHasRealpropertiesChildren">
+
+					<h:outputText
+						value="#{messages.There_are_no_projectHasRealproperties_associated_with_this_realProperty}"
+						rendered="#{empty realPropertyHome.projectRealproperty}" />
+
+					<rich:dataTable value="#{realPropertyHome.projectRealproperty}"
+						var="_projectHasRealproperty"
+						rendered="#{not empty realPropertyHome.projectRealproperty}"
+						rowClasses="rvgRowOne,rvgRowTwo"
+						id="projectHasRealpropertiesTable">
+						<rich:column sortBy="#{_projectHasRealproperty.id}">
+							<f:facet name="header">Id</f:facet>
+							<h:outputText value="#{_projectHasRealproperty.id}" />
+						</rich:column>
+						<rich:column sortBy="#{_projectHasRealproperty.project}">
+							<f:facet name="header">#{messages.Project_name}</f:facet>
+							<h:outputText value="#{_projectHasRealproperty.nameProject}" />
+						</rich:column>
+					</rich:dataTable>
+
+				</h:form>
+
+			</rich:tab>
+
+			<rich:tab>
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/img/onetomany.gif"
+							style="vertical-align: middle; padding-right: 4px;" />#{messages.Construction_license}</h:panelGroup>
+				</f:facet>
+				<h:form styleClass="association" id="constructionLicensesesChildren">
+
+					<h:outputText
+						value="#{messages.There_are_no_constructionLicenseses_associated_with_this_realProperty}"
+						rendered="#{empty realPropertyHome.constructionLicenseses}" />
+
+					<rich:dataTable value="#{realPropertyHome.constructionLicenseses}"
+						var="_constructionLicenses"
+						rendered="#{not empty realPropertyHome.constructionLicenseses}"
+						rowClasses="rvgRowOne,rvgRowTwo" id="constructionLicensesesTable">
+						<rich:column sortBy="#{_constructionLicenses.id}">
+							<f:facet name="header">Id</f:facet>
+							<h:outputText value="#{_constructionLicenses.id}" />
+						</rich:column>
+						<rich:column sortBy="#{_constructionLicenses.number}">
+							<f:facet name="header">#{messages.Number}</f:facet>
+							<h:outputText value="#{_constructionLicenses.number}" />
+						</rich:column>
+						<rich:column sortBy="#{_constructionLicenses.type}">ajax
+                <f:facet name="header">#{messages.Type}</f:facet>
+							<h:outputText value="#{_constructionLicenses.type}" />
+						</rich:column>
+						<rich:column sortBy="#{_constructionLicenses.dateLicense}">
+							<f:facet name="header">#{messages.Date_license}</f:facet>
+							<h:outputText value="#{_constructionLicenses.dateLicense}">
+								<s:convertDateTime type="date" dateStyle="short" />
+							</h:outputText>
+						</rich:column>
+						<rich:column sortBy="#{_constructionLicenses.numberCurating}">
+							<f:facet name="header">#{messages.Number_curating}</f:facet>
+							<h:outputText value="#{_constructionLicenses.numberCurating}" />
+						</rich:column>
+						<rich:column sortBy="#{_constructionLicenses.description}">
+							<f:facet name="header">#{messages.Description}</f:facet>
+							<h:outputText value="#{_constructionLicenses.description}" />
+						</rich:column>
+						<h:column>
+							<f:facet name="header">#{messages.Action}</f:facet>
+							<s:link id="selectconstructionLicenses"
+								value="#{messages.Select}" view="/ConstructionLicenses.xhtml">
+								<f:param name="constructionLicensesId"
+									value="#{_constructionLicenses.id}" />
+								<f:param name="constructionLicensesFrom" value="RealProperty" />
+							</s:link>
+						</h:column>
+					</rich:dataTable>
+
+				</h:form>
+
+				<div class="actionButtons"><s:button
+					id="AddconstructionLicenses"
+					value="#{messages.Add_constructionLicenses}"
+					view="/ConstructionLicensesEdit.xhtml"
+					rendered="#{authenticator.validateShowFunction('RealProperty.xhtml', 'AddconstructionLicenses')}">
+					<f:param name="realPropertyId"
+						value="#{realPropertyHome.instance.id}" />
+					<f:param name="constructionLicensesFrom" value="RealProperty" />
+				</s:button></div>
+			</rich:tab>
+
+
+			<rich:tab>
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/img/onetomany.gif"
+							style="vertical-align: middle; padding-right: 4px;" />#{messages.Segment_stage}</h:panelGroup>
+				</f:facet>
+				<h:form styleClass="association" id="segmentStagesChildren">
+
+					<h:outputText
+						value="#{messages.There_are_no_segmentStages_associated_with_this_realProperty}"
+						rendered="#{empty realPropertyHome.segmentStages}" />
+
+					<rich:dataTable value="#{realPropertyHome.segmentStages}"
+						var="_segmentStage"
+						rendered="#{not empty realPropertyHome.segmentStages}"
+						rowClasses="rvgRowOne,rvgRowTwo" id="segmentStagesTable">
+						<rich:column sortBy="#{_segmentStage.id}">
+							<f:facet name="header">Id</f:facet>
+							<h:outputText value="#{_segmentStage.id}" />
+						</rich:column>
+						<rich:column sortBy="#{_segmentStage.tramo}">
+							<f:facet name="header">#{messages.Tramo}</f:facet>
+							<h:outputText value="#{_segmentStage.tramo}" />
+						</rich:column>
+						<rich:column sortBy="#{_segmentStage.percentage}">
+							<f:facet name="header">#{messages.Percentage}</f:facet>
+							<h:outputText value="#{_segmentStage.percentage}" />
+						</rich:column>
+						<rich:column sortBy="#{_segmentStage.datePurchase}">
+							<f:facet name="header">#{messages.Date_purchase}</f:facet>
+							<h:outputText value="#{_segmentStage.datePurchase}">
+								<s:convertDateTime type="date" dateStyle="short" />
+							</h:outputText>
+						</rich:column>
+						<h:column>
+							<f:facet name="header">#{messages.Action}</f:facet>
+							<s:link id="selectsegmentStage" value="#{messages.Select}"
+								view="/SegmentStage.xhtml">
+								<f:param name="segmentStageId" value="#{_segmentStage.id}" />
+								<f:param name="segmentStageFrom" value="RealProperty" />
+							</s:link>
+						</h:column>
+					</rich:dataTable>
+
+				</h:form>
+
+				<div class="actionButtons"><s:button id="AddsegmentStage"
+					value="#{messages.Add_segmentStage}" view="/SegmentStageEdit.xhtml"
+					rendered="#{authenticator.validateShowFunction('RealProperty.xhtml', 'AddsegmentStage')}">
+					<f:param name="realPropertyId"
+						value="#{realPropertyHome.instance.id}" />
+					<f:param name="segmentStageFrom" value="RealProperty" />
+				</s:button></div>
+			</rich:tab>
+
+			<rich:tab rendered="false">
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/img/onetomany.gif"
+							style="vertical-align: middle; padding-right: 4px;" />#{messages.Addresses}</h:panelGroup>
+				</f:facet>
+				<h:form styleClass="association" id="addressesChildren">
+
+					<h:outputText
+						value="#{messages.There_are_no_addresses_associated_with_this_realProperty}"
+						rendered="#{empty realPropertyHome.addresses}" />
+
+					<rich:dataTable value="#{realPropertyHome.addresses}"
+						var="_address" rendered="#{not empty realPropertyHome.addresses}"
+						rowClasses="rvgRowOne,rvgRowTwo" id="addressesTable">
+						<rich:column sortBy="#{_address.id}">
+							<f:facet name="header">Id</f:facet>
+							<h:outputText value="#{_address.id}" />
+						</rich:column>
+						<rich:column sortBy="#{_address.kindOfWay}">
+							<f:facet name="header">#{messages.Kind_of_way}</f:facet>
+							<h:outputText value="#{_address.kindOfWay}" />
+						</rich:column>
+						<rich:column sortBy="#{_address.wayNumber}">
+							<f:facet name="header">#{messages.Way_number}</f:facet>
+							<h:outputText value="#{_address.wayNumber}" />
+						</rich:column>
+						<rich:column sortBy="#{_address.wayLetter}">
+							<f:facet name="header">#{messages.Way_letter}</f:facet>
+							<h:outputText value="#{_address.wayLetter}" />
+						</rich:column>
+						<rich:column sortBy="#{_address.isWayBis}">
+							<f:facet name="header">#{messages.Is_way_bis}</f:facet>
+							<h:outputText value="#{_address.isWayBis}" />
+						</rich:column>
+						<rich:column sortBy="#{_address.wayBisLetter}">
+							<f:facet name="header">#{messages.Way_bis_letter}</f:facet>
+							<h:outputText value="#{_address.wayBisLetter}" />
+						</rich:column>
+						<rich:column sortBy="#{_address.wayEastOrSouth}">
+							<f:facet name="header">#{messages.Way_east_or_south}</f:facet>
+							<h:outputText value="#{_address.wayEastOrSouth}" />
+						</rich:column>
+						<rich:column sortBy="#{_address.number}">
+							<f:facet name="header">#{messages.Number}</f:facet>
+							<h:outputText value="#{_address.number}" />
+						</rich:column>
+						<rich:column sortBy="#{_address.numberLetter}">
+							<f:facet name="header">#{messages.Number_letter}</f:facet>
+							<h:outputText value="#{_address.numberLetter}" />
+						</rich:column>
+						<rich:column sortBy="#{_address.additionalNumber}">
+							<f:facet name="header">#{messages.Additional_number}</f:facet>
+							<h:outputText value="#{_address.additionalNumber}" />
+						</rich:column>
+						<rich:column sortBy="#{_address.numberEastOrSouth}">
+							<f:facet name="header">#{messages.Number_east_or_south}</f:facet>
+							<h:outputText value="#{_address.numberEastOrSouth}" />
+						</rich:column>
+						<rich:column sortBy="#{_address.other}">
+							<f:facet name="header">#{messages.Other}</f:facet>
+							<h:outputText value="#{_address.other}" />
+						</rich:column>
+						<h:column>
+							<f:facet name="header">#{messages.Action}</f:facet>
+							<s:link id="selectaddress" value="Select" view="/Address.xhtml">
+								<f:param name="addressId" value="#{_address.id}" />
+								<f:param name="addressFrom" value="RealProperty" />
+							</s:link>
+						</h:column>
+					</rich:dataTable>
+
+				</h:form>
+
+				<div class="actionButtons"><s:button
+					value="#{messages.Add_address}" view="/AddressEdit.xhtml">
+					<f:param name="realPropertyId"
+						value="#{realPropertyHome.instance.id}" />
+					<f:param name="addressFrom" value="RealProperty" />
+				</s:button></div>
+			</rich:tab>
+
+			<rich:tab rendered="false">
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/img/onetomany.gif"
+							style="vertical-align: middle; padding-right: 4px;" />#{messages.Real_property_contacts}</h:panelGroup>
+				</f:facet>
+				<h:form styleClass="association" id="realPropertyContactsChildren">
+
+					<h:outputText
+						value="#{messages.There_are_no_realPropertyContacts_associated_with_this_realProperty}"
+						rendered="#{empty realPropertyHome.realPropertyContacts}" />
+
+					<rich:dataTable value="#{realPropertyHome.realPropertyContacts}"
+						var="_realPropertyContact"
+						rendered="#{not empty realPropertyHome.realPropertyContacts}"
+						rowClasses="rvgRowOne,rvgRowTwo" id="realPropertyContactsTable">
+						<rich:column sortBy="#{_realPropertyContact.id}">
+							<f:facet name="header">Id</f:facet>
+							<h:outputText value="#{_realPropertyContact.id}" />
+						</rich:column>
+						<h:column>
+							<f:facet name="header">#{messages.Action}</f:facet>
+							<s:link id="selectrealPropertyContact" value="#{messages.Select}"
+								view="/RealPropertyContact.xhtml">
+								<f:param name="realPropertyContactId"
+									value="#{_realPropertyContact.id}" />
+								<f:param name="realPropertyContactFrom" value="RealProperty" />
+							</s:link>
+						</h:column>
+					</rich:dataTable>
+
+				</h:form>
+
+				<div class="actionButtons"><s:button
+					value="Add realPropertyContact"
+					view="/RealPropertyContactEdit.xhtml">
+					<f:param name="realPropertyId"
+						value="#{realPropertyHome.instance.id}" />
+					<f:param name="realPropertyContactFrom" value="RealProperty" />
+				</s:button></div>
+			</rich:tab>
+
+			<rich:tab rendered="false">
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/img/onetomany.gif"
+							style="vertical-align: middle; padding-right: 4px;" />#{messages.Project_properties}</h:panelGroup>
+				</f:facet>
+				<h:form styleClass="association" id="projectPropertiesChildren">
+
+					<h:outputText
+						value="#{messages.There_are_no_projectProperties_associated_with_this_realProperty}"
+						rendered="#{empty realPropertyHome.projectProperties}" />
+
+					<rich:dataTable value="#{realPropertyHome.projectProperties}"
+						var="_projectProperty"
+						rendered="#{not empty realPropertyHome.projectProperties}"
+						rowClasses="rvgRowOne,rvgRowTwo" id="projectPropertiesTable">
+						<rich:column sortBy="#{_projectProperty.id}">
+							<f:facet name="header">Id</f:facet>
+							<h:outputText value="#{_projectProperty.id}" />
+						</rich:column>
+						<h:column>
+							<f:facet name="header">#{messages.Action}</f:facet>
+							<s:link id="selectprojectProperty" value="#{messages.Select}"
+								view="/ProjectProperty.xhtml">
+								<f:param name="projectPropertyId" value="#{_projectProperty.id}" />
+								<f:param name="projectPropertyFrom" value="RealProperty" />
+							</s:link>
+						</h:column>
+					</rich:dataTable>
+
+				</h:form>
+
+				<div class="actionButtons"><s:button
+					value="#{messages.Add_Project_properties}"
+					view="/ProjectPropertyEdit.xhtml">
+					<f:param name="realPropertyId"
+						value="#{realPropertyHome.instance.id}" />
+					<f:param name="projectPropertyFrom" value="RealProperty" />
+				</s:button></div>
+			</rich:tab>
+
+			<rich:tab>
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/img/onetomany.gif"
+							style="vertical-align: middle; padding-right: 4px;" />#{messages.Avaluations}</h:panelGroup>
+				</f:facet>
+				<h:form styleClass="association" id="avaluationsChildren">
+
+					<h:outputText
+						value="#{messages.There_are_no_avaluations_associated_with_this_realProperty}"
+						rendered="#{empty realPropertyHome.avaluations}" />
+
+					<rich:dataTable value="#{realPropertyHome.avaluations}"
+						var="_avaluation"
+						rendered="#{not empty realPropertyHome.avaluations}"
+						rowClasses="rvgRowOne,rvgRowTwo" id="avaluationsTable">
+						<rich:column sortBy="#{_avaluation.id}">
+							<f:facet name="header">Id</f:facet>
+							<h:outputText value="#{_avaluation.id}" />
+						</rich:column>
+						<rich:column sortBy="#{_avaluation.activationType}">
+							<f:facet name="header">#{messages.Activation_type}</f:facet>
+							<h:outputText value="#{_avaluation.avaluationType.name}">
+							</h:outputText>
+						</rich:column>
+						<rich:column sortBy="#{_avaluation.activationDate}">
+							<f:facet name="header">#{messages.Activation_date}</f:facet>
+							<h:outputText value="#{_avaluation.activationDate}">
+								<s:convertDateTime type="date" dateStyle="short"
+									pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</rich:column>
+						<rich:column sortBy="#{_avaluation.effectiveEndDate}">
+							<f:facet name="header">#{messages.Effective_end_date}</f:facet>
+							<h:outputText value="#{_avaluation.effectiveEndDate}">
+								<s:convertDateTime type="date" dateStyle="short"
+									pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</rich:column>
+						<rich:column sortBy="#{_avaluation.scopeAvaluation}">
+							<f:facet name="header">#{messages.Scope_activation}</f:facet>
+							<h:outputText value="#{_avaluation.scopeAvaluation}">
+							</h:outputText>
+						</rich:column>
+						<rich:column sortBy="#{_avaluation.formatterValue1}">
+							<f:facet name="header">#{messages.Value1}</f:facet>
+							<h:outputText value="#{_avaluation.formatterValue1}" />
+						</rich:column>
+						<rich:column sortBy="#{_avaluation.formatterValue2}">
+							<f:facet name="header">#{messages.Value2}</f:facet>
+							<h:outputText value="#{_avaluation.formatterValue2}" />
+						</rich:column>
+						<rich:column sortBy="#{_avaluation.formatterValue3}">
+							<f:facet name="header">#{messages.Value3}</f:facet>
+							<h:outputText value="#{_avaluation.formatterValue3}" />
+						</rich:column>
+						<h:column>
+							<f:facet name="header">#{messages.Action}</f:facet>
+							<h:commandButton type="button" id="viewavaluation"
+								value=" #{messages.View}">
+								<a4j:support event="onclick" ajaxSingle="true"
+									oncomplete="#{rich:component('modalPanelAvaluation')}.show()"
+									action="#{realPropertyHome.setAvaluation(_avaluation)}"
+									reRender="modalPanelAvaluation"></a4j:support>
+							</h:commandButton>
+						</h:column>
+					</rich:dataTable>
+
+				</h:form>
+			</rich:tab>
+
+
+			<rich:tab switchType="client">
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/img/onetomany.gif"
+							style="vertical-align: middle; padding-right: 4px;" />#{messages.Constructions}</h:panelGroup>
+				</f:facet>
+				<h:form styleClass="association" id="constructionsChildren">
+
+					<h:outputText
+						value=" #{messages.There_are_no_constructions_associated_with_this_realProperty}"
+						rendered="#{empty realPropertyHome.constructions}" />
+
+
+					<a4j:outputPanel id="outPutPanelConstruction" ajaxRendered="true">
+						<rich:dataTable value="#{realPropertyHome.constructions}"
+							var="_construction"
+							rendered="#{not empty realPropertyHome.constructions}"
+							rowClasses="rvgRowOne,rvgRowTwo" id="constructionsTable">
+							<rich:column sortBy="#{_construction.id}">
+								<f:facet name="header">Id</f:facet>
+								<h:outputText value="#{_construction.id}" />
+							</rich:column>
+							<rich:column sortBy="#{_construction.name}">
+								<f:facet name="header"> #{messages.Name}</f:facet>
+								<h:outputText value="#{_construction.name}" />
+							</rich:column>
+							<rich:column sortBy="#{_construction.description}">
+								<f:facet name="header"> #{messages.Description}</f:facet>
+								<h:outputText value="#{_construction.description}" />
+							</rich:column>
+							<rich:column sortBy="#{_construction.area}">
+								<f:facet name="header"> #{messages.Area_construction}</f:facet>
+								<h:outputText value="#{_construction.area}" />
+							</rich:column>
+							<rich:column sortBy="#{_construction.area}">
+								<f:facet name="header"> #{messages.Total_rentable_area}</f:facet>
+								<h:outputText value="#{_construction.totalRentableArea}" />
+							</rich:column>
+							<rich:column styleClass="action">
+								<f:facet name="header">#{messages.Action}</f:facet>
+								<h:commandButton type="button" id="editconstruction"
+									value=" #{messages.Edit}"
+									rendered="#{authenticator.validateShowFunction('RealProperty.xhtml', 'editconstruction')}">
+									<a4j:support event="onclick" ajaxSingle="true"
+										oncomplete="#{rich:component('modalPanelConstruction')}.show()"
+										action="#{realPropertyHome.editConstructionAction(_construction)}"
+										reRender="modalPanelConstruction"></a4j:support>
+								</h:commandButton>
+							</rich:column>
+						</rich:dataTable>
+					</a4j:outputPanel>
+
+				</h:form>
+
+				<f:subview rendered="#{realPropertyHome.managed}" id="constructions">
+					<div class="actionButtons"><h:form>
+
+						<h:commandButton type="button" id="addconstruction"
+							value=" #{messages.Add_construction}"
+							rendered="#{authenticator.validateShowFunction('RealProperty.xhtml', 'addconstruction')}">
+							<a4j:support event="onclick" ajaxSingle="true"
+								oncomplete="#{rich:component('modalPanelConstruction')}.show()"
+								action="#{realPropertyHome.setIdRealProperty()}"
+								reRender="modalPanelConstruction"></a4j:support>
+						</h:commandButton>
+					</h:form></div>
+				</f:subview>
+
+			</rich:tab>
+
+			<rich:tab switchType="client">
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/img/onetomany.gif"
+							style="vertical-align: middle; padding-right: 4px;" />#{messages.Floor}</h:panelGroup>
+				</f:facet>
+				<h:form styleClass="association" id="constructionsChildren2">
+
+					<h:outputText
+						value=" #{messages.There_are_no_constructions_associated_with_this_realProperty}"
+						rendered="#{empty realPropertyHome.constructions}" />
+					<a:outputPanel>
+						<rich:dataTable value="#{realPropertyHome.constructions}"
+							var="_construction"
+							rendered="#{not empty realPropertyHome.constructions}"
+							rowClasses="rvgRowOne,rvgRowTwo" id="constructionsTable">
+							<rich:column sortBy="#{_construction.id}">
+								<f:facet name="header">Id</f:facet>
+								<h:outputText value="#{_construction.id}" />
+							</rich:column>
+							<rich:column sortBy="#{_construction.name}">
+								<f:facet name="header"> #{messages.Name}</f:facet>
+								<h:outputText value="#{_construction.name}" />
+							</rich:column>
+							<rich:column sortBy="#{_construction.description}">
+								<f:facet name="header"> #{messages.Description}</f:facet>
+								<h:outputText value="#{_construction.description}" />
+							</rich:column>
+							<rich:column sortBy="#{_construction.area}">
+								<f:facet name="header"> #{messages.Area_construction}</f:facet>
+								<h:outputText value="#{_construction.area}" />
+							</rich:column>
+							<rich:column sortBy="#{_construction.area}">
+								<f:facet name="header"> #{messages.Total_rentable_area}</f:facet>
+								<h:outputText value="#{_construction.totalRentableArea}" />
+							</rich:column>
+							<rich:column styleClass="action">
+								<f:facet name="header">#{messages.Action}</f:facet>
+
+
+								<h:commandButton type="button" id="createfloor"
+									value=" #{messages.Add_floor}"
+									rendered="#{authenticator.validateShowFunction('RealProperty.xhtml', 'createfloor')}">
+									<a4j:support event="onclick" ajaxSingle="true"
+										oncomplete="#{rich:component('modalPanelCreateFloor')}.show()"
+										action="#{realPropertyHome.instanceConstructionAdd(_construction)}"
+										reRender="modalPanelCreateFloor"></a4j:support>
+								</h:commandButton>
+								<h:commandButton type="button" id="floorlist"
+									value=" #{messages.Floorlist}">
+									<a4j:support event="onclick" ajaxSingle="true"
+										oncomplete="#{rich:component('modalPanelFloorList')}.show()"
+										action="#{realPropertyHome.instanceConstructionEdit(_construction)}"
+										reRender="modalPanelFloorList"></a4j:support>
+
+								</h:commandButton>
+
+							</rich:column>
+						</rich:dataTable>
+					</a:outputPanel>
+
+				</h:form>
+
+			</rich:tab>
+
+			<rich:tab switchType="client"
+				action="#{realPropertyHome.clearListFloor()}">
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/img/onetomany.gif"
+							style="vertical-align: middle; padding-right: 4px;" />#{messages.Areas}</h:panelGroup>
+				</f:facet>
+				<h:form>
+					<table>
+						<tr>
+							<td>Edificios</td>
+							<td><h:selectOneMenu value="#{realPropertyHome.selectedIdConstruction}">
+									<f:selectItems value="#{realPropertyHome.selectedConstructionList}" >
+									</f:selectItems>
+									<a4j:support event="onchange" ajaxSingle="true" limitToList="true" ignoreDupResponses="true" reRender="arealist"></a4j:support>
+								</h:selectOneMenu>
+							</td>
+							
+
+							<td>
+							<div class="actionButtons"><h:commandButton type="button"
+								id="search" value="#{messages.Search}">
+								<a4j:support event="onclick" ajaxSingle="true" 
+									reRender="date" ignoreDupResponses="true" limitToList="true" ></a4j:support>
+							</h:commandButton></div>
+							</td>
+						</tr>
+					</table>
+					<h:outputText value="#{messages.search_returned_no_results}" rendered="#{empty realPropertyHome.construction.floors}" />
+					<a4j:outputPanel id="date">
+					<rich:dataTable id="mitabla" var="_mivar" rendered="#{not empty realPropertyHome.construction.floors}"
+						value="#{realPropertyHome.construction.floors}">
+						<h:column>
+							<f:facet name="header">
+							<ui:include src="layout/sort.xhtml">
+								<ui:param name="entityList" value="#{floorList}"></ui:param>
+								<ui:param name="propertyLabel" value="Id"></ui:param>
+								<ui:param name="propertyPath" value="floor.id"></ui:param>
+							</ui:include>
+							</f:facet>
+							<h:outputText value="#{_mivar.id}" />
+						</h:column>
+						<h:column>
+								<f:facet name="header">
+									<ui:include src="layout/sort.xhtml">
+										<ui:param name="entityList" value="#{floorList}" />
+										<ui:param name="propertyLabel" value="#{messages.Building}" />
+										<ui:param name="propertyPath" value="floor.construction.id" />
+									</ui:include>
+								</f:facet>
+								<h:outputText value="#{_mivar.construction.name}" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+									<ui:include src="layout/sort.xhtml">
+										<ui:param name="entityList" value="#{floorList}" />
+										<ui:param name="propertyLabel"
+											value="#{messages.Floor_number}" />
+										<ui:param name="propertyPath" value="floor.floorNumber" />
+									</ui:include>
+								</f:facet>
+								<h:outputText value="#{_mivar.floorNumber}" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+									<ui:include src="layout/sort.xhtml">
+										<ui:param name="entityList" value="#{floorList}" />
+										<ui:param name="propertyLabel" value="#{messages.Area_construction}" />
+										<ui:param name="propertyPath" value="floor.area" />
+									</ui:include>
+								</f:facet>
+								<h:outputText value="#{_mivar.area}" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+									<ui:include src="layout/sort.xhtml">
+										<ui:param name="entityList" value="#{floorList}" />
+										<ui:param name="propertyLabel" value="#{messages.Total_rentable_area}" />
+										<ui:param name="propertyPath" value="floor.area" />
+									</ui:include>
+								</f:facet>
+								<h:outputText value="#{_mivar.totalRentableArea}" />
+							</h:column>
+							<rich:column styleClass="action">
+								<f:facet name="header">#{messages.Action}</f:facet>
+
+
+								<h:commandButton type="button" id="createarea"
+									value=" #{messages.Add_area}"
+									rendered="#{authenticator.validateShowFunction('RealProperty.xhtml', 'createarea')}">
+									<a4j:support event="onclick" ajaxSingle="true"
+										oncomplete="#{rich:component('modalPanelCreateArea')}.show()"
+										action="#{realPropertyHome.instanceFloorAdd(_mivar)}"
+										reRender="modalPanelCreateArea"></a4j:support>
+								</h:commandButton>
+								<h:commandButton type="button" id="floorlist"
+									value="Listar Áreas">
+									<a4j:support event="onclick" ajaxSingle="true"
+										oncomplete="#{rich:component('modalPanelAreaList')}.show()"
+										action="#{realPropertyHome.instanceFloorEdit(_mivar)}"
+										reRender="modalPanelAreaList"></a4j:support>
+								</h:commandButton>
+
+							</rich:column>
+							
+					</rich:dataTable>
+					</a4j:outputPanel>
+				</h:form>
+			</rich:tab>
+
+			<rich:tab switchType="client"
+				action="#{realPropertyHome.clearListAreas()}">
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/img/onetomany.gif"
+							style="vertical-align: middle; padding-right: 4px;" />#{messages.Rentable_units}</h:panelGroup>
+				</f:facet>
+				
+				<h:form>
+					<table>
+						<tr>
+							<td><s:decorate id="cityDecorate"
+								template="layout/edit.xhtml">
+
+								<ui:define name="label">Edificios / Pisos </ui:define>
+
+								<h:selectOneMenu id="constructionList"
+									value="#{realPropertyHome.selectedIdConstruction}">
+									<f:selectItems value="#{realPropertyHome.selectedConstructionList}"/>
+									<a4j:support ajaxSingle="true" event="onchange" 
+										reRender="arealist,regionsSelector" limitToList="true" ignoreDupResponses="true" ></a4j:support>
+								</h:selectOneMenu>
+
+								<a4j:outputPanel ajaxRendered="true" id="regionsSelector">
+									<h:selectOneMenu id="regiones" 
+										value="#{realPropertyHome.selectedFloor}">
+										<f:selectItems value="#{realPropertyHome.selectedFloorList}" />
+										<a4j:support event="onchange"
+									ajaxSingle="true"
+									reRender="arealist" limitToList="true" ignoreDupResponses="true"></a4j:support>
+									</h:selectOneMenu>
+								</a4j:outputPanel>
+							</s:decorate></td>
+
+							<td>
+							<div class="actionButtons"><h:commandButton type="button"
+								id="search" value="#{messages.Search}">
+								<a4j:support event="onclick"
+									ajaxSingle="true"
+									reRender="arealist" limitToList="true" ignoreDupResponses="true" action = "#{realPropertyHome.setFloor(realPropertyHome.floor)}"></a4j:support>
+							</h:commandButton></div>
+							</td>
+						</tr>
+					</table>
+
+					<a4j:outputPanel id="arealist">
+						<h:outputText value="#{messages.search_returned_no_results}"
+							rendered="#{empty realPropertyHome.floor.areas}" />
+						<rich:dataTable id="areaList" var="_area"
+							value="#{realPropertyHome.floor.areas}"
+							rendered="#{not empty realPropertyHome.floor.areas}">
+							<h:column>
+								<f:facet name="header">
+									<ui:include src="layout/sort.xhtml">
+										<ui:param name="entityList" value="#{areaList}" />
+										<ui:param name="propertyLabel" value="Id" />
+										<ui:param name="propertyPath" value="area.id" />
+									</ui:include>
+								</f:facet>
+								<h:outputText value="#{_area.id}" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+									<ui:include src="layout/sort.xhtml">
+										<ui:param name="entityList" value="#{areaList}" />
+										<ui:param name="propertyLabel"
+											value="#{messages.Area_type_id}" />
+										<ui:param name="propertyPath" value="area.areaType.id" />
+									</ui:include>
+								</f:facet>
+								<h:outputText value="#{_area.areaType.name}" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+									<ui:include src="layout/sort.xhtml">
+										<ui:param name="entityList" value="#{areaList}" />
+										<ui:param name="propertyLabel" value="#{messages.Name}" />
+										<ui:param name="propertyPath" value="area.name" />
+									</ui:include>
+								</f:facet>
+								<h:outputText value="#{_area.name}" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+									<ui:include src="layout/sort.xhtml">
+										<ui:param name="entityList" value="#{areaList}" />
+										<ui:param name="propertyLabel" value="#{messages.Area_construction}" />
+										<ui:param name="propertyPath" value="area.area" />
+									</ui:include>
+								</f:facet>
+								<h:outputText value="#{_area.area}" />
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+									<ui:include src="layout/sort.xhtml">
+										<ui:param name="entityList" value="#{areaList}" />
+										<ui:param name="propertyLabel" value="#{messages.Total_rentable_area}" />
+										<ui:param name="propertyPath" value="area.totalRentableArea" />
+									</ui:include>
+								</f:facet>
+								<h:outputText value="#{_area.totalRentableArea}" />
+							</h:column>
+							<rich:column styleClass="action">
+								<f:facet name="header">#{messages.Action}</f:facet>
+
+
+								<h:commandButton type="button" id="createRentableUnit"
+									value=" #{messages.Add_rentableUnit}"
+									rendered="#{authenticator.validateShowFunction('RealProperty.xhtml', 'createRentableUnit')}">
+									<a4j:support event="onclick" ajaxSingle="true"
+										oncomplete="#{rich:component('modalPanelCreateRentableUnit')}.show()"
+										action="#{realPropertyHome.instanceAreaAdd(_area)}"
+										reRender="modalPanelCreateRentableUnit"></a4j:support>
+								</h:commandButton>
+								<h:commandButton type="button" id="rentableUnitList"
+									value="Listar Unidades Arrendables">
+									<a4j:support event="onclick" ajaxSingle="true"
+										oncomplete="#{rich:component('modalPanelRentableUnitList')}.show()"
+										action="#{realPropertyHome.instanceAreaEdit(_area)}"
+										reRender="modalPanelRentableUnitList"></a4j:support>
+
+								</h:commandButton>
+
+							</rich:column>
+						</rich:dataTable>
+					</a4j:outputPanel>
+				</h:form>
+			</rich:tab>
+
+			<rich:tab ajaxSingle="true" switchType="ajax"
+				ignoreDupResponses="true" reRender="contributionListInclude"
+				limitToList="true">
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/img/onetomany.gif"
+							style="vertical-align: middle; padding-right: 4px;" />#{messages.ContributionModule_List}</h:panelGroup>
+				</f:facet>
+				<a4j:include id="contributionListInclude"
+					viewId="ContributionModuleTab.xhtml">
+					<ui:param name="editable" value="0"></ui:param>
+				</a4j:include>
+			</rich:tab>
+
+
+
+		</rich:tabPanel>
+
+		<rich:modalPanel id="modalPanelConstruction" width="700"
+			autosized="true" action="#{realPropertyHome.clearConstruction()}">
+
+			<h:form id="construction" rendered="true" styleClass="edit">
+				<rich:panel>
+					<f:facet name="header">#{messages.Add} #{messages.Construction}</f:facet>
+					<s:decorate id="nameConstructionField" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Name}</ui:define>
+						<h:inputTextarea id="nameConstruction" cols="35" rows="1"
+							required="true" value="#{realPropertyHome.construction.name}" />
+					</s:decorate>
+
+
+					<s:decorate template="layout/edit.xhtml">
+						<div></div>
+						<a4j:outputPanel id="areaConstructionWarning">
+						<h:outputLabel style="color:red"
+							value="Area construida por asignar #{realPropertyHome.areaFantaltanteConstruction}"
+							rendered="#{!realPropertyHome.validateRentableArea()}" />
+							</a4j:outputPanel>
+					</s:decorate>
+
+					<s:decorate id="areaField" template="layout/edit.xhtml">
+
+						<ui:define name="label">#{messages.Area_construction}</ui:define>
+						<h:inputText id="area"
+							value="#{realPropertyHome.construction.area}">
+							<a:support event="onblur" ignoreDupResponses="true"
+								limitToList="true"
+								reRender="rentableAreaCField,areaField,save,areaConstructionWarning"
+								ajaxSingle="true"
+								action="#{realPropertyHome.constructionAreaValidation()}" />
+						</h:inputText>
+						<s:label style="color: #FF0000;"
+							value="#{realPropertyHome.messageLabel}"
+							rendered="#{not empty realPropertyHome.messageLabel}">
+						</s:label>
+					</s:decorate>
+
+					<s:decorate template="layout/edit.xhtml">
+						<div></div>
+							<a4j:outputPanel id="rentableAreaWarning">
+						<h:outputLabel style="color:red"
+							value="Area arrendable por asignar #{realPropertyHome.rentableAreaConst}"
+							rendered="#{!realPropertyHome.validateRentableArea()}" />
+							</a4j:outputPanel>
+					</s:decorate>
+
+					<s:decorate id="rentableAreaCField" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.rentable_area}</ui:define>
+						<h:inputText id="totalRentableArea" required="true"
+							value="#{realPropertyHome.construction.totalRentableArea}">
+							<a:support event="onblur" ignoreDupResponses="true"
+								limitToList="true"
+								reRender="areaConstructionWarning,rentableAreaCField, save, rentableAreaWarning"
+								ajaxSingle="true"
+								action="#{realPropertyHome.constructionAreaValidation()}" />
+						</h:inputText>
+
+						<s:label style="color: #FF0000;"
+							value="#{realPropertyHome.messageLabel2}"
+							rendered="#{not empty realPropertyHome.messageLabel2}">
+						</s:label>
+					</s:decorate>
+
+
+
+					<s:decorate id="descriptionConstructionField"
+						template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Description}</ui:define>
+						<h:inputTextarea id="descriptionConstruction" cols="60" rows="2"
+							value="#{realPropertyHome.construction.description}" />
+					</s:decorate>
+
+
+					<s:decorate template="layout/edit.xhtml">
+						<ui:define name="label">
+							<h:outputText value="#{messages.Standard_address}" />
+						</ui:define>
+						<a4j:outputPanel ajaxRendered="true">
+							<h:selectBooleanCheckbox value="#{addressHome.direccionEstandar}">
+								<a4j:support event="onchange" disableDefault="true"
+									ajaxSingle="true" reRender="estandarDir,otherAddress"></a4j:support>
+							</h:selectBooleanCheckbox>
+						</a4j:outputPanel>
+					</s:decorate>
+
+					<s:decorate id="cityDecorate" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Location}</ui:define>
+						<a4j:region id="citySelector">
+							<h:selectOneMenu
+								value="#{realPropertyHome.addressHome.selectedCountry}">
+								<s:selectItems
+									value="#{realPropertyHome.addressHome.countryList}"
+									var="country" label="#{country.name}"></s:selectItems>
+								<s:convertEntity></s:convertEntity>
+								<a4j:support ajaxSingle="true" event="onchange"
+									disableDefault="true" reRender="regionsSelector,citiesSelector"></a4j:support>
+							</h:selectOneMenu>
+
+							<a4j:outputPanel id="regionsSelector">
+								<h:selectOneMenu id="regiones"
+									value="#{realPropertyHome.addressHome.selectedRegion}">
+									<s:selectItems
+										value="#{realPropertyHome.addressHome.selectedCountry.regions}"
+										var="region" label="#{region.name}"></s:selectItems>
+									<s:convertEntity></s:convertEntity>
+									<a4j:support ajaxSingle="true" event="onchange"
+										disableDefault="true" reRender="citiesSelector"></a4j:support>
+								</h:selectOneMenu>
+							</a4j:outputPanel>
+							<a4j:outputPanel id="citiesSelector">
+								<h:selectOneMenu required="true" id="cities"
+									value="#{realPropertyHome.address.city}">
+									<s:selectItems
+										value="#{realPropertyHome.addressHome.selectedRegion.cities}"
+										var="city" label="#{city.name}"></s:selectItems>
+									<s:convertEntity></s:convertEntity>
+
+								</h:selectOneMenu>
+							</a4j:outputPanel>
+						</a4j:region>
+					</s:decorate>
+
+					<a4j:outputPanel id="estandarDir">
+						<a4j:outputPanel rendered="#{addressHome.direccionEstandar}">
+
+							<s:decorate id="kindOfWayField" template="layout/edit.xhtml">
+								<table>
+									<tr>
+										<td><ui:define name="label">#{messages.Kind_of_way}</ui:define>
+										<h:selectOneMenu value="#{realPropertyHome.address.kindOfWay}">
+
+											<f:selectItem itemValue="Cll" itemLabel="Cll" />
+
+											<f:selectItem itemValue="Cr" itemLabel="Cr" />
+
+											<f:selectItem itemValue="Dg" itemLabel="Dg" />
+
+											<f:selectItem itemValue="Tr" itemLabel="Tr" />
+
+											<f:selectItem itemValue="Av Cll" itemLabel="Av Cll" />
+
+											<f:selectItem itemValue="Av Cr" itemLabel="Av Cr" />
+
+										</h:selectOneMenu></td>
+										<td><h:inputText id="wayNumber"
+											value="#{realPropertyHome.address.wayNumber}" size="3"
+											style="width:30px">
+										</h:inputText></td>
+										<td><h:selectOneMenu
+											value="#{realPropertyHome.address.wayLetter}">
+											<f:selectItem itemValue=" " itemLabel="" />
+											<f:selectItem itemValue="A" itemLabel="A" />
+											<f:selectItem itemValue="B" itemLabel="B" />
+											<f:selectItem itemValue="C" itemLabel="C" />
+											<f:selectItem itemValue="D" itemLabel="D" />
+											<f:selectItem itemValue="E" itemLabel="E" />
+											<f:selectItem itemValue="F" itemLabel="F" />
+											<f:selectItem itemValue="G" itemLabel="G" />
+											<f:selectItem itemValue="H" itemLabel="H" />
+											<f:selectItem itemValue="I" itemLabel="I" />
+
+											<f:selectItem itemValue="J" itemLabel="J" />
+											<f:selectItem itemValue="K" itemLabel="K" />
+											<f:selectItem itemValue="L" itemLabel="L" />
+											<f:selectItem itemValue="M" itemLabel="M" />
+											<f:selectItem itemValue="N" itemLabel="N" />
+											<f:selectItem itemValue="O" itemLabel="O" />
+											<f:selectItem itemValue="P" itemLabel="P" />
+											<f:selectItem itemValue="Q" itemLabel="Q" />
+											<f:selectItem itemValue="R" itemLabel="R" />
+
+											<f:selectItem itemValue="S" itemLabel="S" />
+											<f:selectItem itemValue="T" itemLabel="T" />
+											<f:selectItem itemValue="U" itemLabel="U" />
+											<f:selectItem itemValue="V" itemLabel="V" />
+											<f:selectItem itemValue="W" itemLabel="W" />
+											<f:selectItem itemValue="X" itemLabel="X" />
+											<f:selectItem itemValue="Y" itemLabel="Y" />
+											<f:selectItem itemValue="Z" itemLabel="Z" />
+
+										</h:selectOneMenu> <h:outputText value="bis ?" /> <a4j:outputPanel
+											layout="none" ajaxRendered="true">
+
+											<h:selectBooleanCheckbox id="isWayBis"
+												value="#{realPropertyHome.address.isWayBis}">
+												<a4j:support reRender="bisLetter" ajaxSingle="true"
+													event="onchange" disableDefault="true"></a4j:support>
+											</h:selectBooleanCheckbox>
+
+										</a4j:outputPanel> <a4j:outputPanel id="bisLetter" ajaxRendered="true">
+											<h:selectOneMenu
+												rendered="#{realPropertyHome.address.isWayBis}"
+												value="#{realPropertyHome.address.wayBisLetter}">
+												<f:selectItem itemValue=" " itemLabel="" />
+												<f:selectItem itemValue="A" itemLabel="A" />
+												<f:selectItem itemValue="B" itemLabel="B" />
+												<f:selectItem itemValue="C" itemLabel="C" />
+												<f:selectItem itemValue="D" itemLabel="D" />
+												<f:selectItem itemValue="E" itemLabel="E" />
+												<f:selectItem itemValue="F" itemLabel="F" />
+
+												<f:selectItem itemValue="G" itemLabel="G" />
+												<f:selectItem itemValue="H" itemLabel="H" />
+												<f:selectItem itemValue="I" itemLabel="I" />
+												<f:selectItem itemValue="J" itemLabel="J" />
+												<f:selectItem itemValue="K" itemLabel="K" />
+												<f:selectItem itemValue="L" itemLabel="L" />
+												<f:selectItem itemValue="M" itemLabel="M" />
+												<f:selectItem itemValue="N" itemLabel="N" />
+												<f:selectItem itemValue="O" itemLabel="O" />
+
+												<f:selectItem itemValue="P" itemLabel="P" />
+												<f:selectItem itemValue="Q" itemLabel="Q" />
+												<f:selectItem itemValue="R" itemLabel="R" />
+												<f:selectItem itemValue="S" itemLabel="S" />
+												<f:selectItem itemValue="T" itemLabel="T" />
+												<f:selectItem itemValue="U" itemLabel="U" />
+												<f:selectItem itemValue="V" itemLabel="V" />
+												<f:selectItem itemValue="W" itemLabel="W" />
+												<f:selectItem itemValue="X" itemLabel="X" />
+
+												<f:selectItem itemValue="Y" itemLabel="Y" />
+												<f:selectItem itemValue="Z" itemLabel="Z" />
+											</h:selectOneMenu>
+										</a4j:outputPanel></td>
+										<td><h:selectOneRadio
+											value="#{realPropertyHome.address.wayEastOrSouth}">
+											<f:selectItem itemLabel="E" itemValue="E" />
+											<f:selectItem itemLabel="S" itemValue="S" />
+										</h:selectOneRadio></td>
+										<td><h:inputText id="number"
+											value="#{realPropertyHome.address.number}" size="3"
+											style="width:30px">
+										</h:inputText></td>
+										<td><h:selectOneMenu
+											value="#{realPropertyHome.address.numberLetter}">
+											<f:selectItem itemValue=" " itemLabel="" />
+											<f:selectItem itemValue="A" itemLabel="A" />
+											<f:selectItem itemValue="B" itemLabel="B" />
+											<f:selectItem itemValue="C" itemLabel="C" />
+											<f:selectItem itemValue="D" itemLabel="D" />
+											<f:selectItem itemValue="E" itemLabel="E" />
+											<f:selectItem itemValue="F" itemLabel="F" />
+
+											<f:selectItem itemValue="G" itemLabel="G" />
+											<f:selectItem itemValue="H" itemLabel="H" />
+											<f:selectItem itemValue="I" itemLabel="I" />
+											<f:selectItem itemValue="J" itemLabel="J" />
+											<f:selectItem itemValue="K" itemLabel="K" />
+											<f:selectItem itemValue="L" itemLabel="L" />
+											<f:selectItem itemValue="M" itemLabel="M" />
+											<f:selectItem itemValue="N" itemLabel="N" />
+											<f:selectItem itemValue="O" itemLabel="O" />
+
+											<f:selectItem itemValue="P" itemLabel="P" />
+											<f:selectItem itemValue="Q" itemLabel="Q" />
+											<f:selectItem itemValue="R" itemLabel="R" />
+											<f:selectItem itemValue="S" itemLabel="S" />
+											<f:selectItem itemValue="T" itemLabel="T" />
+											<f:selectItem itemValue="U" itemLabel="U" />
+											<f:selectItem itemValue="V" itemLabel="V" />
+											<f:selectItem itemValue="W" itemLabel="W" />
+											<f:selectItem itemValue="X" itemLabel="X" />
+											<f:selectItem itemValue="Y" itemLabel="Y" />
+											<f:selectItem itemValue="Z" itemLabel="Z" />
+										</h:selectOneMenu> <h:inputText id="additionalNumber"
+											value="#{realPropertyHome.address.additionalNumber}" size="3"
+											style="width:30px">
+										</h:inputText></td>
+										<td><h:selectOneRadio
+											value="#{realPropertyHome.address.numberEastOrSouth}">
+											<f:selectItem itemLabel="E" itemValue="E" />
+											<f:selectItem itemLabel="S" itemValue="S" />
+										</h:selectOneRadio></td>
+									</tr>
+								</table>
+							</s:decorate>
+
+
+						</a4j:outputPanel>
+					</a4j:outputPanel>
+
+
+					<a4j:outputPanel ajaxRendered="true">
+						<a4j:region id="otherAddress" rendered="#{! addressHome.direccionEstandar}">
+							<s:decorate id="otherField" template="layout/edit.xhtml">
+								<ui:define name="label">#{messages.Other}</ui:define>
+								<h:inputTextarea id="other" cols="50" rows="2" value="#{realPropertyHome.address.other}" />
+							</s:decorate>
+						</a4j:region>
+					</a4j:outputPanel>
+
+					<a4j:outputPanel id="motiveConstruction">
+							<s:decorate  template="layout/edit.xhtml" >
+							<ui:define name="label">#{messages.Motive_deactivate}</ui:define>
+							<h:inputTextarea id="taConstruction" value="#{realPropertyHome.construction.motive}" cols="50" rows="5" readonly="true">
+							</h:inputTextarea>
+							</s:decorate>
+						</a4j:outputPanel>
+
+
+
+					<div style="clear: both"><br />
+					<span class="required">*</span> #{messages.required_fields} <br />
+					<table align="right">
+						<tr>
+							<th><h:commandButton type="button" id="AddAvaluation"
+								value="#{messages.Avaluation}">
+								<a4j:support event="onclick" ajaxSingle="true"
+									oncomplete="#{rich:component('modalPanelCreateAvaluation')}.show()"
+									reRender="modalPanelCreateAvaluation"></a4j:support>
+							</h:commandButton></th>
+						</tr>
+					</table>
+					<br />
+					<br />
+					</div>
+
+				</rich:panel>
+
+				<div class="actionButtons"><h:commandButton id="save"
+					value="#{messages.Save}" view="/RealProperty.xhtml"
+					action="#{realPropertyHome.persistConstruction()}"
+					disabled="#{!realPropertyHome.checkMessages()}">
+				</h:commandButton> <h:commandButton type="button" id="cancelAdd"
+					value="#{messages.Cancel}" view="/RealProperty.xhtml">
+					<a4j:support event="onclick" ajaxSingle="true"
+						onsubmit="#{rich:component('modalPanelConstruction')}.hide()"
+						action="#{realPropertyHome.clearConstruction()}"
+						reRender="modalPanelConstruction"></a4j:support>
+				</h:commandButton></div>
+			</h:form>
+		</rich:modalPanel>
+
+		<rich:modalPanel id="modalPanelCreateFloor" width="450"
+			autosized="true">
+
+
+			<h:form id="floor" styleClass="edit">
+				<rich:panel>
+					<f:facet name="header">#{messages.Add} #{messages.Floor}</f:facet>
+
+					<s:decorate id="floorNumberApartmentBuildingField"
+						template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Floor_number_apartment_building}</ui:define>
+						<h:inputText id="floorNumberApartmentBuilding" cols="160" rows="3"
+							required="true" value="#{realPropertyHome.floor.floorNumber}" />
+					</s:decorate>
+
+					<a4j:outputPanel id="areaFloorWarning">
+						<s:decorate template="layout/edit.xhtml">
+							<div></div>
+							<h:outputLabel id="rentableFloorWarning" style="color:red"
+								value="Area construida por asignar #{realPropertyHome.areaFaltanteFloor}" rendered="#{!realPropertyHome.validateRentableAreaFloor()}" />
+						</s:decorate>
+					</a4j:outputPanel>
+					<s:decorate id="areaApartmentBuildingField"
+						template="layout/edit.xhtml">
+
+						<ui:define name="label">#{messages.Area_construction}</ui:define>
+						<h:inputText id="areaApartmentBuilding"
+							value="#{realPropertyHome.floor.area}">
+							<a4j:support event="onblur" ignoreDupResponses="true"
+								limitToList="true"
+								reRender="areaApartmentBuildingField,save,update,rentableFloorWarning,areaFloorWarning"
+								action="#{realPropertyHome.floorAreaValidation()}"
+								ajaxSingle="true" />
+
+						</h:inputText>
+						<s:label style="color: #FF0000;"
+							value="#{realPropertyHome.messageLabel}"
+							rendered="#{not empty realPropertyHome.messageLabel}">
+						</s:label>
+					</s:decorate>
+
+
+					<a4j:outputPanel id="rentableAreaFloorWarning">
+						<s:decorate template="layout/edit.xhtml">
+							<div></div>
+							<h:outputLabel style="color:red"
+								value="Area arrendable por asignar #{realPropertyHome.rentableAreaFloor}"
+								rendered="#{!realPropertyHome.validateRentableAreaFloor()}" />
+						</s:decorate>
+					</a4j:outputPanel>
+
+					<s:decorate id="rentableAreaFField" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.rentable_area}</ui:define>
+						<h:inputText id="totalRentableArea" required="true"
+							value="#{realPropertyHome.floor.totalRentableArea}">
+							<a4j:support event="onblur" ignoreDupResponses="true"
+								limitToList="true"
+								reRender="rentableAreaFField,save,rentableAreaFloorWarning,rentableAreaFloorWarning2,update"
+								action="#{realPropertyHome.floorAreaValidation()}"
+								ajaxSingle="true" />
+						</h:inputText>
+
+						<s:label id="rentableAreaFloorWarning2" style="color: #FF0000;"
+							value="#{realPropertyHome.messageLabel2}"
+							rendered="#{not empty realPropertyHome.messageLabel2}">
+						</s:label>
+					</s:decorate>
+
+					<a4j:outputPanel id="motiveFloor">
+						<s:decorate  template="layout/edit.xhtml" >
+						<ui:define name="label">#{messages.Motive_deactivate}</ui:define>
+						<h:inputTextarea id="taFloor" value="#{realPropertyHome.floor.motive}" cols="50" rows="5" readonly="true">
+						</h:inputTextarea>
+						</s:decorate>
+					</a4j:outputPanel>
+
+					<div style="clear: both"><span class="required">*</span>
+					#{messages.required_fields}</div>
+
+				</rich:panel>
+
+				<div class="actionButtons">
+				<h:commandButton id="save" 	value="#{messages.Save}" action="#{realPropertyHome.persitRowConstruction()}" 
+				rendered="#{realPropertyHome.edit==0}" view="/RealProperty.xhtml"
+					disabled="#{!realPropertyHome.checkMessages()}" />
+				<h:commandButton id="update" value="#{messages.Save}"
+					action="#{realPropertyHome.persitRowConstruction2()}"
+					rendered="#{realPropertyHome.edit==1}"
+					disabled="#{not empty realPropertyHome.messageLabel or realPropertyHome.areaFaltanteFloor==0}" />
+				<h:commandButton type="button" id="cancelAdd"
+					value="#{messages.Cancel}" view="/RealPropertyEdit.xhtml">
+					<a4j:support event="onclick" ajaxSingle="true"
+						onsubmit="#{rich:component('modalPanelCreateFloor')}.hide()"
+						action="#{realPropertyHome.clearFloor()}"
+						reRender="modalPanelCreateFloor"></a4j:support>
+				</h:commandButton></div>
+			</h:form>
+		</rich:modalPanel>
+
+		<rich:modalPanel id="modalPanelFloorList" width="500" autosized="true">
+			<rich:panel>
+				<f:facet name="header">#{messages.Search_Results} (#{empty realPropertyHome.construction.floors ? 0 : (realPropertyHome.construction.floors.size)})</f:facet>
+				<h:form>
+				<a4j:outputPanel id="floorListEdit" layout="block" style="OVERFLOW: auto; WIDTH: 900px; TOP: 48px; HEIGHT: 450px"  >
+					<div class="results" id="floorList"><h:outputText
+						value="#{messages.search_returned_no_results}"
+						rendered="#{empty realPropertyHome.construction.floors}" /> <rich:dataTable
+						id="floorList" var="_floor"
+						value="#{realPropertyHome.construction.floors}"
+						rendered="#{not empty floorList.resultList}">
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{floorList}" />
+									<ui:param name="propertyLabel" value="Id" />
+									<ui:param name="propertyPath" value="floor.id" />
+								</ui:include>
+							</f:facet>
+							<h:outputText value="#{_floor.id}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{floorList}" />
+									<ui:param name="propertyLabel" value="#{messages.Building}" />
+									<ui:param name="propertyPath" value="floor.construction.id" />
+								</ui:include>
+							</f:facet>
+							<h:outputText value="#{_floor.construction.name}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{floorList}" />
+									<ui:param name="propertyLabel" value="#{messages.Floor_number}" />
+									<ui:param name="propertyPath" value="floor.floorNumber" />
+								</ui:include>
+							</f:facet>
+							<h:outputText value="#{_floor.floorNumber}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{floorList}" />
+									<ui:param name="propertyLabel" value="#{messages.Area_construction}" />
+									<ui:param name="propertyPath" value="floor.area" />
+								</ui:include>
+							</f:facet>
+							<h:outputText value="#{_floor.area}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{floorList}" />
+									<ui:param name="propertyLabel" value="#{messages.Total_rentable_area}" />
+									<ui:param name="propertyPath" value="#{floor.totalRentableArea}" />
+								</ui:include>
+							</f:facet>
+							<h:outputText value="#{_floor.totalRentableArea}" />
+						</h:column>
+						<rich:column styleClass="action">
+							<f:facet name="header">#{messages.Action}</f:facet>
+							<h:commandButton type="button" id="editfloor"
+								value=" #{messages.Edit}">
+								<a4j:support event="onclick" ajaxSingle="true"
+									oncomplete="#{rich:component('modalPanelCreateFloor')}.show()"
+									action="#{realPropertyHome.setFloor(_floor)}"
+									reRender="modalPanelFloorList,modalPanelCreateFloor"></a4j:support>
+
+							</h:commandButton>
+						</rich:column>
+
+					</rich:dataTable></div>
+					</a4j:outputPanel>
+				</h:form>
+			</rich:panel>
+			<h:commandButton type="button" id="closeModalPanelFloorList"
+				value="#{messages.Close}" view="/RealProperty.xhtml">
+				<a4j:support event="onclick" ajaxSingle="true"
+					onsubmit="#{rich:component('modalPanelFloorList')}.hide()"
+					reRender="modalPanelFloorList"></a4j:support>
+			</h:commandButton>
+		</rich:modalPanel>
+
+		<rich:modalPanel id="modalPanelCreateArea" width="500"
+			autosized="true">
+			<h:form id="area" styleClass="edit">
+				<rich:panel>
+					<f:facet name="header">#{messages.Add} #{messages.Area}</f:facet>
+
+					<s:decorate id="nameField" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Name}</ui:define>
+						<h:inputTextarea id="name" cols="40" rows="1" required="true"
+							value="#{realPropertyHome.area.name}">
+							<a4j:support event="onblur" ajaxSingle="true"></a4j:support>
+						</h:inputTextarea>
+					</s:decorate>
+
+					<a4j:outputPanel id="constructionAreaWarning">
+						<s:decorate template="layout/edit.xhtml">
+							<div></div>
+							<h:outputLabel id="rentableAreaTWarming" style="color:red"
+								value="Area construida por asignar #{realPropertyHome.areaFaltanteTA}"
+								rendered="#{!realPropertyHome.validateRentableAreaArea()}" />
+						</s:decorate>
+					</a4j:outputPanel>
+
+
+					<s:decorate id="areaField" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Area_construction}</ui:define>
+						<h:inputText id="area" value="#{realPropertyHome.area.area}">
+							<a:support event="onblur" ignoreDupResponses="true"
+								limitToList="true"
+								reRender="areaField,save,update,rentableAreaTWarming,constructionAreaWarning"
+								action="#{realPropertyHome.areaAreaValidation()}"
+								ajaxSingle="true" />
+						</h:inputText>
+						<s:label style="color: #FF0000;"
+							value="#{realPropertyHome.messageLabel}"
+							rendered="#{not empty realPropertyHome.messageLabel}" />
+					</s:decorate>
+
+
+					<a4j:outputPanel id="rentableAreaAreaWarning">
+						<s:decorate template="layout/edit.xhtml">
+							<div></div>
+							<h:outputLabel style="color:red"
+								value="Area arrendable por asignar #{realPropertyHome.rentableArea}"
+								rendered="#{!realPropertyHome.validateRentableAreaArea()}" />
+						</s:decorate>
+					</a4j:outputPanel>
+
+					<s:decorate id="rentableAreaField" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.rentable_area}</ui:define>
+						<h:inputText id="totalRentableArea" required="true"
+							value="#{realPropertyHome.area.totalRentableArea}">
+
+							<a4j:support event="onblur" ignoreDupResponses="true"
+								limitToList="true"
+								reRender="rentableAreaField,save,update,rentableAreaAreaWarning,rentableAreaAreaWarning2"
+								action="#{realPropertyHome.areaAreaValidation()}"
+								ajaxSingle="true" />
+						</h:inputText>
+
+						<s:label id="rentableAreaAreaWarning2" style="color: #FF0000;"
+							value="#{realPropertyHome.messageLabel2}"
+							rendered="#{not empty realPropertyHome.messageLabel2}" />
+					</s:decorate>
+
+					<s:decorate id="cityDecorate" template="layout/edit.xhtml">
+
+						<ui:define name="label">Tipo de Área</ui:define>
+						<a4j:region renderRegionOnly="true" id="areatype">
+							<h:selectOneMenu value="#{realPropertyHome.areaType}">
+								<s:selectItems value="#{realPropertyHome.areasTypes}" var="area"
+									label="#{area.name}"></s:selectItems>
+								<s:convertEntity></s:convertEntity>
+							</h:selectOneMenu>
+						</a4j:region>
+					</s:decorate>
+					
+					<a4j:outputPanel id="motiveArea">
+						<s:decorate  template="layout/edit.xhtml" >
+						<ui:define name="label">#{messages.Motive_deactivate}</ui:define>
+						<h:inputTextarea id="taArea" value="#{realPropertyHome.area.motive}" cols="50" rows="5" readonly="true">
+						</h:inputTextarea>
+						</s:decorate>
+					</a4j:outputPanel>
+
+					<div style="clear: both"><span class="required">*</span>
+					#{messages.required_fields}</div>
+
+				</rich:panel>
+
+				<div class="actionButtons"><h:commandButton id="save"
+					value="#{messages.Save}"
+					action="#{realPropertyHome.persitRowFloor()}"
+					rendered="#{realPropertyHome.edit==0}"
+					view="/RealProperty.xhtml"
+					disabled="#{!realPropertyHome.checkMessages()}" />
+				<h:commandButton id="update" value="#{messages.Save}"
+					action="#{realPropertyHome.persitRowFloor2()}"
+					rendered="#{realPropertyHome.edit==1}"
+					disabled="#{!realPropertyHome.checkMessages()}" />
+				<h:commandButton type="button" id="cancelAdd"
+					value="#{messages.Cancel}" view="/RealPropertyEdit.xhtml">
+					<a4j:support limitToList="true" event="onclick" ajaxSingle="true"
+						onsubmit="#{rich:component('modalPanelCreateArea')}.hide()"
+						reRender="modalPanelCreateArea"
+						action="#{realPropertyHome.clearArea()}"></a4j:support>
+				</h:commandButton></div>
+			</h:form>
+		</rich:modalPanel>
+
+
+
+		<rich:modalPanel id="modalPanelAreaList" width="500" autosized="true">
+			<f:facet name="header">#{messages.Search_Results} (#{empty realPropertyHome.floor.areas ? 0 : (realPropertyHome.floor.areas.size)})</f:facet>
+			<h:form>
+			<a4j:outputPanel id="areaListEdit" layout="block" style="OVERFLOW: auto; WIDTH: 900px; TOP: 48px; HEIGHT: 450px"  >
+				<div class="results" id="areaList"><h:outputText
+					value="#{messages.search_returned_no_results}"
+					rendered="#{empty realPropertyHome.floor.areas}" /> <rich:dataTable
+					id="areaList" var="_area" value="#{realPropertyHome.floor.areas}"
+					rendered="#{not empty areaList.resultList}">
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="layout/sort.xhtml">
+								<ui:param name="entityList" value="#{areaList}" />
+								<ui:param name="propertyLabel" value="Id" />
+								<ui:param name="propertyPath" value="area.id" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_area.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="layout/sort.xhtml">
+								<ui:param name="entityList" value="#{areaList}" />
+								<ui:param name="propertyLabel" value="#{messages.Area_type_id}" />
+								<ui:param name="propertyPath" value="area.areaType.id" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_area.areaType.name}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="layout/sort.xhtml">
+								<ui:param name="entityList" value="#{areaList}" />
+								<ui:param name="propertyLabel" value="#{messages.Name}" />
+								<ui:param name="propertyPath" value="area.name" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_area.name}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="layout/sort.xhtml">
+								<ui:param name="entityList" value="#{areaList}" />
+								<ui:param name="propertyLabel" value="#{messages.Area_construction}" />
+								<ui:param name="propertyPath" value="area.area" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_area.area}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="layout/sort.xhtml">
+								<ui:param name="entityList" value="#{areaList}" />
+								<ui:param name="propertyLabel" value="#{messages.Total_rentable_area}" />
+								<ui:param name="propertyPath" value="area.totalRentableArea" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_area.totalRentableArea}" />
+					</h:column>
+					<rich:column styleClass="action">
+						<f:facet name="header">#{messages.Action}</f:facet>
+						<h:commandButton type="button" id="editfloor"
+							value=" #{messages.Edit}" rendered="#{realPropertyHome.managed}">
+							<a4j:support event="onclick" ajaxSingle="true"
+								oncomplete="#{rich:component('modalPanelCreateArea')}.show()"
+								action="#{realPropertyHome.setArea(_area)}"
+								reRender="modalPanelCreateArea"></a4j:support>
+						</h:commandButton>
+					</rich:column>
+				</rich:dataTable></div>
+				</a4j:outputPanel>
+			</h:form>
+			<h:commandButton type="button" id="closeModalPanelAreaList"
+				value="#{messages.Close}" view="/RealProperty.xhtml">
+				<a4j:support event="onclick" ajaxSingle="true"
+					onsubmit="#{rich:component('modalPanelAreaList')}.hide()"
+					reRender="modalPanelAreaList"></a4j:support>
+			</h:commandButton>
+
+		</rich:modalPanel>
+
+		<rich:modalPanel id="modalPanelCreateRentableUnit" width="600" autosized="true">
+			<h:form id="rentableUnit" styleClass="edit">
+
+				<rich:panel>
+					<f:facet name="header">#{messages.Add} #{messages.Rentable_unit}</f:facet>
+
+					<s:decorate id="nameField" template="layout/edit.xhtml">
+						<ui:define name="label">Nombre</ui:define>
+						<h:inputTextarea id="name" cols="30" rows="1" required="true"
+							value="#{realPropertyHome.rentableUnit.name}">
+							<a4j:support event="onblur" ajaxSingle="true"></a4j:support>
+						</h:inputTextarea>
+					</s:decorate>
+
+					<s:decorate id="buildingPermitField" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Building_permit}</ui:define>
+						<h:inputText id="buildingPermit"
+							value="#{realPropertyHome.rentableUnit.buildingPermit}">
+							<a4j:support event="onblur" ajaxSingle="true"></a4j:support>
+						</h:inputText>
+					</s:decorate>
+
+					<s:decorate id="construcionEnrollmentField"
+						template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Construcion_enrollment}</ui:define>
+						<h:inputText id="construcionEnrollment"
+							value="#{realPropertyHome.rentableUnit.construcionEnrollment}">
+							<a4j:support event="onblur" ajaxSingle="true"></a4j:support>
+						</h:inputText>
+					</s:decorate>
+
+
+					<a4j:outputPanel id="rentableUnitWarning">
+						<s:decorate template="layout/edit.xhtml">
+							<div></div>
+							<h:outputLabel style="color:red"
+								value="Area construida por asignar #{realPropertyHome.areaFaltanteRentableUnit}"
+								rendered="#{!realPropertyHome.validateRentableAreaRentableUnit()}" />
+						</s:decorate>
+					</a4j:outputPanel>
+
+					<s:decorate id="metersField" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Area_construction}</ui:define>
+						<h:inputText value="#{realPropertyHome.rentableUnit.meters}">
+							<a:support event="onblur" ignoreDupResponses="true"
+								limitToList="true"
+								reRender="metersField,save,update,rentableUnitWarning"
+								action="#{realPropertyHome.rentableUnitAreaValidation()}"
+								ajaxSingle="true" />
+						</h:inputText>
+						<s:label style="color: #FF0000;"
+							value="#{realPropertyHome.messageLabel}"
+							rendered="#{not empty realPropertyHome.messageLabel}" />
+
+					</s:decorate>
+
+					<a4j:outputPanel id="rentableAreaUnitWarning">
+						<s:decorate template="layout/edit.xhtml">
+							<div></div>
+							<h:outputLabel style="color:red"
+								value="Area arrendable por asignar #{realPropertyHome.rentableAreaUnit}"
+								rendered="#{!realPropertyHome.validateRentableAreaRentableUnit()}" />
+						</s:decorate>
+					</a4j:outputPanel>
+
+					<s:decorate id="rentableAreaUnitField" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.rentable_area}</ui:define>
+						<h:inputText id="totalRentableArea" required="true"
+							value="#{realPropertyHome.rentableUnit.totalRentableArea}">
+							<a:support event="onblur" ignoreDupResponses="true"
+								limitToList="true"
+								reRender="rentableAreaUnitField,save,update,rentableAreaUnitWarning"
+								action="#{realPropertyHome.rentableUnitAreaValidation()}"
+								ajaxSingle="true" />
+						</h:inputText>
+						<s:label style="color: #FF0000;"
+							value="#{realPropertyHome.messageLabel2}"
+							rendered="#{not empty realPropertyHome.messageLabel2}" />
+					</s:decorate>
+
+					<s:decorate id="rentableType" template="layout/edit.xhtml">
+						<ui:define name="label">Tipos de Unidades Arrendables</ui:define>
+						<h:selectOneMenu
+							value="#{realPropertyHome.rentableUnit.rentableUnitType}">
+							<s:selectItems value="#{rentableUnitHome.rentableUnitType}"
+								var="type" label="#{type.type}"></s:selectItems>
+							<s:convertEntity></s:convertEntity>
+							<a4j:support ajaxSingle="true" event="onchange"></a4j:support>
+						</h:selectOneMenu>
+					</s:decorate>
+					
+					<s:decorate id="conceptField" template="layout/edit.xhtml">
+								<ui:define name="label">#{messages.Concept}</ui:define>
+								<h:inputText id="concept" value="#{realPropertyHome.rentableUnit.concept}">
+									<a4j:support event="onblur" ajaxSingle="true"></a4j:support>
+								</h:inputText>
+							</s:decorate>
+							
+							<s:decorate id="valueConceptField" template="layout/edit.xhtml">
+								<ui:define name="label">#{messages.Value}</ui:define>
+								<h:inputText id="valueConcept" value="#{realPropertyHome.rentableUnit.valueConcept}">
+									<a4j:support event="onblur" ajaxSingle="true"></a4j:support>
+								</h:inputText>
+							</s:decorate>
+							
+							<s:decorate id="periodicityField" template="layout/edit.xhtml">
+								<ui:define name="label">#{messages.periodicity}</ui:define>
+								<h:inputText id="periodicity" value="#{realPropertyHome.rentableUnit.periodicity}">
+									<a4j:support event="onblur" ajaxSingle="true"></a4j:support>
+								</h:inputText>
+							</s:decorate>
+							
+							<a4j:outputPanel id="motiveRentableUnit">
+								<s:decorate  template="layout/edit.xhtml" >
+								<ui:define name="label">#{messages.Motive_deactivate}</ui:define>
+								<h:inputTextarea id="taRentableUnit" value="#{realPropertyHome.rentableUnit.motive}" cols="50" rows="5" readonly="true">
+								</h:inputTextarea>
+								</s:decorate>
+							</a4j:outputPanel>
+
+
+					<div style="clear: both"><span class="required">*</span>
+					#{messages.required_fields}</div>
+				</rich:panel>
+
+				<div class="actionButtons">
+					<h:commandButton id="save" value="#{messages.Save}" action="#{realPropertyHome.persitRowRentableUnit()}" rendered="#{realPropertyHome.edit==0}" view="/RealProperty.xhtml" disabled="#{!realPropertyHome.checkMessages()}" />
+					<h:commandButton id="update" value="#{messages.Save}" action="#{realPropertyHome.persitRowRentableUnit2()}" rendered="#{realPropertyHome.edit==1}" disabled="#{!realPropertyHome.checkMessages()}" />
+					<h:commandButton type="button" id="cancelAdd" value="#{messages.Cancel}" view="/RealPropertyEdit.xhtml">
+						<a4j:support event="onclick" ajaxSingle="true" onsubmit="#{rich:component('modalPanelCreateRentableUnit')}.hide()" action="#{realPropertyHome.clearRentableUnit()}" reRender="modalPanelCreateRentableUnit"></a4j:support>
+					</h:commandButton>
+				</div>
+			</h:form>
+		</rich:modalPanel>
+
+
+		<rich:modalPanel id="modalPanelRentableUnitList" width="500"
+			autosized="true">
+			<f:facet name="header">#{messages.Search_Results} (#{empty realPropertyHome.area.rentableUnits ? 0 : (realPropertyHome.area.rentableUnits.size)})</f:facet>
+			<h:form>
+			<a4j:outputPanel id="rentableUnitListEdit" layout="block" style="OVERFLOW: auto; WIDTH: 900px; TOP: 48px; HEIGHT: 450px"  >
+				<div class="results" id="rentableUnitList"><h:outputText
+					value="#{messages.search_returned_no_results}"
+					rendered="#{empty realPropertyHome.area.rentableUnits}" /> <rich:dataTable
+					id="rentableUnitList" var="_rentableUnit"
+					value="#{realPropertyHome.area.rentableUnits}"
+					rendered="#{not empty realPropertyHome.area.rentableUnits}">
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="layout/sort.xhtml">
+								<ui:param name="entityList" value="#{rentableUnitList}" />
+								<ui:param name="propertyLabel" value="Id" />
+								<ui:param name="propertyPath" value="rentableUnit.id" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_rentableUnit.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="layout/sort.xhtml">
+								<ui:param name="entityList" value="#{rentableUnitList}" />
+								<ui:param name="propertyLabel" value="Area id" />
+								<ui:param name="propertyPath" value="rentableUnit.area.id" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_rentableUnit.area.name}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="layout/sort.xhtml">
+								<ui:param name="entityList" value="#{rentableUnitList}" />
+								<ui:param name="propertyLabel" value="Nombre" />
+								<ui:param name="propertyPath" value="rentableUnit.name" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_rentableUnit.name}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="layout/sort.xhtml">
+								<ui:param name="entityList" value="#{rentableUnitList}" />
+								<ui:param name="propertyLabel" value="#{messages.Area_construction}" />
+								<ui:param name="propertyPath" value="rentableUnit.meters" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_rentableUnit.meters}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">
+							<ui:include src="layout/sort.xhtml">
+								<ui:param name="entityList" value="#{rentableUnitList}" />
+								<ui:param name="propertyLabel" value="#{messages.Total_rentable_area}" />
+								<ui:param name="propertyPath" value="rentableUnit.totalRentableArea" />
+							</ui:include>
+						</f:facet>
+						<h:outputText value="#{_rentableUnit.totalRentableArea}" />
+					</h:column>
+					<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{rentableUnitList}" />
+									<ui:param name="propertyLabel" value="Tipo Unidad Arrendable" />
+									<ui:param name="propertyPath" value="rentableUnit.rentableUnitType.type" />
+								</ui:include>
+							</f:facet>
+							<h:outputText value="#{_rentableUnit.rentableUnitType.type}" />
+						</h:column>
+					
+					<rich:column styleClass="action">
+						<f:facet name="header">#{messages.Action}</f:facet>
+						<h:commandButton type="button" id="editrentableunit"
+							value=" #{messages.Edit}">
+							<a4j:support event="onclick" ajaxSingle="true"
+								oncomplete="#{rich:component('modalPanelCreateRentableUnit')}.show()"
+								action="#{realPropertyHome.setRentableUnit(_rentableUnit)}"
+								reRender="modalPanelCreateRentableUnit"></a4j:support>
+						</h:commandButton>
+					</rich:column>
+				</rich:dataTable></div>
+				</a4j:outputPanel>
+			</h:form>
+			<h:commandButton type="button" id="closeModalPanelRentableUnitList"
+				value="#{messages.Close}" view="/RealProperty.xhtml">
+				<a4j:support event="onclick" ajaxSingle="true"
+					onsubmit="#{rich:component('modalPanelRentableUnitList')}.hide()"
+					reRender="modalPanelRentableUnitList"></a4j:support>
+			</h:commandButton>
+		</rich:modalPanel>
+
+		<rich:modalPanel id="modalPanelAvaluation" width="700"
+			autosized="true">
+			<h:form>
+				<rich:panel>
+					<f:facet name="header">Detalles del Avaluo</f:facet>
+
+					<s:decorate id="avaluationType" template="layout/display.xhtml">
+						<ui:define name="label">#{messages.Activation_type}</ui:define>
+						<h:outputText
+							value="#{realPropertyHome.avaluation.avaluationType.name}" />
+					</s:decorate>
+
+					<s:decorate id="activationDate" template="layout/display.xhtml">
+						<ui:define name="label">#{messages.Activation_date}</ui:define>
+						<h:outputText
+							value="#{realPropertyHome.avaluation.activationDate}">
+							<s:convertDateTime type="date" dateStyle="short"
+								pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</s:decorate>
+
+					<s:decorate id="effectiveEndDate" template="layout/display.xhtml">
+						<ui:define name="label">#{messages.Effective_end_date}</ui:define>
+						<h:outputText
+							value="#{realPropertyHome.avaluation.effectiveEndDate}">
+							<s:convertDateTime type="date" dateStyle="short"
+								pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</s:decorate>
+
+					<s:decorate id="tradeName" template="layout/display.xhtml">
+						<ui:define name="label">#{messages.Scope_activation}</ui:define>
+						<h:outputText
+							value="#{realPropertyHome.avaluation.scopeAvaluation}" />
+					</s:decorate>
+
+					<s:decorate id="value1" template="layout/display.xhtml">
+						<ui:define name="label">#{realPropertyHome.avaluation.avaluationType.id==1 ? 'Valor del Avaluo': 'Valor Edificio'}</ui:define>
+						<h:outputText
+							value="#{realPropertyHome.avaluation.formatterValue1}" />
+					</s:decorate>
+
+					<s:decorate id="value2" template="layout/display.xhtml">
+						<ui:define name="label">#{realPropertyHome.avaluation.avaluationType.id==1 ? 'Valor del Terreno': 'Valor Equipo Electronico'}</ui:define>
+						<h:outputText
+							value="#{realPropertyHome.avaluation.formatterValue2}" />
+					</s:decorate>
+
+					<s:decorate id="value3" template="layout/display.xhtml">
+						<ui:define name="label">#{realPropertyHome.avaluation.avaluationType.id==1 ? 'Valor de la Construcción': 'Valor Maquinaria'}</ui:define>
+						<h:outputText
+							value="#{realPropertyHome.avaluation.formatterValue3}" />
+					</s:decorate>
+					<div style="clear: both"><span class="required"></span></div>
+				</rich:panel>
+				<div class="actionButtons"><h:commandButton type="button"
+					value="#{messages.Close}" view="/RealProperty.xhtml">
+					<a4j:support limitToList="true" event="onclick" ajaxSingle="true"
+						onsubmit="#{rich:component('modalPanelAvaluation')}.hide()"
+						reRender="modalPanelAvaluation"></a4j:support>
+				</h:commandButton></div>
+			</h:form>
+
+		</rich:modalPanel>
+
+		<rich:modalPanel id="modalPanelCreateAvaluation" width="700"
+			autosized="true">
+			<h:form>
+			<a4j:outputPanel id="avaluationConstructionEdit" layout="block" style="OVERFLOW: auto; WIDTH: 900px; TOP: 48px; HEIGHT: 450px"  >
+				<a4j:outputPanel id="outPutPanelAvaluationList">
+					<rich:dataTable value="#{realPropertyHome.constructionAvaluations}"
+						var="_avaluationList"
+						rendered="#{not empty realPropertyHome.construction.avaluations}"
+						rowClasses="rvgRowOne,rvgRowTwo" id="avaluationsTableList">
+						<rich:column sortBy="#{_avaluationList.id}">
+							<f:facet name="header">Id</f:facet>
+							<h:outputText value="#{_avaluationList.id}" />
+						</rich:column>
+						<rich:column sortBy="#{_avaluationList.activationType}">
+							<f:facet name="header">#{messages.Activation_type}</f:facet>
+							<h:outputText value="#{_avaluationList.avaluationType.name}">
+							</h:outputText>
+						</rich:column>
+						<rich:column sortBy="#{_avaluationList.activationDate}">
+							<f:facet name="header">#{messages.Activation_date}</f:facet>
+							<h:outputText value="#{_avaluationList.activationDate}">
+								<s:convertDateTime type="date" dateStyle="short"
+									pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</rich:column>
+						<rich:column sortBy="#{_avaluationList.effectiveEndDate}">
+							<f:facet name="header">#{messages.Effective_end_date}</f:facet>
+							<h:outputText value="#{_avaluationList.effectiveEndDate}">
+								<s:convertDateTime type="date" dateStyle="short"
+									pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</rich:column>
+						<rich:column sortBy="#{_avaluationList.scopeAvaluation}">
+							<f:facet name="header">#{messages.Scope_activation}</f:facet>
+							<h:outputText value="#{_avaluationList.scopeAvaluation}">
+							</h:outputText>
+						</rich:column>
+						<rich:column sortBy="#{_avaluationList.formatterValue1}">
+							<f:facet name="header">#{messages.Value_construction}</f:facet>
+							<h:outputText value="#{_avaluationList.formatterValue1}" />
+						</rich:column>
+						<rich:column sortBy="#{_avaluationList.formatterValue2}">
+							<f:facet name="header">#{messages.Electronic_equipment_value}</f:facet>
+							<h:outputText value="#{_avaluationList.formatterValue2}" />
+						</rich:column>
+						<rich:column sortBy="#{_avaluationList.formatterValue3}">
+							<f:facet name="header">#{messages.Used_value}</f:facet>
+							<h:outputText value="#{_avaluationList.formatterValue3}" />
+						</rich:column>
+					</rich:dataTable>
+				</a4j:outputPanel>
+				</a4j:outputPanel>
+			</h:form>
+
+			<f:subview id="avaluationsList">
+				<div class="actionButtons"><h:form>
+					<h:commandButton type="button" value="#{messages.Close}">
+						<a4j:support event="onclick" ajaxSingle="true" limitToList="true"
+							ignoreDupResponses="true"
+							oncomplete="#{rich:component('modalPanelCreateAvaluation')}.hide()"
+							reRender="outPutPanelConstruction"></a4j:support>
+					</h:commandButton>
+				</h:form></div>
+			</f:subview>
+
+		</rich:modalPanel>
+	</ui:define>
+</ui:composition>

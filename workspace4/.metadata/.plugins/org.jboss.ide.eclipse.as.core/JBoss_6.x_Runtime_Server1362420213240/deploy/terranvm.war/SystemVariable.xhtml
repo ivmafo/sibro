@@ -1,0 +1,113 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">#{messages.System_variable_Details}</f:facet>
+
+        <s:decorate id="id" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Id}</ui:define>
+            <h:outputText value="#{systemVariableHome.instance.id}"/>
+        </s:decorate>
+
+        <s:decorate id="name" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Name}</ui:define>
+            <h:outputText value="#{systemVariableHome.instance.name}"/>
+        </s:decorate>
+        
+
+        <s:decorate id="sintax" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Sintax}</ui:define>
+            <h:outputText value="#{systemVariableHome.instance.sintax}"/>
+        </s:decorate>
+
+        <s:decorate id="value" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Value}</ui:define>
+            <h:outputText value="#{systemVariableHome.instance.value}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/SystemVariableEdit.xhtml"
+                    id="edit"
+                 value="#{messages.Edit}"/>
+
+        <s:button view="/#{empty systemVariableFrom ? 'SystemVariableList' : systemVariableFrom}.xhtml"
+                    id="done"
+                 value="#{messages.Done}"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>#{messages.Projects}</h:panelGroup>
+        </f:facet>
+    <div class="association" id="projectParent">
+
+        <h:outputText value="#{messages.There_is_no_project_associated_with_this_systemVariable}"
+                   rendered="#{systemVariableHome.instance.project == null}"/>
+
+        <rich:dataTable var="_project"
+                   value="#{systemVariableHome.instance.project}"
+                rendered="#{systemVariableHome.instance.project != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="projectTable">
+            <h:column>
+                <f:facet name="header">#{messages.Id}</f:facet>
+                <h:outputText value="#{_project.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.businessEntity} id</f:facet>
+                <h:outputText value="#{_project.businessEntity.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Business_line_id}</f:facet>
+                <h:outputText value="#{_project.businessLine.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Name_project}</f:facet>
+                <h:outputText value="#{_project.nameProject}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Cost_center_project}</f:facet>
+                <h:outputText value="#{_project.costCenterProject}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Project_prefix}</f:facet>
+                <h:outputText value="#{_project.projectPrefix}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Rounding}</f:facet>
+                <h:outputText value="#{_project.rounding}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">#{messages.Action}</f:facet>
+                <s:link id="viewproject"
+                     value="#{messages.View}"
+                      view="/Project.xhtml">
+                    <f:param name="projectId"
+                           value="#{_project.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+    </rich:tabPanel>
+</ui:define>
+
+</ui:composition>

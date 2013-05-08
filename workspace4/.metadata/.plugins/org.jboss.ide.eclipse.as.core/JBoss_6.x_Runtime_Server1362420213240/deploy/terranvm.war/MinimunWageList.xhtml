@@ -1,0 +1,112 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+
+	<ui:define name="body">
+		<rich:panel>
+        <f:facet name="header">#{messages.Search_Results} (#{empty minimunWageList.resultList ? 0 : (minimunWageList.paginated ? minimunWageList.resultCount : minimunWageList.resultList.size)})</f:facet>
+    <div class="results" id="minimunWageList">
+
+    <h:outputText value="#{messages.search_returned_no_results}"
+               rendered="#{empty minimunWageList.resultList}"/>
+
+    <rich:dataTable id="minimunWageList"
+                var="_minimunWage"
+              value="#{minimunWageList.resultList}"
+           rendered="#{not empty minimunWageList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{minimunWageList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Year}"/>
+                    <ui:param name="propertyPath" value="_minimunWage.year"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_minimunWage.year}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{minimunWageList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Date}"/>
+                    <ui:param name="propertyPath" value="_minimunWage.date"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_minimunWage.date}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">The minimunWage search returned no results.
+                    <ui:param name="entityList" value="#{minimunWageList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Value}"/>
+                    <ui:param name="propertyPath" value="_minimunWage.value"/>     
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{minimunWageHome.valueFormat(_minimunWage.value)}"/>
+        </h:column>
+        <rich:column styleClass="action">
+            <f:facet name="header">#{messages.Action}</f:facet>
+            <s:link view="/#{empty from ? 'MinimunWage' : from}.xhtml"
+                   value="#{empty from ? messages.View : messages.Select}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="minimunWageId">
+                <f:param name="minimunWageId"
+                        value="#{_minimunWage.id}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/MinimunWageList.xhtml"
+            rendered="#{minimunWageList.previousExists}"
+               value="#{messages.left}#{messages.left} #{messages.First_Page}"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/MinimunWageList.xhtml"
+            rendered="#{minimunWageList.previousExists}"
+               value="#{messages.left} #{messages.Previous_Page}"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{minimunWageList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/MinimunWageList.xhtml"
+            rendered="#{minimunWageList.nextExists}"
+               value="#{messages.Next_page} #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{minimunWageList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/MinimunWageList.xhtml"
+            rendered="#{minimunWageList.nextExists}"
+               value="#{messages.Last_Page} #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{minimunWageList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/MinimunWageEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="Crear Salario Minimo">
+            <f:param name="minimunWageId"/>
+        </s:button>
+    </s:div>
+	</ui:define>
+</ui:composition>

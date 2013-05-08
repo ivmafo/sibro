@@ -1,0 +1,188 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:p="http://primefaces.prime.com.tr/ui" xmlns:a4j="http://richfaces.org/a4j" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+
+	<ui:define name="body">
+		<a4j:keepAlive beanName="projectHome" />
+		<a4j:keepAlive beanName="projectList" />
+		<h:form id="projectSearch" styleClass="edit">
+
+			<rich:simpleTogglePanel label="#{messages.Project_Search_Filter}" switchType="ajax">
+				<s:decorate template="layout/display.xhtml">
+					<ui:define name="label">#{messages.Name}</ui:define>
+					<h:inputText id="nameProject" value="#{projectList.project.nameProject}" />
+				</s:decorate>
+
+				<s:decorate template="layout/display.xhtml">
+					<ui:define name="label">#{messages.Cost_center_project}</ui:define>
+					<h:inputText id="costCenterProject" value="#{projectList.project.costCenterProject}" />
+
+				</s:decorate>
+
+				<s:decorate template="layout/display.xhtml">
+					<ui:define name="label">#{messages.Match}</ui:define>
+					<h:selectOneRadio id="logic" value="#{projectList.restrictionLogicOperator}" styleClass="radio">
+						<f:selectItem itemLabel="#{messages.All}" itemValue="and" />
+						<f:selectItem itemLabel="#{messages.Any}" itemValue="or" />
+					</h:selectOneRadio>
+				</s:decorate>
+
+			</rich:simpleTogglePanel>
+
+			<div class="actionButtons">
+				<h:commandButton id="search" value="#{messages.Search}" action="/Collection.xhtml" rendered="#{authenticator.validateShowFunction('Collection.xhtml', 'search')}" />
+				<s:button id="reset" value="#{messages.Reset}" includePageParams="false" rendered="#{authenticator.validateShowFunction('Collection.xhtml', 'reset')}" />
+			</div>
+
+		</h:form>
+
+		<rich:panel>
+			<f:facet name="header">#{messages.Search_Results} (#{empty projectList.resultList ? 0 : (projectList.paginated ? projectList.resultCount : projectList.resultList.size)})</f:facet>
+			<div class="results" id="projectList">
+				<h:outputText value="#{messages.search_returned_no_results}" rendered="#{empty projectList.resultList}" />
+				<h:form>
+
+					<rich:dataTable id="projectList" var="_project" value="#{projectList.resultList}" rendered="#{not empty projectList.resultList}">
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{projectList}" />
+									<ui:param name="propertyLabel" value="Id" />
+									<ui:param name="propertyPath" value="project.id" />
+								</ui:include>
+							</f:facet>
+
+							<h:outputText value="#{_project.id}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{projectList}" />
+									<ui:param name="propertyLabel" value="#{messages.Business_entity_id}" />
+									<ui:param name="propertyPath" value="project.businessEntity.nameBusinessEntity" />
+								</ui:include>
+
+							</f:facet>
+							<h:outputText value="#{_project.businessEntity.nameBusinessEntity}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{projectList}" />
+									<ui:param name="propertyLabel" value="#{messages.Business_line_id}" />
+									<ui:param name="propertyPath" value="project.businessLine.nameBusinessLine" />
+
+								</ui:include>
+							</f:facet>
+							<h:outputText value="#{_project.businessLine.nameBusinessLine}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{projectList}" />
+									<ui:param name="propertyLabel" value="#{messages.Name}" />
+
+									<ui:param name="propertyPath" value="project.nameProject" />
+								</ui:include>
+							</f:facet>
+							<h:outputText value="#{_project.nameProject}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{projectList}" />
+
+									<ui:param name="propertyLabel" value="#{messages.Cost_center_project}" />
+									<ui:param name="propertyPath" value="project.costCenterProject" />
+								</ui:include>
+							</f:facet>
+							<h:outputText value="#{_project.costCenter()}" />
+						</h:column>
+						<rich:column styleClass="action">
+							<table>
+								<tr>
+									<td><h:outputLink type="button" id="openModalPanelRecoverClosure" value="#">
+									#{messages.Close_Recover}
+									<a4j:support event="onclick" ajaxSingle="true" ignoreDupResponses="true" limitToList="true" oncomplete="#{rich:component('modalPanelRecoverClosure')}.show()" action="#{projectHome.instanceProject(_project)}" reRender="ouputPanelRecoverClosure,titleRecoverProject" />
+										</h:outputLink>
+									</td>
+									<td>#{' '}</td>
+									<td>
+										<h:outputLink value="#" type="button">
+											Generar SIIGO
+											<a4j:support ignoreDupResponses="true" limitToList="true" event="onclick" oncomplete="#{rich:component('modalPanelGeneratePdf')}.show()" ajaxSingle="true" action="#{recoverHome.generatedSiigo(_project)}" reRender="modalPanelGeneratePdf, linkPDF3"  >
+											</a4j:support>
+										</h:outputLink>
+									</td>
+								</tr>
+							</table>
+						</rich:column>
+					</rich:dataTable>
+				</h:form>
+			</div>
+			
+		</rich:panel>
+
+		<div class="tableControl">
+			<s:link view="/Collection.xhtml" rendered="#{projectList.previousExists and authenticator.validateShowFunction('ProjectList.xhtml', 'firstPage')}" value="#{messages.left}#{messages.left} #{messages.First_Page}" id="firstPage">
+				<f:param name="firstResult" value="0" />
+			</s:link>
+			<s:link view="/Collection.xhtml" rendered="#{projectList.previousExists and authenticator.validateShowFunction('ProjectList.xhtml', 'previousPage')}" value="#{messages.left} #{messages.Previous_Page}" id="previousPage">
+				<f:param name="firstResult" value="#{projectList.previousFirstResult}" />
+			</s:link>
+			<s:link view="/Collection.xhtml" rendered="#{projectList.nextExists and authenticator.validateShowFunction('ProjectList.xhtml', 'nextPage')}" value="#{messages.Next_page} #{messages.right}" id="nextPage">
+				<f:param name="firstResult" value="#{projectList.nextFirstResult}" />
+			</s:link>
+			<s:link view="/Collection.xhtml" rendered="#{projectList.nextExists and authenticator.validateShowFunction('ProjectList.xhtml', 'lastPage')}" value="#{messages.Last_Page} #{messages.right}#{messages.right}" id="lastPage">
+				<f:param name="firstResult" value="#{projectList.lastFirstResult}" />
+			</s:link>
+		</div>
+
+		<rich:modalPanel id="modalPanelGeneratePdf" width="1000" autosized="true">
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText value="#{messages.Download}">
+					</h:outputText>
+				</h:panelGroup>
+			</f:facet>
+
+			<h:form>
+				<s:link id="linkPDF3" rendered="#{recoverHome.linkSIIGO != null}" value="#{messages.Download_SIIGO}" action="#{downloadAttachment.download()}">
+					<f:param name="relativePath" value="#{recoverHome.linkSIIGO}"></f:param>
+				</s:link>
+				<h:commandButton type="button" id="closeModalPanelGeneratePdf" value="#{messages.Close}">
+					<a4j:support event="onclick" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" onsubmit="#{rich:component('modalPanelGeneratePdf')}.hide()" reRender="modalPanelGeneratePdf, linkPDF3"></a4j:support>
+				</h:commandButton>
+			</h:form>
+		</rich:modalPanel>
+
+		<rich:modalPanel id="modalPanelRecoverClosure" autosized="true">
+			<f:facet name="header">
+				<h:panelGroup>
+					<a4j:outputPanel id="titleRecoverProject">
+						<h:outputText value="#{messages.CLOSE_RECOVER}  -  #{projectHome.recoverPeriod}"></h:outputText>
+					</a4j:outputPanel>
+				</h:panelGroup>
+			</f:facet>
+			<h:form>
+				<a4j:outputPanel id="ouputPanelRecoverClosure">
+					<h:panelGrid width="400px" columns="1">
+						<h:panelGrid rendered="#{!projectHome.recoverCloseable}">
+							<h:outputLabel value="#{messages.noCloseableRecover}" />
+						</h:panelGrid>
+						<h:panelGrid columns="#{projectHome.recoverCloseable ? 2 : 1}">
+							<h:commandButton type="button" value="#{projectHome.recoverCloseable ? messages.Cancel : messages.Close}">
+								<a4j:support event="onclick" ajaxSingle="true" ignoreDupResponses="true" limitToList="true" onclick="#{rich:component('modalPanelRecoverClosure')}.hide()" action="#{projectHome.destroyModal1()}"></a4j:support>
+							</h:commandButton>
+							<h:commandButton rendered="#{projectHome.recoverCloseable}" type="button" value="#{messages.YES}, #{messages.closeProject}">
+								<a4j:support event="onclick" ajaxSingle="true" action="#{projectHome.closeRecover()}" ignoreDupResponses="true" limitToList="true" oncomplete="#{rich:component('modalPanelRecoverClosure')}.hide()"></a4j:support>
+							</h:commandButton>
+						</h:panelGrid>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</h:form>
+		</rich:modalPanel>
+
+	</ui:define>
+
+</ui:composition>

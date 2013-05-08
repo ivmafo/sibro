@@ -1,0 +1,190 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="systemVariableSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="#{messages.SystemVariable_Search_Filter}" switchType="ajax">
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">#{messages.Name}</ui:define>
+                <h:inputText id="name" value="#{systemVariableList.systemVariable.name}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">#{messages.Sintax}</ui:define>
+                <h:inputText id="sintax" value="#{systemVariableList.systemVariable.sintax}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">#{messages.Value}</ui:define>
+                <h:inputText id="value" value="#{systemVariableList.systemVariable.value}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">#{messages.Match}</ui:define>
+                <h:selectOneRadio id="logic" value="#{systemVariableList.restrictionLogicOperator}" styleClass="radio">
+                    <f:selectItem itemLabel="#{messages.All}" itemValue="and"/>
+                    <f:selectItem itemLabel="#{messages.Any}" itemValue="or"/>
+                </h:selectOneRadio>
+            </s:decorate>
+
+        </rich:simpleTogglePanel>
+
+        <div class="actionButtons">
+            <h:commandButton id="search" value="#{messages.Search}" action="/SystemVariableList.xhtml"/>
+            <s:button id="reset" value="#{messages.Reset}" includePageParams="false"/>
+        </div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">#{messages.Search_Results} (#{empty systemVariableList.resultList ? 0 : (systemVariableList.paginated ? systemVariableList.resultCount : systemVariableList.resultList.size)})</f:facet>
+    <div class="results" id="systemVariableList">
+
+    <h:outputText value="T#{messages.search_returned_no_results}"
+               rendered="#{empty systemVariableList.resultList}"/>
+
+    <rich:dataTable id="systemVariableList"
+                var="_systemVariable"
+              value="#{systemVariableList.resultList}"
+           rendered="#{not empty systemVariableList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{systemVariableList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Id}"/>
+                    <ui:param name="propertyPath" value="systemVariable.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_systemVariable.id}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{systemVariableList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.projectid}"/>
+                    <ui:param name="propertyPath" value="systemVariable.project.nameProject"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_systemVariable.project.nameProject}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{systemVariableList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Name}"/>
+                    <ui:param name="propertyPath" value="systemVariable.name"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_systemVariable.name}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{systemVariableList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Sintax}"/>
+                    <ui:param name="propertyPath" value="systemVariable.sintax"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_systemVariable.sintax}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{systemVariableList}"/>
+                    <ui:param name="propertyLabel" value="Es Variable del Sitema"/>
+                    <ui:param name="propertyPath" value="systemVariable.isSystemvariable"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{systemVariableHome.True_False(_systemVariable.isSystemvariable)}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{systemVariableList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Value}"/>
+                    <ui:param name="propertyPath" value="systemVariable.value"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_systemVariable.value}"/>
+        </h:column>
+        <rich:column styleClass="action">
+            <f:facet name="header">#{messages.Action}</f:facet>
+            <s:link view="/#{empty from ? 'SystemVariable' : from}.xhtml"
+                   value="#{empty from ? messages.View : messages.Select}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="systemVariableViewId">
+                <f:param name="systemVariableId"
+                        value="#{_systemVariable.id}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/SystemVariableEdit.xhtml"
+                   value="#{messages.Edit}"
+             propagation="none"
+                      id="systemVariableEdit"
+                rendered="#{empty from}">
+                <f:param name="systemVariableId"
+                        value="#{_systemVariable.id}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/SystemVariableList.xhtml"
+            rendered="#{systemVariableList.previousExists}"
+               value="#{messages.left}#{messages.left} #{messages.First_Page}"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/SystemVariableList.xhtml"
+            rendered="#{systemVariableList.previousExists}"
+               value="#{messages.left} #{messages.Previous_Page}"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{systemVariableList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/SystemVariableList.xhtml"
+            rendered="#{systemVariableList.nextExists}"
+               value="#{messages.Next_page} #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{systemVariableList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/SystemVariableList.xhtml"
+            rendered="#{systemVariableList.nextExists}"
+               value="#{messages.Last_Page} #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{systemVariableList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/SystemVariableEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="#{messages.Create_systemVariable}">
+            <f:param name="systemVariableId"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

@@ -1,0 +1,309 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:a4j="http://richfaces.org/a4j" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+
+	<ui:define name="body">
+		<h:form id="invoiceSearch" styleClass="edit">
+
+			<rich:simpleTogglePanel switchType="ajax">
+				<f:facet name="header">#{messages.reversion_invoice_plural} - #{invoiceHome.project.nameProject}  -  #{invoiceHome.billingPeriod}</f:facet>
+
+				<s:decorate template="layout/display.xhtml">
+					<ui:define name="label">#{messages.Invoice_Status}</ui:define>
+					<h:selectOneMenu value="#{invoiceHome.selectedInvoiceStatus}">
+						<s:selectItems value="#{invoiceHome.invoiceStatusList}" var="_status" label="#{_status.name}"></s:selectItems>
+						<s:convertEntity></s:convertEntity>
+					</h:selectOneMenu>
+				</s:decorate>
+
+				<div class="actionButtons">
+					<h:commandButton type="button" id="search" value="#{messages.Search}" action="/InvoiceList.xhtml">
+						<a4j:support event="onclick" action="#{invoiceHome.newSearch()}" reRender="outPutPanelInvoiceList"></a4j:support>
+					</h:commandButton>
+					<a4j:outputPanel ajaxRendered="true">
+						<h:outputLabel value="#{messages.Search_Results}: ( #{invoiceHome.invoiceList.size()} ) - " />
+					</a4j:outputPanel>
+					<s:link view="/BillingList.xhtml" value=" #{messages.Go_back_to_project_List}" propagation="none">
+					</s:link>
+				</div>
+			</rich:simpleTogglePanel>
+
+
+		</h:form>
+		<rich:panel>
+			<h:form>
+				<a4j:outputPanel id="outPutPanelInvoiceList">
+					<rich:extendedDataTable binding="#{tableInvoiceBind}" noDataLabel="No hay facturas para este projecto (#{projectHome.billingPeriod})" width="100%" height="480px" selection="#{invoiceHome.selectionTableInvoice}" selectionMode="single" rows="10" sortMode="multi" tableState="#{invoiceHome.invoiceListTableState}" value="#{invoiceHome.invoiceList}" var="_invoice" id="tableInvoiceList">
+
+						<rich:column width="5%" sortable="true" sortBy="#{_invoice.id}" filterBy="#{_invoice.id}" filterEvent="onchange" style="text-align: center">
+							<f:facet name="header">
+								<h:outputText value="id" />
+							</f:facet>
+							<h:outputText value="#{_invoice.id}" />
+						</rich:column>
+						<rich:column width="15%" sortable="true" sortBy="#{_invoice.expeditionDate}" filterBy="#{_invoice.expeditionDate}" filterEvent="onchange" style="text-align: center">
+							<f:facet name="header">
+								<h:outputText value="#{messages.expediton_date}" />
+							</f:facet>
+							<h:outputText value="#{_invoice.expeditionDate}" />
+						</rich:column>
+						<rich:column width="15%" sortable="true" sortBy="#{_invoice.expirationDate}" filterBy="#{_invoice.expirationDate}" filterEvent="onchange" style="text-align: center">
+							<f:facet name="header">
+								<h:outputText value="#{messages.expiration_date}" />
+							</f:facet>
+							<h:outputText value="#{_invoice.expirationDate}" />
+						</rich:column>
+						<rich:column width="15%" sortable="true" sortBy="#{_invoice.nameBiller}" filterBy="#{_invoice.nameBiller}" filterEvent="onchange" style="text-align: center">
+							<f:facet name="header">
+								<h:outputText value="#{messages.Biller}" />
+							</f:facet>
+							<h:outputText value="#{_invoice.nameBiller}" />
+						</rich:column>
+						<rich:column width="15%" sortable="true" sortBy="#{_invoice.nameBilled}" filterBy="#{_invoice.nameBilled}" filterEvent="onchange" style="text-align: center">
+							<f:facet name="header">
+								<h:outputText value="#{messages.Billed}" />
+							</f:facet>
+							<h:outputText value="#{_invoice.nameBilled}" />
+						</rich:column>
+						<rich:column width="10%" sortable="true" sortBy="#{_invoice.total()}" filterBy="#{_invoice.total()}" filterEvent="onchange" style="text-align: right">
+							<f:facet name="header">
+								<h:outputText value="#{messages.Total}" />
+							</f:facet>
+							<h:outputText value="#{_invoice.total()}" style="font-weight:bold;padding-right:10px;">
+								<f:convertNumber currencySymbol="$ " type="currency" />
+							</h:outputText>
+						</rich:column>
+						<rich:column width="10%" sortable="true" sortBy="#{_invoice.number}" filterBy="#{_invoice.number}" filterEvent="onchange" style="text-align: center">
+							<f:facet name="header">
+								<h:outputText value="#{messages.Fac_Number}" />
+							</f:facet>
+							<h:outputText value="#{projectHome.invoiceNumber(_invoice)}" />
+						</rich:column>
+						<rich:column width="15%" style="text-align: center">
+							<f:facet name="header">
+								<h:outputText value="#{messages.Action}" />
+							</f:facet>
+							<h:selectBooleanCheckbox rendered="#{invoiceHome.selectedInvoiceStatus.id == 1 || invoiceHome.selectedInvoiceStatus.id == 2 || invoiceHome.selectedInvoiceStatus.id == 3}" value="#{_invoice.selected}">
+								<a4j:support event="onchange" ajaxSingle="true" reRender="okModalPanelInvoice"></a4j:support>
+							</h:selectBooleanCheckbox>
+							#{' '}
+							<h:commandButton rendered="#{invoiceHome.selectedInvoiceStatus.id == 1}" value="#{messages.request_reversion}" type="button">
+								<a4j:support ajaxSingle="true" event="onclick" ignoreDupResponses="true" action="#{invoiceHome.instanceSelectedInvoice(_invoice)}" oncomplete="#{rich:component('modalPanelOrderReversion')}.show()"></a4j:support>
+							</h:commandButton>
+							<h:commandButton rendered="#{invoiceHome.selectedInvoiceStatus.id == 2}" value="#{messages.view_reversion}" type="button">
+								<a4j:support ajaxSingle="true" event="onclick" ignoreDupResponses="true" action="#{invoiceHome.instanceSelectedInvoice(_invoice)}" oncomplete="#{rich:component('modalPanelViewReversion')}.show()" reRender="outputPanelViewReversion"></a4j:support>
+							</h:commandButton>
+							<h:commandButton rendered="#{invoiceHome.selectedInvoiceStatus.id == 3}" value="#{messages.reversion}" type="button">
+								<a4j:support ajaxSingle="true" event="onclick" ignoreDupResponses="true" action="#{invoiceHome.instanceSelectedInvoice(_invoice)}" oncomplete="#{rich:component('modalPanelRecalculate')}.show()" reRender="outputPanelViewReversion"></a4j:support>
+							</h:commandButton>
+						</rich:column>
+						<f:facet name="footer">
+							<rich:datascroller rendered="#{invoiceHome.invoiceList.size() > 10}" id="datascroller" />
+						</f:facet>
+						<a4j:support ajaxSingle="true" event="onchange" />
+					</rich:extendedDataTable>
+				</a4j:outputPanel>
+			</h:form>
+		</rich:panel>
+		<rich:modalPanel id="modalPanelOrderReversion" autosized="true">
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText value="#{messages.Order_reversal}"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+			<h:form>
+				<a4j:outputPanel>
+					<h:panelGrid columns="1">
+						<s:decorate template="layout/display.xhtml">
+							<ui:define name="label">#{messages.Reversion_Reason}</ui:define>
+							<h:inputTextarea required="true" value="#{invoiceHome.selectedInvoice.note}">
+								<a4j:support event="onkeyup" limitToList="true" ignoreDupResponses="true" reRender="buttonRequestReversion"></a4j:support>
+							</h:inputTextarea>
+						</s:decorate>
+						<h:panelGrid columns="2">
+							<h:commandButton disabled="#{invoiceHome.selectedInvoice.note == null || invoiceHome.selectedInvoice.note.equalsIgnoreCase('')}" id="buttonRequestReversion" type="button" value="#{messages.Order_reversal}">
+								<a4j:support event="onclick" ajaxSingle="true" action="#{invoiceHome.saveReversionNote()}" oncomplete="#{rich:component('modalPanelOrderReversion')}.hide()" reRender="outPutPanelInvoiceList"></a4j:support>
+							</h:commandButton>
+							<h:commandButton type="button" value="Cancel">
+								<rich:componentControl for="modalPanelInvoiceConcept" attachTo="modalPanelOrderReversion" operation="hide" event="onclick" />
+								<a4j:support event="onclick" ajaxSingle="true" oncomplete="#{rich:component('modalPanelOrderReversion')}.hide()"></a4j:support>
+							</h:commandButton>
+						</h:panelGrid>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</h:form>
+		</rich:modalPanel>
+
+		<rich:modalPanel id="modalPanelOrderReversionBlock" autosized="true">
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText value="#{messages.reversion_block_request}"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+			<h:form>
+				<a4j:outputPanel>
+					<h:panelGrid columns="1">
+						<s:decorate template="layout/display.xhtml">
+							<ui:define name="label">#{messages.reversion_reason_block}</ui:define>
+							<h:inputTextarea value="#{invoiceHome.reversionNote}">
+								<a4j:support event="onkeyup" limitToList="true" ignoreDupResponses="true" reRender="buttonRequestReversionBlock"></a4j:support>
+							</h:inputTextarea>
+						</s:decorate>
+						<h:panelGrid columns="2">
+							<h:commandButton id="buttonRequestReversionBlock" disabled="#{invoiceHome.reversionNote == null || invoiceHome.reversionNote.equalsIgnoreCase('')}" type="button" value="#{messages.Order_reversal}">
+								<a4j:support event="onclick" ajaxSingle="true" action="#{invoiceHome.saveReversionNoteBlock()}" oncomplete="#{rich:component('modalPanelOrderReversionBlock')}.hide()" reRender="outPutPanelInvoiceList"></a4j:support>
+							</h:commandButton>
+							<h:commandButton type="button" value="Cancel">
+								<rich:componentControl for="modalPanelInvoiceConcept" attachTo="modalPanelOrderReversion" operation="hide" event="onclick" />
+								<a4j:support event="onclick" ajaxSingle="true" oncomplete="#{rich:component('modalPanelOrderReversionBlock')}.hide()"></a4j:support>
+							</h:commandButton>
+						</h:panelGrid>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</h:form>
+		</rich:modalPanel>
+
+		<rich:modalPanel id="modalPanelViewReversion" autosized="true">
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText value="Order reversion"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+			<h:form>
+				<a4j:outputPanel id="outputPanelViewReversion">
+					<h:panelGrid columns="1">
+						<s:decorate template="layout/display.xhtml">
+							<ui:define name="label">#{messages.Reversion_Reason}</ui:define>
+							<h:inputTextarea readonly="true" value="#{invoiceHome.selectedInvoice.note}">
+							</h:inputTextarea>
+						</s:decorate>
+
+						<h:panelGrid columns="3">
+							<h:commandButton type="button" value="#{messages.Approve_reversion}">
+								<a4j:support event="onclick" ajaxSingle="true" action="#{invoiceHome.approveReversion(true)}" oncomplete="#{rich:component('modalPanelViewReversion')}.hide()" reRender="outPutPanelInvoiceList"></a4j:support>
+							</h:commandButton>
+							<h:commandButton type="button" value="#{messages.Do_not_approve}">
+								<rich:componentControl for="modalPanelInvoiceConcept" attachTo="modalPanelOrderReversion" operation="hide" event="onclick" />
+								<a4j:support event="onclick" ajaxSingle="true" action="#{invoiceHome.approveReversion(false)}" oncomplete="#{rich:component('modalPanelViewReversion')}.hide()" reRender="outPutPanelInvoiceList"></a4j:support>
+							</h:commandButton>
+							<h:commandButton type="button" value="#{messages.Cancel}">
+								<rich:componentControl for="modalPanelInvoiceConcept" attachTo="modalPanelOrderReversion" operation="hide" event="onclick" />
+								<a4j:support event="onclick" ajaxSingle="true" oncomplete="#{rich:component('modalPanelViewReversion')}.hide()"></a4j:support>
+							</h:commandButton>
+						</h:panelGrid>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</h:form>
+		</rich:modalPanel>
+
+		<rich:modalPanel id="modalPanelViewReversionBlock" autosized="true">
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText value="#{messages.reversion_block_approve}"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+			<h:form>
+				<a4j:outputPanel id="outputPanelViewReversion">
+					<h:panelGrid columns="1">
+						<h:outputText value="#{messages.reversion_approve_confirmation}"></h:outputText>
+
+						<h:panelGrid columns="3">
+							<h:commandButton type="button" value="#{messages.Approve_reversion}">
+								<a4j:support event="onclick" ajaxSingle="true" action="#{invoiceHome.approveReversionBlock(true)}" oncomplete="#{rich:component('modalPanelViewReversionBlock')}.hide()" reRender="outPutPanelInvoiceList"></a4j:support>
+							</h:commandButton>
+							<h:commandButton type="button" value="#{messages.Do_not_approve}">
+								<rich:componentControl for="modalPanelInvoiceConcept" attachTo="modalPanelOrderReversion" operation="hide" event="onclick" />
+								<a4j:support event="onclick" ajaxSingle="true" action="#{invoiceHome.approveReversionBlock(false)}" oncomplete="#{rich:component('modalPanelViewReversionBlock')}.hide()" reRender="outPutPanelInvoiceList"></a4j:support>
+							</h:commandButton>
+							<h:commandButton type="button" value="#{messages.Cancel}">
+								<rich:componentControl for="modalPanelInvoiceConcept" attachTo="modalPanelOrderReversion" operation="hide" event="onclick" />
+								<a4j:support event="onclick" ajaxSingle="true" oncomplete="#{rich:component('modalPanelViewReversionBlock')}.hide()"></a4j:support>
+							</h:commandButton>
+						</h:panelGrid>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</h:form>
+		</rich:modalPanel>
+
+		<rich:modalPanel id="modalPanelRecalculate" autosized="true">
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText value="#{messages.reversion_invoice}"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+			<h:form>
+				<a4j:outputPanel id="outputPanelRecalculation">
+					<h:panelGrid columns="1">
+						<h:outputText value="#{messages.reversion_warning}"></h:outputText>
+
+						<h:panelGrid columns="3">
+							<h:commandButton type="button" value="#{messages.reversion_invoice}">
+								<a4j:support event="onclick" ajaxSingle="true" action="#{invoiceHome.recalculation(true)}" oncomplete="#{rich:component('modalPanelRecalculate')}.hide()" reRender="outPutPanelInvoiceList"></a4j:support>
+							</h:commandButton>
+							<h:commandButton type="button" value="#{messages.reversion_cancel}">
+								<rich:componentControl for="modalPanelInvoiceConcept" attachTo="modalPanelOrderReversion" operation="hide" event="onclick" />
+								<a4j:support event="onclick" ajaxSingle="true" action="#{invoiceHome.recalculation(false)}" oncomplete="#{rich:component('modalPanelRecalculate')}.hide()" reRender="outPutPanelInvoiceList"></a4j:support>
+							</h:commandButton>
+							<h:commandButton type="button" value="#{messages.Close}">
+								<rich:componentControl for="modalPanelInvoiceConcept" attachTo="modalPanelOrderReversion" operation="hide" event="onclick" />
+								<a4j:support event="onclick" ajaxSingle="true" oncomplete="#{rich:component('modalPanelRecalculate')}.hide()"></a4j:support>
+							</h:commandButton>
+						</h:panelGrid>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</h:form>
+		</rich:modalPanel>
+
+		<rich:modalPanel id="modalPanelRecalculateBlock" autosized="true">
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText value="#{messages.reversion_invoice}"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+			<h:form>
+				<a4j:outputPanel id="outputPanelRecalculation">
+					<h:panelGrid columns="1">
+						<h:outputText value="#{messages.reversion_warning_plural}"></h:outputText>
+
+						<h:panelGrid columns="3">
+							<h:commandButton type="button" value="#{messages.reversion_invoice_plural}">
+								<a4j:support event="onclick" ajaxSingle="true" action="#{invoiceHome.recalculationBlock(true)}" ignoreDupResponses="true" oncomplete="#{rich:component('modalPanelRecalculateBlock')}.hide()" reRender="outPutPanelInvoiceList"></a4j:support>
+							</h:commandButton>
+							<h:commandButton type="button" value="#{messages.reversion_cancel_plural}">
+								<a4j:support event="onclick" ajaxSingle="true" action="#{invoiceHome.recalculation(false)}" ignoreDupResponses="true" oncomplete="#{rich:component('modalPanelRecalculateBlock')}.hide()" reRender="outPutPanelInvoiceList"></a4j:support>
+							</h:commandButton>
+							<h:commandButton type="button" value="#{messages.Close}">
+								<a4j:support event="onclick" ajaxSingle="true" limitToList="true" oncomplete="#{rich:component('modalPanelRecalculateBlock')}.hide()"></a4j:support>
+							</h:commandButton>
+						</h:panelGrid>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</h:form>
+		</rich:modalPanel>
+
+		<h:form>
+			<a4j:outputPanel ajaxRendered="true">
+				<s:decorate template="layout/display.xhtml">
+					<ui:define name="label">#{messages.check_all}?</ui:define>
+					<h:selectBooleanCheckbox id="checkAll" rendered="#{invoiceHome.selectedInvoiceStatus.id == 1 || invoiceHome.selectedInvoiceStatus.id == 2 || invoiceHome.selectedInvoiceStatus.id == 3}" value="#{invoiceHome.allInvoices}">
+						<a4j:support event="onchange" action="#{invoiceHome.checkAllInvoices()}" ignoreDupResponses="true" ajaxSingle="true" reRender="tableInvoiceList"></a4j:support>
+					</h:selectBooleanCheckbox>
+				</s:decorate>
+				<rich:panel width="100%" rendered="#{invoiceHome.reversionBlockAvailable}">
+					<div style="width: 100%; text-align: center;">
+						<h:commandButton rendered="#{invoiceHome.selectedInvoiceStatus.id == 1}" value="#{messages.reversion_block_request}" type="button">
+							<a4j:support ignoreDupResponses="true" ajaxSingle="true" event="onclick" oncomplete="#{rich:component('modalPanelOrderReversionBlock')}.show()"></a4j:support>
+						</h:commandButton>
+						<h:commandButton rendered="#{invoiceHome.selectedInvoiceStatus.id == 2}" value="#{messages.reversion_block_approve}" type="button">
+							<a4j:support ignoreDupResponses="true" ajaxSingle="true" event="onclick" oncomplete="#{rich:component('modalPanelViewReversionBlock')}.show()" reRender="outputPanelViewReversion"></a4j:support>
+						</h:commandButton>
+						<h:commandButton rendered="#{invoiceHome.selectedInvoiceStatus.id == 3}" value="#{messages.reversion_block}" type="button">
+							<a4j:support ignoreDupResponses="true" ajaxSingle="true" event="onclick" oncomplete="#{rich:component('modalPanelRecalculateBlock')}.show()"></a4j:support>
+						</h:commandButton>
+					</div>
+				</rich:panel>
+			</a4j:outputPanel>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

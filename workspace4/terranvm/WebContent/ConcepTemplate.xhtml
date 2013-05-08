@@ -1,0 +1,69 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Plantilla del concepto</f:facet>
+
+        <s:decorate id="id" template="layout/display.xhtml">
+            <ui:define name="label">Id</ui:define>
+            <h:outputText value="#{concepTemplateHome.instance.id}"/>
+        </s:decorate>
+
+        <s:decorate id="name" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Name}</ui:define>
+            <h:outputText value="#{concepTemplateHome.instance.name}"/>
+        </s:decorate>
+
+        <s:decorate id="printDescription" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Print_description}</ui:define>
+            <h:outputText value="#{concepTemplateHome.instance.printDescription}"/>
+        </s:decorate>
+
+        <s:decorate id="expression" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Expression}</ui:define>
+            <h:outputText value="#{concepTemplateHome.instance.expression}"/>
+        </s:decorate>
+
+        <s:decorate id="isContributionModule" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.IsContributionModule}</ui:define>
+            <h:outputText value="#{concepTemplateHome.instance.isContributionModule}"/>
+        </s:decorate>
+
+        <s:decorate id="isEarlyPayment" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Is_early_payment}</ui:define>
+            <h:outputText value="#{concepTemplateHome.instance.isEarlyPayment}"/>
+        </s:decorate>
+
+        <s:decorate id="documentType" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.periodicity_type}</ui:define>
+            <h:outputText value="#{concepTemplateHome.instance.documentType}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/ConcepTemplateEdit.xhtml"
+                    id="edit"
+                 value="#{messages.Edit}"/>
+
+        <s:button view="/#{empty concepTemplateFrom ? 'ConcepTemplateList' : concepTemplateFrom}.xhtml"
+                    id="done"
+                 value="#{messages.Done}"/>
+
+    </div>
+
+</ui:define>
+
+</ui:composition>

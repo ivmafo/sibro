@@ -1,0 +1,279 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:a="http://richfaces.org/a4j" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+
+
+	<ui:define name="body">
+
+		<h:form id="rentableUnitOwnerLesse" styleClass="edit">
+
+			<rich:simpleTogglePanel switchType="ajax">
+				<f:facet name="header">Relacion Propietartio y Arrendatario</f:facet>
+							
+					<s:decorate template="layout/display.xhtml">
+						<ui:define name="label">Activos:</ui:define>
+						<h:selectOneMenu value="#{rentableUnitHome.selectRealProperty}">
+							<s:selectItems value="#{rentableUnitHome.realproperties}" var="realproperty" label="#{realproperty.nameProperty}"></s:selectItems>
+							<s:convertEntity></s:convertEntity>
+						</h:selectOneMenu>
+					</s:decorate>
+
+					<div class="actionButtons">
+					<h:commandButton type="button" id="search" value="#{messages.Search}" action="/RentableUnitOwnerLesseeList.xhtml">
+						<a4j:support event="onclick" action="#{rentableUnitHome.newSearch()}" reRender="outPutPanelRentableUnitList"></a4j:support>
+					</h:commandButton>
+				</div>
+				</rich:simpleTogglePanel>
+					</h:form>
+
+		<rich:panel>
+			<h:form>
+				<a4j:outputPanel id="outPutPanelRentableUnitList">
+					<rich:extendedDataTable binding="#{tableRentableUnit}" width="100%" height="480px" selection="#{rentableUnitHome.selectionTableRentableUnit}" selectionMode="single" rows="11" sortMode="multi" tableState="#{rentableUnitHome.rentableUnitListTableState}" value="#{rentableUnitHome.rentableUnitList}" var="_rentableUnit" id="tableRentableUnitList">
+
+						<rich:column width="3%" sortable="true" sortBy="#{_rentableUnit.id}" filterBy="#{_rentableUnit.id}" filterEvent="onkeyup" style="text-align: center">
+							<f:facet name="header">
+								<h:outputText value="id" />
+							</f:facet>
+							<h:outputText value="#{_rentableUnit.id}" />
+						</rich:column>
+						<rich:column width="15%" sortable="true" sortBy="#{_rentableUnit.name}" filterBy="#{_rentableUnit.name}" filterEvent="onkeyup" style="text-align: center">
+							<f:facet name="header">
+								<h:outputText value="#{messages.Name}" />
+							</f:facet>
+							<h:outputText value="#{_rentableUnit.name}" />
+						</rich:column>
+						<rich:column width="15%" sortable="true" sortBy="#{_rentableUnit.businessEntityByOwner.nameBusinessEntity}" filterBy="#{_rentableUnit.businessEntityByOwner.nameBusinessEntity}" filterEvent="onkeyup" style="text-align: center">
+							<f:facet name="header">
+								<h:outputText value="#{messages.Owner}" />
+							</f:facet>
+							<h:outputText value="#{_rentableUnit.businessEntityByOwner.nameBusinessEntity}" />
+						</rich:column>
+						<rich:column width="15%" sortable="true" sortBy="#{_rentableUnit.businessEntityByLessee.nameBusinessEntity}" filterBy="#{_rentableUnit.businessEntityByLessee.nameBusinessEntity}" filterEvent="onkeyup" style="text-align: center">
+							<f:facet name="header">
+								<h:outputText value="#{messages.Lessee}" />
+							</f:facet>
+							<h:outputText value="#{_rentableUnit.businessEntityByLessee.nameBusinessEntity}" />
+						</rich:column>
+						<rich:column width="12%" sortable="true" sortBy="#{_rentableUnit.meters}" filterBy="#{_rentableUnit.meters}" filterEvent="onkeyup" style="text-align: center">
+							<f:facet name="header">
+								<h:outputText value="#{messages.Area_construction}" />
+							</f:facet>
+							<h:outputText value="#{_rentableUnit.meters}" />
+						</rich:column>
+						<rich:column width="11%" sortable="true" sortBy="#{_rentableUnit.totalRentableArea}" filterBy="#{_rentableUnit.totalRentableArea}" filterEvent="onkeyup" style="text-align: center">
+							<f:facet name="header">
+								<h:outputText value="#{messages.rentable_area}" />
+							</f:facet>
+							<h:outputText value="#{_rentableUnit.totalRentableArea}" />
+						</rich:column>
+						<rich:column width="18%" sortable="true" sortBy="#{_rentableUnit.rentableUnitType}" filterBy="#{_rentableUnit.rentableUnitType}" filterEvent="onkeyup" style="text-align: center">
+							<f:facet name="header">
+								<h:outputText value="Tipos de Unidad Arrendable" />
+							</f:facet>
+							<h:outputText value="#{_rentableUnit.rentableUnitType.type}" />
+						</rich:column>
+						<rich:column width="11%" style="text-align: center">
+							<f:facet name="header">
+								<h:outputText value="#{messages.Action}" />
+							</f:facet>
+							<h:commandButton id="assignment"  value="#{messages.Assignment}" type="button" rendered="#{authenticator.validateShowFunction('RentableUnitOwnerLesseeList.xhtml', 'assignment') }">
+								<a4j:support ajaxSingle="true" event="onclick" limitToList="true" action="#{rentableUnitHome.instanceSelectedRentableUnit(_rentableUnit)}" ignoreDupResponses="true" oncomplete="#{rich:component('modalPanelOwnerLessee')}.show()" reRender="panelModalPanelOwnerLessee,xxx"></a4j:support>
+							</h:commandButton>
+						</rich:column>
+						<f:facet name="footer">
+							<rich:datascroller id="datascroller" />
+						</f:facet>
+						<a4j:support ajaxSingle="true" event="onchange" />
+					</rich:extendedDataTable>
+				</a4j:outputPanel>
+			</h:form>
+		</rich:panel>
+
+
+
+		<rich:modalPanel id="modalPanelOwnerLessee" width="1000" height="400">
+			<h:form id="construction" rendered="true" styleClass="edit">
+				<a4j:outputPanel id="panelModalPanelOwnerLessee" layout="block"
+					style="OVERFLOW: auto; WIDTH: 980px; TOP: 48px; HEIGHT: 359px">
+					<rich:panel>
+						<f:facet name="header">#{messages.Add} #{messages.Owner} Y #{messages.Lessee} correspondiente al activo: #{rentableUnitHome.selectRealProperty.nameProperty} : #{rentableUnitHome.selectedRentableUnit.name}</f:facet>
+
+						<rich:simpleTogglePanel label="Informacion Del Propietario"
+							opened="true" switchType="client">
+							<a4j:region>
+
+								<h:panelGrid columns="2">
+									<s:decorate id="owner" template="layout/edit.xhtml">
+										<ui:define name="label">#{messages.Owner}:</ui:define>
+										<h:inputTextarea readonly="true" rows="3"
+											value="#{rentableUnitHome.selectedRentableUnit.businessEntityByOwner.nameBusinessEntity}" />
+									</s:decorate>
+
+
+									<rich:extendedDataTable binding="#{tableOwnerBind}"
+										width="600px" height="100px"
+										selection="#{rentableUnitHome.selectionOwner}"
+										selectionMode="single" rows="0" sortMode="single"
+										tableState="#{rentableUnitHome.tableStateOwner}"
+										value="#{rentableUnitHome.owners}" var="_owner"
+										id="tableOwner">
+
+										<rich:column sortable="true" width="50%"
+											sortBy="#{_owner.nameBusinessEntity}" id="col_1"
+											filterBy="#{_owner.nameBusinessEntity}" filterEvent="onkeyup"
+											label="Nombre / Razón Social">
+											<f:facet name="header">
+												<h:outputText value="Nombre / Razón Social" />
+											</f:facet>
+											<h:outputText value="#{_owner.nameBusinessEntity}" />
+										</rich:column>
+										<rich:column width="50%" sortable="true"
+											sortBy="#{_owner.idNumber}" id="col_2"
+											filterBy="#{_owner.idNumber}" filterEvent="onkeyup"
+											label="Número Identificación">
+											<f:facet name="header">
+												<h:outputText value="Número Identificación" />
+											</f:facet>
+											<h:outputText value="#{_owner.idNumber}" />
+										</rich:column>
+										<a4j:support ajaxSingle="true" reRender="owner,shipping_addres_owner,phone_number_owner,save"
+											action="#{rentableUnitHome.onSelectionOwnerChanged}"
+											event="onselectionchange"  />
+									</rich:extendedDataTable>
+								</h:panelGrid>
+
+								<s:decorate id="shipping_addres_owner"
+									template="layout/edit.xhtml">
+									<ui:define name="label">#{messages.Street_address}</ui:define>
+									<h:selectOneMenu required="true"
+										value="#{rentableUnitHome.selectedRentableUnit.addressByAddressOwner}">
+										<s:selectItems
+											value="#{rentableUnitHome.addressOwner}"
+											var="address" label="#{address.toString()}" />
+										<s:convertEntity></s:convertEntity>
+										<a4j:support event="onchange" ajaxSingle="true" reRender="save"
+											></a4j:support>
+									</h:selectOneMenu>
+								</s:decorate>
+
+								<s:decorate id="phone_number_owner" template="layout/edit.xhtml">
+									<ui:define name="label">#{messages.Phone_numbers}</ui:define>
+									<h:selectOneMenu required="true"
+										value="#{rentableUnitHome.selectedRentableUnit.phoneNumberByPhonenumbeOwner}">
+										<s:selectItems
+											value="#{rentableUnitHome.phoneNumberOwner}"
+											var="phone"
+											label="#{phone.indicative}) -  #{phone.number} - #{phone.extension}" />
+										<s:convertEntity></s:convertEntity>
+										<a4j:support event="onchange" ajaxSingle="true"  reRender="save"></a4j:support>
+									</h:selectOneMenu>
+								</s:decorate>
+
+							</a4j:region>
+						</rich:simpleTogglePanel>
+
+
+						<rich:simpleTogglePanel label="Informacion Del Arrendatario"
+							opened="true" switchType="client">
+							<a4j:region >
+								<h:panelGrid columns="3" cellspacing="20px">
+									<s:decorate id="lessee">
+										<s:label
+											style="vertical-align: top; font-weight: bold; float: left; padding: 5px; margin-top: 3px; clear: left;">#{messages.Lessee}:</s:label>
+										<h:inputTextarea readonly="true" rows="3"
+											value="#{rentableUnitHome.selectedRentableUnit.businessEntityByLessee.nameBusinessEntity}" />
+									</s:decorate>
+									<rich:extendedDataTable binding="#{tableLesseeBind}"
+										width="400px" height="100px"
+										selection="#{rentableUnitHome.selectionLessee}"
+										selectionMode="single" rows="0" sortMode="single"
+										tableState="#{rentableUnitHome.tableStateLessee}"
+										value="#{rentableUnitHome.lessees}" var="_lessee"
+										id="tableLesse"
+										
+										>
+
+										<rich:column sortable="true" width="50%"
+											sortBy="#{_lessee.nameBusinessEntity}" id="col_1"
+											filterBy="#{_lessee.nameBusinessEntity}"
+											filterEvent="onkeyup" label="Nombre / Razón Social">
+											<f:facet name="header">
+												<h:outputText value="Nombre/Razón Social" />
+											</f:facet>
+											<h:outputText value="#{_lessee.nameBusinessEntity}" />
+										</rich:column>
+										<rich:column sortable="true" width="50%"
+											sortBy="#{_lessee.idNumber}" id="col_2"
+											filterBy="#{_lessee.idNumber}" filterEvent="onkeyup"
+											label="Número Identificación">
+											<f:facet name="header">
+												<h:outputText value="Número Identificación" />
+											</f:facet>
+											<h:outputText value="#{_lessee.idNumber}" />
+										</rich:column>
+										<a4j:support ajaxSingle="true" reRender="lessee,shipping_addres_billed,phone_number,save"
+											action="#{rentableUnitHome.onSelectionLesseeChanged()}"
+											event="onselectionchange" />
+									</rich:extendedDataTable>
+									<h:commandButton type="button" value="Limpiar Arrendatario" >
+										<a4j:support limitToList="true" ajaxSingle="true" ignoreDupResponses="true" event="onclick" action="#{rentableUnitHome.cleanLesses()}" reRender="lessee,shipping_addres_billed,phone_number,save"></a4j:support>
+									</h:commandButton>
+								</h:panelGrid>
+
+								<s:decorate id="shipping_addres_billed"
+									template="layout/edit.xhtml">
+									<ui:define name="label">#{messages.Street_address}</ui:define>
+									<h:selectOneMenu 
+										value="#{rentableUnitHome.selectedRentableUnit.addressByAddressLessee}">
+										<s:selectItems
+											value="#{rentableUnitHome.addressLessee}"
+											var="address" label="#{address.toString()}" />
+										<s:convertEntity></s:convertEntity>
+										<a4j:support event="onchange" ajaxSingle="true" reRender="save" ></a4j:support>
+									</h:selectOneMenu>
+								</s:decorate>
+
+								<s:decorate id="phone_number" template="layout/edit.xhtml">
+									<ui:define name="label">#{messages.Phone_numbers}</ui:define>
+									<h:selectOneMenu 
+										value="#{rentableUnitHome.selectedRentableUnit.phoneNumberByPhonenumberLessee}">
+										<s:selectItems
+											value="#{rentableUnitHome.phoneNumbersLessee}"
+											var="phone"
+											label="(#{phone.indicative})  #{phone.number} - #{phone.extension}" />
+										<s:convertEntity></s:convertEntity>
+										<a4j:support event="onchange" ajaxSingle="true" reRender="save"
+											></a4j:support>
+									</h:selectOneMenu>
+								</s:decorate>
+							</a4j:region>
+						</rich:simpleTogglePanel>
+					</rich:panel>
+					
+						<div class="actionButtons">
+						
+							<h:commandButton id="save"
+								value="#{messages.Save}"
+								view="/RentableUnitOwnerLesseeList.xhtml"
+								action="#{rentableUnitHome.updateRentableUnit()}" 
+								disabled="#{rentableUnitHome.disableButton()}">
+							</h:commandButton>
+							
+						
+						<h:commandButton type="button" id="cancelAdd"
+							value="#{messages.Cancel}"
+							view="/RentableUnitOwnerLesseeList.xhtml">
+							<a4j:support event="onclick" ajaxSingle="true"
+								onsubmit="#{rich:component('modalPanelOwnerLessee')}.hide()"
+								action = "#{rentableUnitHome.cancelAsignmentAction()}"
+								reRender="modalPanelOwnerLessee"></a4j:support>
+						</h:commandButton></div>
+					
+				</a4j:outputPanel>
+			</h:form>
+		</rich:modalPanel>
+
+	</ui:define>
+
+</ui:composition>

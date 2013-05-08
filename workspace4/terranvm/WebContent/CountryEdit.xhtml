@@ -1,0 +1,126 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="country" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{countryHome.managed ? 'Editar' : 'Agregar'} #{messages.Add_Country}</f:facet>
+
+
+            <s:decorate id="nameField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Name}</ui:define>
+                <h:inputTextarea id="name"
+                               cols="80"
+                               rows="3"
+                           required="true"
+                              value="#{countryHome.instance.name}"/>
+            </s:decorate>
+
+
+            <s:decorate id="abbreviationField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Abbreviation}</ui:define>
+                <h:inputTextarea id="abbreviation"
+                               cols="80"
+                               rows="3"
+                           required="true"
+                              value="#{countryHome.instance.abbreviation}"/>
+            </s:decorate>
+
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                #{messages.required_fields}
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="#{messages.Save}"
+                         action="#{countryHome.persist}"
+                       disabled="#{!countryHome.wired}"
+                       rendered="#{!countryHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="#{messages.Save}"
+                         action="#{countryHome.update}"
+                       rendered="#{countryHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="#{messages.Delete}"
+                         action="#{countryHome.remove}"
+                      immediate="true"
+                       rendered="false or #{countryHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="#{messages.Cancel}"
+             propagation="end"
+                    view="/Country.xhtml"
+                rendered="#{countryHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="#{messages.Cancel}"
+             propagation="end"
+                    view="/#{empty countryFrom ? 'CountryList' : countryFrom}.xhtml"
+                rendered="#{!countryHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="#{messages.Regions}">
+        <h:form styleClass="association" id="regionsChildren">
+
+            <h:outputText value="#{messages.There_are_no_regions_associated_with_this_country}"
+                       rendered="#{empty countryHome.regions}"/>
+
+            <rich:dataTable value="#{countryHome.regions}"
+                           var="_region"
+                      rendered="#{not empty countryHome.regions}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="regionsTable">
+                <rich:column sortBy="#{_region.id}">
+                    <f:facet name="header">Id</f:facet>
+                    <h:outputText value="#{_region.id}"/>
+                </rich:column>
+                <rich:column sortBy="#{_region.name}">
+                    <f:facet name="header">#{messages.Name}</f:facet>
+                    <h:outputText value="#{_region.name}"/>
+                </rich:column>
+                <rich:column sortBy="#{_region.abbreviation}">
+                    <f:facet name="header">#{messages.Abbreviation}</f:facet>
+                    <h:outputText value="#{_region.abbreviation}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{countryHome.managed}" id="regions">
+        <div class="actionButtons">
+            <s:button id="addregion"
+                   value="#{messages.Add_Region}"
+                    view="/RegionEdit.xhtml"
+             propagation="none">
+                 <f:param name="countryId"
+                         value="#{countryHome.instance.id}"/>
+                 <f:param name="regionFrom" value="Country"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

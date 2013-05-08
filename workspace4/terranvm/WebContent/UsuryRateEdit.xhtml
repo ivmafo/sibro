@@ -1,0 +1,96 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:a4j="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="usuryRate" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{usuryRateHome.managed ? messages.Edit : messages.Add} #{messages.UsuryRate}</f:facet>
+            
+            <a4j:outputPanel id="outputpanelForm">
+
+           <s:decorate id="valueField" template="layout/edit.xhtml">
+				<ui:define name="label">#{messages.Value}</ui:define>			
+					<rich:inputNumberSpinner value="#{usuryRateHome.instance.usuryValue}" step="1" minValue="0.00" maxValue="100" required="true" disabled="#{usuryRateHome.validate()}">
+						<a4j:support event="onchange" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="outputpanelButtons" ></a4j:support>
+					</rich:inputNumberSpinner>
+			</s:decorate>
+            
+            
+	        <s:decorate id="dateField" template="layout/edit.xhtml" rendered="#{!usuryRateHome.quarterDateValidate()}">
+				<ui:define name="label">#{messages.Current_date}</ui:define>
+					<h:outputText value="#{usuryRateHome.showdate}">
+						<s:convertDateTime type="date" pattern="dd/MM/yyyy" />
+					</h:outputText>
+			</s:decorate>
+				
+				
+			
+			<s:decorate id="dateFieldPast" template="layout/edit.xhtml" >
+					<ui:define name="label">#{messages.Last_date}</ui:define>
+					<h:outputText style="color:blue"   value="#{usuryRateHome.instance.date}">
+						<s:convertDateTime type="date" pattern="dd/MM/yyyy" />
+					</h:outputText>
+			</s:decorate>
+			
+			
+			<s:decorate id="quarterField" template="layout/edit.xhtml">
+				<ui:define name="label">#{messages.quarter}</ui:define>
+					<h:outputText value="#{usuryRateHome.quarterName()}">
+					</h:outputText>
+			</s:decorate>
+            
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                #{messages.required_fields}
+            </div>
+            
+            </a4j:outputPanel>
+            
+        </rich:panel>
+
+       
+			<div class="actionButtons">
+				<a4j:outputPanel id="outputpanelButtons">
+				
+				<table>
+					<tr>
+					    <td>
+							<s:button id="cancelEdit" value="#{messages.Done}" propagation="end" view="/#{empty usuryRateFrom ? 'home' : usuryRateFrom}.xhtml"/>
+							<h:commandButton value="#{messages.save_interest_rate}" type="button" rendered="#{!usuryRateHome.validate()}"  >
+								<a4j:support event="onclick" ajaxSingle="true" action="#{usuryRateHome.persistDataBase()}" ignoreDupResponses="true" limitToList="true" reRender="outputpanelForm,growlPanel, outputpanelButtons" > </a4j:support>
+							</h:commandButton>
+						</td>
+					</tr>
+					
+					<tr>
+						<td>	
+							<h:outputLabel style="color:blue" value="La Tasa de Usura para el Trimestre actual ya ha sido ingresada" rendered="#{usuryRateHome.quarterDateValidate()}" />
+						</td>
+					</tr>
+					
+					<tr>
+						<td>	
+							<h:outputLabel style="color:blue" value="La Tasa de Usura para el Trimestre actual ya ha sido utilizada no es posible modificar" rendered="#{usuryRateHome.validate()}" /> 
+							<h:outputLabel style="color:blue" value="La Tasa de Usura para el Trimestre actual no ha sido utilizada es posible modificar" rendered="#{!usuryRateHome.validate()}" />
+						</td>
+					</tr>	
+				</table>
+				</a4j:outputPanel>
+			</div>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

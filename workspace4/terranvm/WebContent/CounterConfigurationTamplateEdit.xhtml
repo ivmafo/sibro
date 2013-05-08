@@ -1,0 +1,442 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+
+
+	<ui:define name="body">
+
+		<h:form id="counterConfigurationTamplate" styleClass="edit">
+
+			<rich:panel>
+				<f:facet name="header">#{counterConfigurationTamplateHome.managed ? 'Editar' : 'Agregar'} Plantilla de Configuración Contable</f:facet>
+
+
+
+				<a4j:region>
+					<s:decorate id="biller" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Business_entity}</ui:define>
+						<h:selectOneMenu id="billerCombo" required="true"
+							value="#{counterConfigurationTamplateHome.biller}"
+							defaultLabel="Haga Click para escojer el tipo de Contrato">
+							<s:selectItems
+								value="#{counterConfigurationTamplateHome.businessEntities}"
+								var="_biller" label="#{_biller.nameBusinessEntity}" />
+							<s:convertEntity></s:convertEntity>
+							<a4j:support event="onchange" ignoreDupResponses="true"
+								limitToList="true" reRender="accountingAccountsRecoverField"
+								ajaxSingle="true"></a4j:support>
+						</h:selectOneMenu>
+					</s:decorate>
+				</a4j:region>
+
+
+
+				<s:decorate id="nameField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Name}</ui:define>
+					<h:inputText id="name" required="true" size="100" maxlength="100"
+						value="#{counterConfigurationTamplateHome.instance.name}">
+						<a:support event="onchange" bypassUpdates="true" ajaxSingle="true" />
+					</h:inputText>
+				</s:decorate>
+
+
+				<a4j:outputPanel id="accountingAccountsRecoverField" rendered="#{counterConfigurationTamplateHome.instance.id != 0}">
+					
+					<s:decorate id="paymentFormField3" template="layout/edit.xhtml">
+							<ui:define name="label">#{messages.Payment_form}:</ui:define>
+							<h:panelGrid columns="3">
+								<h:inputTextarea readonly="true" rows="3"
+								value="#{counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idAccountReceivable).account} - #{counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idAccountReceivable).name}"/>
+								<h:commandButton type="button" value="Escoger">
+									<a4j:support event="onclick" ajaxSingle="true"
+										ignoreDupResponses="true" limitToList="true"
+										oncomplete="#{rich:component('modalPanelAccountTable')}.show()"
+										action="#{counterConfigurationTamplateHome.updateCountItems(projectPropertyHome.idAccountReceivable)}"
+									reRender="modalPanelAccountTable,buttonConceptField" />
+								</h:commandButton>
+							<h:commandButton type="button" value="Limpiar">
+								<a4j:support event="onclick" ajaxSingle="true"
+									ignoreDupResponses="true" limitToList="true"
+									action="#{counterConfigurationTamplateHome.instance.cleanAccount(counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idAccountReceivable).retentionRate.id)}"
+									reRender="accountingAccountsRecoverField" />
+							</h:commandButton>
+							</h:panelGrid>
+						</s:decorate>
+						
+					<s:decorate id="banckAccountField" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Bank_Accounts}</ui:define>
+						<h:panelGrid columns="3">
+							<h:inputTextarea readonly="true" rows="3"
+								value="#{counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idAccountBank).account} - #{counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idAccountBank).name}" />
+							<h:commandButton type="button" value="Escoger">
+								<a4j:support event="onclick" ajaxSingle="true"
+									ignoreDupResponses="true" limitToList="true"
+									oncomplete="#{rich:component('modalPanelAccountTable')}.show()"
+									action="#{counterConfigurationTamplateHome.updateCountItems(projectPropertyHome.idAccountBank)}"
+									reRender="modalPanelAccountTable,buttonConceptField" />
+							</h:commandButton>
+							<h:commandButton type="button" value="Limpiar">
+								<a4j:support event="onclick" ajaxSingle="true"
+									ignoreDupResponses="true" limitToList="true"
+									action="#{counterConfigurationTamplateHome.instance.cleanAccount(counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idAccountBank).retentionRate.id)}"
+									reRender="accountingAccountsRecoverField" />
+							</h:commandButton>
+
+						</h:panelGrid>
+					</s:decorate>
+
+					<s:decorate id="accountingAccountsEarlyPaymentField"
+						template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Discount_Accounts}</ui:define>
+						<h:panelGrid columns="3" id="descuentosaccount">
+							<h:inputTextarea readonly="true" rows="3"
+								value="#{counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idAccountDiscuont).account} - #{counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idAccountDiscuont).name} " />
+							<h:commandButton type="button" value="Escoger">
+								<a4j:support event="onclick" ajaxSingle="true"
+									ignoreDupResponses="true" limitToList="true"
+									oncomplete="#{rich:component('modalPanelAccountTable')}.show()"
+									action="#{counterConfigurationTamplateHome.updateCountItems(projectPropertyHome.idAccountDiscuont)}"
+									reRender="modalPanelAccountTable,buttonConceptField" />
+							</h:commandButton>
+							<h:commandButton type="button" value="Limpiar">
+								<a4j:support event="onclick" ajaxSingle="true"
+									ignoreDupResponses="true" limitToList="true"
+									action="#{counterConfigurationTamplateHome.instance.cleanAccount(counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idAccountDiscuont).retentionRate.id)}"
+									reRender="accountingAccountsRecoverField" />
+							</h:commandButton>
+						</h:panelGrid>
+					</s:decorate>
+
+
+					<s:decorate id="accountingCreditAccountsField"
+						template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Income_accounts}</ui:define>
+						<h:panelGrid columns="3">
+							<h:inputTextarea readonly="true" rows="3"
+								value="#{counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idAccountIncome).account} - #{counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idAccountIncome).name}" />
+							<h:commandButton type="button" value="Escoger">
+								<a4j:support event="onclick" ajaxSingle="true"
+									ignoreDupResponses="true" limitToList="true"
+									oncomplete="#{rich:component('modalPanelAccountTable')}.show()"
+									action="#{counterConfigurationTamplateHome.updateCountItems(projectPropertyHome.idAccountIncome)}"
+									reRender="modalPanelAccountTable,buttonConceptField" />
+							</h:commandButton>
+							<h:commandButton type="button" value="Limpiar">
+								<a4j:support event="onclick" ajaxSingle="true"
+									ignoreDupResponses="true" limitToList="true"
+									action="#{counterConfigurationTamplateHome.instance.cleanAccount(counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idAccountIncome).retentionRate.id)}"
+									reRender="accountingAccountsRecoverField" />
+							</h:commandButton>
+						</h:panelGrid>
+					</s:decorate>
+
+					<s:decorate id="accountingPenaltyPortafolioField"
+						template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.accountingAccountsPenaltyPortafolio}</ui:define>
+						<h:panelGrid columns="3">
+							<h:inputTextarea readonly="true" rows="3"
+								value="#{counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idPenaltyPortafolio).account} - #{counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idPenaltyPortafolio).name}" />
+							<h:commandButton type="button" value="Escoger">
+								<a4j:support event="onclick" ajaxSingle="true"
+									ignoreDupResponses="true" limitToList="true"
+									oncomplete="#{rich:component('modalPanelAccountTable')}.show()"
+									action="#{counterConfigurationTamplateHome.updateCountItems(projectPropertyHome.idPenaltyPortafolio)}"
+									reRender="modalPanelAccountTable,buttonConceptField" />
+							</h:commandButton>
+							<h:commandButton type="button" value="Limpiar">
+								<a4j:support event="onclick" ajaxSingle="true"
+									ignoreDupResponses="true" limitToList="true"
+									action="#{counterConfigurationTamplateHome.instance.cleanAccount(counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idPenaltyPortafolio).retentionRate.id)}"
+									reRender="accountingAccountsRecoverField" />
+							</h:commandButton>
+						</h:panelGrid>
+					</s:decorate>
+
+					<s:decorate id="StamptaxList" template="layout/edit.xhtml"
+						rendered="#{projectPropertyHome.instance.step==1}">
+						<ui:define name="label">#{messages.Stamptax}</ui:define>
+						<h:panelGrid columns="3">
+							<h:inputTextarea readonly="true" rows="3"
+								value="#{counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idStamptax).account} - #{counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idStamptax).name}" />
+							<h:commandButton type="button" value="Escoger">
+								<a4j:support event="onclick" ajaxSingle="true"
+									ignoreDupResponses="true" limitToList="true"
+									oncomplete="#{rich:component('modalPanelAccountTable')}.show()"
+									action="#{counterConfigurationTamplateHome.updateCountItems(projectPropertyHome.idStamptax)}"
+									reRender="modalPanelAccountTable,buttonConceptField" />
+							</h:commandButton>
+							<h:commandButton type="button" value="Limpiar">
+								<a4j:support event="onclick" ajaxSingle="true"
+									ignoreDupResponses="true" limitToList="true"
+									action="#{counterConfigurationTamplateHome.instance.cleanAccount(counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idStamptax).retentionRate.id)}"
+									reRender="accountingAccountsRecoverField" />
+							</h:commandButton>
+						</h:panelGrid>
+					</s:decorate>
+
+					<s:decorate id="taxList" template="layout/edit.xhtml"
+						rendered="#{counterConfigurationTamplateHome.printTaxList()}">
+						<ui:define name="label">#{messages.Tax}</ui:define>
+						<h:panelGrid columns="3">
+							<h:inputTextarea readonly="true" rows="3"
+								value="#{counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idTax).account} - #{counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idTax).name}" />
+							<h:commandButton type="button" value="Escoger">
+								<a4j:support event="onclick" ajaxSingle="true"
+									ignoreDupResponses="true" limitToList="true"
+									oncomplete="#{rich:component('modalPanelAccountTable')}.show()"
+									action="#{counterConfigurationTamplateHome.updateCountItems(projectPropertyHome.idTax)}"
+									reRender="modalPanelAccountTable,buttonConceptField" />
+							</h:commandButton>
+							<h:commandButton type="button" value="Limpiar">
+								<a4j:support event="onclick" ajaxSingle="true"
+									ignoreDupResponses="true" limitToList="true"
+									action="#{counterConfigurationTamplateHome.instance.cleanAccount(counterConfigurationTamplateHome.instance.searchAccount(projectPropertyHome.idtax).retentionRate.id)}"
+									reRender="accountingAccountsRecoverField" />
+							</h:commandButton>
+						</h:panelGrid>
+					</s:decorate>
+
+
+					<s:decorate id="RetentionRateAccount" template="layout/edit.xhtml"
+						rendered="true">
+						<ui:define name="label">#{messages.RetentionRate}:</ui:define>
+						<h:panelGrid width="100%" id="panelRetentionRateAccount"
+							columns="1">
+							<rich:extendedDataTable width="700px" height="125px"
+								selectionMode="single" rows="0" sortMode="single"
+								tableState="#{counterConfigurationTamplateHome.tableState}"
+								rendered="#{counterConfigurationTamplateHome.listTaxConfiguration != null}"
+								value="#{counterConfigurationTamplateHome.listTaxConfiguration}"
+								var="report" id="tableRetenetion">
+
+								<rich:column width="6%" sortable="true" sortBy="#{report[0]}"
+									id="col_id">
+									<f:facet name="header">
+										<h:outputText value="id" />
+									</f:facet>
+									<h:outputText
+										value="#{projectPropertyHome.settRetenetionRateAccount(report[0])}" />
+								</rich:column>
+
+								<rich:column width="22%" sortable="true" sortBy="#{report[1]}"
+									id="col_name">
+									<f:facet name="header">
+										<h:outputText value="#{messages.RetentionRate}" />
+									</f:facet>
+									<h:outputText
+										value="#{projectPropertyHome.getNameRetenetionRate(report[0])}" />
+								</rich:column>
+
+								<rich:column width="44%" sortable="false"
+									id="col_retention_count_list">
+									<f:facet name="header">
+										<h:outputText value="#{messages.RetentionRateAccountSelected}" />
+									</f:facet>
+									<center>
+										<h:outputText
+											value="#{counterConfigurationTamplateHome.instance.searchAccount(report[0]).account} - #{counterConfigurationTamplateHome.instance.searchAccount(report[0]).name}" />
+									</center>
+								</rich:column>
+								<rich:column width="13%" sortable="false" id="col_Choos">
+									<center>
+										<h:commandButton type="button" value="Escoger">
+											<a4j:support event="onclick" ajaxSingle="true"
+												ignoreDupResponses="true" limitToList="true"
+												oncomplete="#{rich:component('modalPanelAccountTable')}.show()"
+												action="#{counterConfigurationTamplateHome.updateCountItems(report[0])}"
+												reRender="modalPanelAccountTable,buttonConceptField" />
+										</h:commandButton>
+									</center>
+								</rich:column>
+								<rich:column width="13%" sortable="false" id="clean_account">
+									<center>
+										<h:commandButton type="button" value="Limpiar">
+											<a4j:support event="onclick" ajaxSingle="true"
+												ignoreDupResponses="true" limitToList="true"
+												action="#{counterConfigurationTamplateHome.instance.cleanAccount(report[0])}"
+												reRender="accountingAccountsRecoverField" />
+										</h:commandButton>
+
+									</center>
+								</rich:column>
+							</rich:extendedDataTable>
+
+						</h:panelGrid>
+					</s:decorate>
+
+					<s:decorate id="interestRetentionRateAccounts"
+						template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.RetentionRateForInterest}:</ui:define>
+						<h:panelGrid width="100%" id="panelInterestRetentionRateAccounts"
+							columns="1">
+							<rich:extendedDataTable width="700px" height="125px"
+								selectionMode="single" rows="0" sortMode="single"
+								tableState="#{projectPropertyHome.tableInterestRetentionRateAccountState}"
+								rendered="#{counterConfigurationTamplateHome.listInterestAccountsConfiguration != null}"
+								value="#{counterConfigurationTamplateHome.listInterestAccountsConfiguration}"
+								var="rrCDOD" id="tableInterestRetentionRate">
+
+								<rich:column width="6%" sortable="true" sortBy="#{rrCDOD[0].id}"
+									id="col_rrCDOD_0">
+									<f:facet name="header">
+										<h:outputText value="id" />
+									</f:facet>
+									<center>
+										<h:outputText value="#{rrCDOD[0].id}" />
+									</center>
+								</rich:column>
+								<rich:column width="22%" sortable="true"
+									sortBy="#{rrCDOD[0].name}" id="col_rrCDOD_1">
+									<f:facet name="header">
+										<h:outputText value="#{messages.Ledger_Account}" />
+									</f:facet>
+									<center>
+										<h:outputText value="#{rrCDOD[0].name}" />
+									</center>
+								</rich:column>
+								<rich:column width="44%" sortable="true" sortBy="#{rrCDOD[1]}"
+									id="col_rrCDOD_2">
+									<f:facet name="header">
+										<h:outputText value="#{messages.RetentionRateAccountSelected}" />
+									</f:facet>
+									<center>
+										<h:outputText
+											value="#{counterConfigurationTamplateHome.instance.searchAccount(rrCDOD[0].id).account} - #{counterConfigurationTamplateHome.instance.searchAccount(rrCDOD[0].id).name}" />
+									</center>
+								</rich:column>
+								<rich:column width="13%" sortable="false" id="col_rrCDOD_3">
+									<f:facet name="header">
+										<h:outputText value="" />
+									</f:facet>
+									<center>
+										<h:commandButton type="button" value="Escoger">
+											<a4j:support event="onclick" ajaxSingle="true"
+												ignoreDupResponses="true" limitToList="true"
+												oncomplete="#{rich:component('modalPanelAccountTable')}.show()"
+												action="#{counterConfigurationTamplateHome.updateCountItems(rrCDOD[0].id)}"
+												reRender="modalPanelAccountTable,buttonConceptField" />
+										</h:commandButton>
+									</center>
+								</rich:column>
+								<rich:column width="13%" sortable="false" id="col_rrCDOD_4">
+									<f:facet name="header">
+										<h:outputText value="" />
+									</f:facet>
+									<center>
+										<h:commandButton type="button" value="Limpiar">
+											<a4j:support event="onclick" ajaxSingle="true"
+												ignoreDupResponses="true" limitToList="true"
+												action="#{counterConfigurationTamplateHome.instance.cleanAccount(rrCDOD[0].id)}"
+												reRender="accountingAccountsRecoverField" />
+										</h:commandButton>
+
+									</center>
+								</rich:column>
+
+							</rich:extendedDataTable>
+
+						</h:panelGrid>
+					</s:decorate>
+
+				</a4j:outputPanel>
+
+
+				<div style="clear: both">
+					<span class="required">*</span> Campos Obligatorios
+				</div>
+
+			</rich:panel>
+
+			<div class="actionButtons">
+				<a4j:outputPanel>
+
+					<h:commandButton id="save" value="#{messages.Save}"
+						action="#{counterConfigurationTamplateHome.persist}"
+						disabled="#{!counterConfigurationTamplateHome.wired}"
+						rendered="#{!counterConfigurationTamplateHome.managed}" />
+
+					<h:commandButton id="update" value="#{messages.Save}"
+						action="#{counterConfigurationTamplateHome.update}"  
+						rendered="#{counterConfigurationTamplateHome.managed}" />
+
+					<h:commandButton id="delete" value="#{messages.Delete}"
+						action="#{counterConfigurationTamplateHome.remove}"
+						immediate="true" rendered="false" />
+
+					<s:button id="cancelEdit" value="#{messages.Cancel}"
+						propagation="end" view="/CounterConfigurationTamplate.xhtml"
+						rendered="#{counterConfigurationTamplateHome.managed}" />
+
+					<s:button id="#{messages.Cancel}" value="Cancel" propagation="end"
+						view="/#{empty counterConfigurationTamplateFrom ? 'CounterConfigurationTamplateList' : counterConfigurationTamplateFrom}.xhtml"
+						rendered="#{!counterConfigurationTamplateHome.managed}" />
+				</a4j:outputPanel>
+
+			</div>
+		</h:form>
+
+		
+
+		<rich:modalPanel id="modalPanelAccountTable" width="420"
+			autosized="true">
+			<f:facet name="header">
+				<h:panelGroup>
+					<a4j:outputPanel ajaxRendered="true">
+						<h:outputText value="#{messages.Edit_concept}"></h:outputText>
+					</a4j:outputPanel>
+				</h:panelGroup>
+			</f:facet>
+			<h:form>
+				<h:panelGrid columns="2">
+					<rich:extendedDataTable binding="#{tableAccountBinds}"
+						width="600px" height="100px"
+						selection="#{counterConfigurationTamplateHome.selectionAccount}"
+						selectionMode="single" rows="0" sortMode="single"
+						tableState="#{counterConfigurationTamplateHome.tableState}"
+						value="#{counterConfigurationTamplateHome.accotuntsItems}"
+						var="_account" id="accountTable">
+						<rich:column sortable="true" width="20%"
+							sortBy="#{_account.retentionRateAccount.account}" id="col_2"
+							filterBy="#{_account.retentionRateAccountId.account}"
+							filterEvent="onkeyup" label="#{messages.Account_Number}">
+							<f:facet name="header">
+								<h:outputText value="Número de Cuenta" />
+							</f:facet>
+							<h:outputText value="#{_account.retentionRateAccountId.account}" />
+						</rich:column>
+						<rich:column sortable="true" width="70%"
+							sortBy="#{_account.retentionRateAccountId.name}" id="col_3"
+							filterBy="#{_account.retentionRateAccountId.name}"
+							filterEvent="onkeyup" label="#{messages.Concept}">
+							<f:facet name="header">
+								<h:outputText value="Concepto" />
+							</f:facet>
+							<h:outputText value="#{_account.retentionRateAccountId	.name}" />
+						</rich:column>
+						<a4j:support ajaxSingle="true"
+							reRender="accountingAccountsRecoverField"
+							action="#{counterConfigurationTamplateHome.onSelectionAccountChanged()}"
+							event="onselectionchange"
+							oncomplete="#{rich:component('modalPanelAccountTable')}.hide()" />
+					</rich:extendedDataTable>
+				</h:panelGrid>
+				<h:commandButton type="button" id="closeModalPanelAccountTable"
+					value="#{messages.Cancel}">
+					<rich:componentControl for="modalPanelAccountTable"
+						attachTo="closeModalPanelAccountTable" operation="hide"
+						event="onclick" />
+				</h:commandButton>
+
+			</h:form>
+		</rich:modalPanel>
+
+	</ui:define>
+
+</ui:composition>

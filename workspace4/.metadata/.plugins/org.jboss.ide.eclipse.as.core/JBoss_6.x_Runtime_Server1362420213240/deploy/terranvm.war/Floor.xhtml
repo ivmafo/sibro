@@ -1,0 +1,101 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">#{messages.Floor_Details}</f:facet>
+
+        <s:decorate id="id" template="layout/display.xhtml">
+            <ui:define name="label">Id</ui:define>
+            <h:outputText value="#{floorHome.instance.id}"/>
+        </s:decorate>
+
+        <s:decorate id="areaApartmentBuilding" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Area_apartment_building}</ui:define>
+            <h:outputText value="#{floorHome.instance.area}"/>
+        </s:decorate>
+
+        <s:decorate id="floorNumberApartmentBuilding" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Floor_number_apartment_building}</ui:define>
+            <h:outputText value="#{floorHome.instance.floorNumber}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+    <table>
+    <tr>
+    <td><div id="editButton">
+        <s:button view="/FloorEdit.xhtml"
+                    id="edit"
+                 value="#{messages.Edit}" disabled="#{floorHome.floorListInApprove(floorHome.instance)}" rendered="#{empty makerCheckerId}"/>
+        <rich:toolTip disabled="#{not floorHome.floorListInApprove(floorHome.instance)}" for="editButton">#{messages.You_can_not_edit_pending_approval_of_a_change}</rich:toolTip>
+        </div></td>
+        <td><s:button view="/#{empty floorFrom ? 'FloorList' : floorFrom}.xhtml"
+                    id="done"
+                 value="#{messages.Done}" rendered="#{empty makerCheckerId}"/></td>
+   </tr>
+   </table>
+   <s:button view="/MakerCheckerList.xhtml" action="#{floorHome.approveChange()}" id="approved" value="#{messages.ApproveChange}" rendered="#{not empty makerCheckerId}"/>
+		 	<s:button view="/MakerCheckerList.xhtml" action="#{floorHome.cancelChange()}" id="cancel" value="#{messages.Cancel}" rendered="#{not empty makerCheckerId}"/>
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>#{messages.Construction}</h:panelGroup>
+        </f:facet>
+    <div class="association" id="constructionParent">
+
+        <h:outputText value="#{messages.There_is_no_construction_associated_with_this_floor}"
+                   rendered="#{floorHome.instance.construction == null}"/>
+
+        <rich:dataTable var="_construction"
+                   value="#{floorHome.instance.construction}"
+                rendered="#{floorHome.instance.construction != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="constructionTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_construction.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Real_property_id}</f:facet>
+                <h:outputText value="#{_construction.realProperty.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Name}</f:facet>
+                <h:outputText value="#{_construction.name}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Description}</f:facet>
+                <h:outputText value="#{_construction.description}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">#{messages.Action}</f:facet>
+                <s:link id="viewconstruction"
+                     value="#{messages.View}"
+                      view="/Construction.xhtml">
+                    <f:param name="constructionId"
+                           value="#{_construction.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

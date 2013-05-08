@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd">
+
+   <param name="firstResult" value="#{userTerranvmList.firstResult}"/>
+   <param name="sort" value="#{userTerranvmList.orderColumn}"/>
+   <param name="dir" value="#{userTerranvmList.orderDirection}"/>
+   <param name="logic" value="#{userTerranvmList.restrictionLogicOperator}"/>
+
+   <param name="from"/>
+   <param name="login" value="#{userTerranvmList.userTerranvm.login}"/>
+   <param name="password" value="#{userTerranvmList.userTerranvm.password}"/>
+   <param name="mail" value="#{userTerranvmList.userTerranvm.mail}"/>
+   <param name="nombre" value="#{userTerranvmList.userTerranvm.nombre}"/>
+
+</page>

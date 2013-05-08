@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd">
+
+   <param name="firstResult" value="#{legalNatureOfPropertyList.firstResult}"/>
+   <param name="sort" value="#{legalNatureOfPropertyList.orderColumn}"/>
+   <param name="dir" value="#{legalNatureOfPropertyList.orderDirection}"/>
+   <param name="logic" value="#{legalNatureOfPropertyList.restrictionLogicOperator}"/>
+
+   <param name="from"/>
+   <param name="description" value="#{legalNatureOfPropertyList.legalNatureOfProperty.description}"/>
+   <param name="name" value="#{legalNatureOfPropertyList.legalNatureOfProperty.name}"/>
+
+</page>

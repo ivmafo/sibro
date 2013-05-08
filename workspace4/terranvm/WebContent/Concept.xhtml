@@ -1,0 +1,231 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:a4j="http://richfaces.org/a4j" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+
+	<ui:define name="body"> 
+
+		<rich:panel>
+			<h:form>
+				<f:facet name="header">#{messages.Concept_Details}</f:facet>
+
+				<s:decorate id="id" template="layout/display.xhtml">
+					<ui:define name="label">Id</ui:define>
+					<h:outputText value="#{conceptHome.instance.id}" />
+				</s:decorate>
+
+				<s:decorate id="nameConcept" template="layout/display.xhtml">
+					<ui:define name="label">#{messages.Description}</ui:define>
+					<h:outputText value="#{conceptHome.instance.name}" />
+				</s:decorate>
+
+        <s:decorate id="tax" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Tax}</ui:define>
+            <h:outputText value="#{conceptHome.instance.tax}"/>
+        </s:decorate>
+        
+		<s:decorate id="startDate" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Start_date}</ui:define>
+            <h:outputText value="#{conceptHome.instance.startDate}">
+                <s:convertDateTime type="date"/>
+            </h:outputText>
+        </s:decorate>
+		
+        <s:decorate id="period" template="layout/display.xhtml">
+        	<ui:define name="label">#{messages.periodicity}</ui:define>
+        	<h:outputText value="#{conceptHome.instance.periodicity}"/>
+        	<h:outputText value="#{conceptHome.periodicityTypeName}"/>	
+        </s:decorate>
+         <s:decorate id="expressionId" template="layout/display.xhtml">
+        	<ui:define name="label">#{messages.Expression}</ui:define>
+        	<h:outputText value="#{conceptHome.instance.expression}"/>        
+        </s:decorate>
+        
+		<s:decorate id="numberPeriods" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.number_periods}</ui:define>
+            <h:outputText value="#{conceptHome.instance.numberPeriods}"/>
+        </s:decorate>
+		
+		<s:decorate id="endDateField" template="layout/display.xhtml">
+					<ui:define name="label">#{messages.end_date}</ui:define>
+					<h:outputText value="#{conceptHome.instance.endDate}">
+		                <s:convertDateTime type="date" dateStyle="short"/>
+		            </h:outputText>
+		</s:decorate>
+				
+		<s:decorate id="promptPaymentDiscount" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.prompt_payment_discount}</ui:define>
+            <h:outputText value="#{conceptHome.instance.promptPaymentDiscount}"/>
+        </s:decorate>
+		
+		<s:decorate id="discountDays" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.discount_days}</ui:define>
+            <h:outputText value="#{conceptHome.instance.discountDays}"/>
+        </s:decorate>
+		
+		<s:decorate id="documentType" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.periodicity_type}</ui:define>
+            <h:outputText value="#{conceptHome.convertDocumentTypeToString()}"/>
+        </s:decorate>
+		
+        <s:decorate id="responsible" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.responsible}</ui:define>
+            <h:outputText value="#{conceptHome.convertResponsibleToString()}"/>
+        </s:decorate>
+		
+		<s:decorate id="printDescription" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Print_description}</ui:define>
+            <h:outputText value="#{conceptHome.instance.printDescription}"/>
+        </s:decorate>
+        
+        <s:decorate id="paymentForm" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Payment_form}</ui:define>
+            <h:outputText value="#{conceptHome.instance.paymentForm.description}"/>
+        </s:decorate>
+        
+        <s:decorate id="isEarlyPayment" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Is_early_payment}t</ui:define>
+            <h:outputText value="#{conceptHome.instance.earlyPayment? 'Si': 'No'}"/>
+        </s:decorate>
+        
+        
+				<s:decorate id="buttonConceptField" template="layout/edit.xhtml">
+					<h:commandButton rendered= "#{authenticator.validateShowFunction('Concept.xhtml', 'addConcept')}" type="button" id="addConcept" value="#{messages.Edit_Plugin}" >
+						<rich:componentControl for="panelConcepts" attachTo="addConcept" operation="show" event="onclick" />
+						<a4j:support event="onclick" ajaxSingle="true" action="#{conceptHome.instanceIframeUrl()}" reRender="iframePanel"></a4j:support>
+					</h:commandButton>
+				</s:decorate>
+				<rich:modalPanel id="panelConcepts" autosized="true">
+					<f:facet name="header">
+						<h:panelGroup>
+							<h:outputText value="#{messages.Add_concept}"></h:outputText>
+						</h:panelGroup>
+					</f:facet>
+					<a4j:outputPanel ajaxRendered="true" id="iframePanel">
+						<h:panelGrid columns="1">
+							<iframe id="iframe" width="800" height="400" src="#{conceptHome.mainUrl}">
+							<p>#{messages.This_browser_does_not_support_IFRAMES}</p>
+							</iframe>
+							<h:commandButton type="button" id="addConcept" value="#{messages.Close}" rendered="#{authenticator.validateShowFunction('Concept.xhtml', 'addConcept')}">
+								<rich:componentControl for="panelConcepts" attachTo="addConcept" operation="hide" event="onclick" />
+								<a4j:support event="onclick" ajaxSingle="true" reRender="conceptRegion"></a4j:support>
+							</h:commandButton>
+						</h:panelGrid>
+					</a4j:outputPanel>
+				</rich:modalPanel>
+
+				<div style="clear: both" />
+			</h:form>
+		</rich:panel>
+
+		<div class="actionButtons">
+		<table>
+			<tr>
+				<td>
+				<div id="editButton"><s:button view="/ConceptEdit.xhtml" id="edit" value="#{messages.Edit}" disabled="#{conceptHome.conceptListInApprove(conceptHome.instance)}" rendered="#{empty makerCheckerId and authenticator.validateShowFunction('Concept.xhtml', 'edit')}" /> <rich:toolTip disabled="#{not conceptHome.conceptListInApprove(conceptHome.instance)}" for="editButton">#{messages.You_can_not_edit_pending_approval_of_a_change}</rich:toolTip></div>
+				</td>
+				<td><s:button view="/#{empty conceptFrom ? 'ConceptList' : conceptFrom}.xhtml" id="done" value="#{messages.Done}" rendered="#{empty makerCheckerId and authenticator.validateShowFunction('Concept.xhtml', 'done')}" /></td>
+			</tr>
+		</table>
+		<s:button view="/MakerCheckerList.xhtml" action="#{conceptHome.approveChange()}" id="approved" value="#{messages.ApproveChange}" rendered="#{not empty makerCheckerId and authenticator.validateShowFunction('Concept.xhtml', 'approved')}" /> <s:button view="/MakerCheckerList.xhtml" action="#{conceptHome.cancelChange()}" id="cancel" value="#{messages.Cancel}" rendered="#{not empty makerCheckerId and authenticator.validateShowFunction('Concept.xhtml', 'cancel')}" /></div>
+
+		<rich:tabPanel rendered="#{conceptHome.instance.id == 0}" switchType="ajax">
+
+			<rich:tab>
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;" />#{messages.Project_properties}</h:panelGroup>
+				</f:facet>
+				<div class="association" id="projectPropertyParent"><h:outputText value="#{messages.There_is_no_projectProperty_associated_with_this_concept}" rendered="#{conceptHome.instance.projectProperty == null}" /> <rich:dataTable var="_projectProperty" value="#{conceptHome.instance.projectProperty}" rendered="#{conceptHome.instance.projectProperty != null}" rowClasses="rvgRowOne,rvgRowTwo" id="projectPropertyTable">
+					<h:column>
+						<f:facet name="header">Id</f:facet>
+						<h:outputText value="#{_projectProperty.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Business_entity_by_billed_id}</f:facet>
+						<h:outputText value="#{_projectProperty.billed.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Business_entity_by_biller_id}</f:facet>
+						<h:outputText value="#{_projectProperty.biller.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Contract_type_id}</f:facet>
+						<h:outputText value="#{_projectProperty.contractType.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Project_id}</f:facet>
+						<h:outputText value="#{_projectProperty.project.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Real_property_id}</f:facet>
+						<h:outputText value="#{_projectProperty.realProperty.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Subscription_date}</f:facet>
+						<h:outputText value="#{_projectProperty.subscriptionDate}">
+							<s:convertDateTime type="date" dateStyle="short" />
+						</h:outputText>
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Expiration_date}</f:facet>
+						<h:outputText value="#{_projectProperty.expirationDate}">
+							<s:convertDateTime type="date" dateStyle="short" />
+						</h:outputText>
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Status}</f:facet>
+						<h:outputText value="#{_projectProperty.status}" />
+					</h:column>
+					<h:column styleClass="action" rendered="#{authenticator.validateShowFunction('Concept.xhtml', 'viewprojectProperty')}">
+						<f:facet name="header">#{messages.Action}</f:facet>
+						<s:link id="viewprojectProperty" value="#{messages.View}" view="/ProjectProperty.xhtml">
+							<f:param name="projectPropertyId" value="#{_projectProperty.id}" />
+						</s:link>
+					</h:column>
+				</rich:dataTable></div>
+			</rich:tab>
+
+
+			<rich:tab>
+		        <f:facet name="label">
+		            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Payment form</h:panelGroup>
+		        </f:facet>
+		    <div class="association" id="paymentFormParent">
+		
+		        <h:outputText value="There is no paymentForm associated with this concept."
+		                   rendered="#{conceptHome.instance.paymentForm == null}"/>
+		
+		        <rich:dataTable var="_paymentForm"
+		                   value="#{conceptHome.instance.paymentForm}"
+		                rendered="#{conceptHome.instance.paymentForm != null}"
+		              rowClasses="rvgRowOne,rvgRowTwo"
+		                      id="paymentFormTable">
+		            <h:column>
+		                <f:facet name="header">Id</f:facet>
+		                <h:outputText value="#{_paymentForm.id}"/>
+		            </h:column>
+		            <h:column>
+		                <f:facet name="header">Count</f:facet>
+		                <h:outputText value="#{_paymentForm.count}"/>
+		            </h:column>
+		            <h:column>
+		                <f:facet name="header">Description</f:facet>
+		                <h:outputText value="#{_paymentForm.description}"/>
+		            </h:column>
+		            <h:column styleClass="action" rendered="#{authenticator.validateShowFunction('Concept.xhtml', 'viewpaymentForm')}">
+		                <f:facet name="header">Action</f:facet>
+		                <s:link id="viewpaymentForm"
+		                     value="View"
+		                      view="/PaymentForm.xhtml">
+		                    <f:param name="paymentFormId"
+		                           value="#{_paymentForm.id}"/>
+		                </s:link>
+		            </h:column>
+		        </rich:dataTable>
+		
+		    </div>
+		    </rich:tab>
+		</rich:tabPanel>
+	</ui:define>
+
+</ui:composition>

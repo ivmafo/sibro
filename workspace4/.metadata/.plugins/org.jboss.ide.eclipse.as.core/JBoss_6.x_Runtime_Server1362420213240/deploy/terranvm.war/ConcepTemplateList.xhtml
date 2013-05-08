@@ -1,0 +1,202 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="concepTemplateSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Filtro de Búsqueda por plantilla de concepto" switchType="ajax">
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">#{messages.Name}</ui:define>
+                <h:inputText id="name" value="#{concepTemplateList.concepTemplate.name}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">#{messages.Print_description}</ui:define>
+                <h:inputText id="printDescription" value="#{concepTemplateList.concepTemplate.printDescription}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">#{messages.Expression}</ui:define>
+                <h:inputText id="expression" value="#{concepTemplateList.concepTemplate.expression}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">#{messages.Match}</ui:define>
+                <h:selectOneRadio id="logic" value="#{concepTemplateList.restrictionLogicOperator}" styleClass="radio">
+                    <f:selectItem itemLabel="#{messages.All}" itemValue="and"/>
+                    <f:selectItem itemLabel="#{messages.Any}" itemValue="or"/>
+                </h:selectOneRadio>
+            </s:decorate>
+
+        </rich:simpleTogglePanel>
+
+        <div class="actionButtons">
+            <h:commandButton id="search" value="#{messages.Search}" action="/ConcepTemplateList.xhtml"/>
+            <s:button id="reset" value="#{messages.Reset}" includePageParams="false"/>
+        </div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">#{messages.Search_Results} (#{empty concepTemplateList.resultList ? 0 : (concepTemplateList.paginated ? concepTemplateList.resultCount : concepTemplateList.resultList.size)})</f:facet>
+    <div class="results" id="concepTemplateList">
+
+    <h:outputText value="The concepTemplate search returned no results."
+               rendered="#{empty concepTemplateList.resultList}"/>
+
+    <rich:dataTable id="concepTemplateList"
+                var="_concepTemplate"
+              value="#{concepTemplateList.resultList}"
+           rendered="#{not empty concepTemplateList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{concepTemplateList}"/>
+                    <ui:param name="propertyLabel" value="Id"/>
+                    <ui:param name="propertyPath" value="concepTemplate.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_concepTemplate.id}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{concepTemplateList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Name}"/>
+                    <ui:param name="propertyPath" value="concepTemplate.name"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_concepTemplate.name}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{concepTemplateList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Print_description}"/>
+                    <ui:param name="propertyPath" value="concepTemplate.printDescription"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_concepTemplate.printDescription}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{concepTemplateList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Expression}"/>
+                    <ui:param name="propertyPath" value="concepTemplate.expression"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_concepTemplate.expression}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{concepTemplateList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.IsContributionModule}"/>
+                    <ui:param name="propertyPath" value="concepTemplate.isContributionModule"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{concepTemplateHome.True_False(_concepTemplate.isContributionModule)}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{concepTemplateList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Is_early_payment}"/>
+                    <ui:param name="propertyPath" value="concepTemplate.isEarlyPayment"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{concepTemplateHome.True_False(_concepTemplate.isEarlyPayment)}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{concepTemplateList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.periodicity_type}"/>
+                    <ui:param name="propertyPath" value="concepTemplate.documentType"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_concepTemplate.documentType}"/>
+        </h:column>
+        <rich:column styleClass="action">
+            <f:facet name="header">#{messages.Action}</f:facet>
+            <s:link view="/#{empty from ? 'ConcepTemplate' : from}.xhtml"
+                   value="#{empty from ? messages.View : messages.Select}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="concepTemplateViewId">
+                <f:param name="concepTemplateId"
+                        value="#{_concepTemplate.id}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/ConcepTemplateEdit.xhtml"
+                   value="#{messages.Edit}"
+             propagation="none"
+                      id="concepTemplateEdit"
+                rendered="#{empty from}">
+                <f:param name="concepTemplateId"
+                        value="#{_concepTemplate.id}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/ConcepTemplateList.xhtml"
+            rendered="#{concepTemplateList.previousExists}"
+               value="#{messages.left}#{messages.left} #{messages.First_Page}"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/ConcepTemplateList.xhtml"
+            rendered="#{concepTemplateList.previousExists}"
+               value="#{messages.left} #{messages.Previous_Page}"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{concepTemplateList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/ConcepTemplateList.xhtml"
+            rendered="#{concepTemplateList.nextExists}"
+               value="#{messages.Next_page} #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{concepTemplateList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/ConcepTemplateList.xhtml"
+            rendered="#{concepTemplateList.nextExists}"
+               value="#{messages.Last_Page} #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{concepTemplateList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/ConcepTemplateEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="Crear Plantilla de Concepto">
+            <f:param name="concepTemplateId"/>
+        </s:button>
+    </s:div>
+    
+        
+
+</ui:define>
+
+</ui:composition>

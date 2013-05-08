@@ -1,0 +1,171 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="billingResolutionSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="#{messages.BillingResolution_Search_Filter}" switchType="ajax">
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">#{messages.Prefix}</ui:define>
+                <h:inputText id="prefix" value="#{billingResolutionList.billingResolution.prefix}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">#{messages.Match}</ui:define>
+                <h:selectOneRadio id="logic" value="#{billingResolutionList.restrictionLogicOperator}" styleClass="radio">
+                    <f:selectItem itemLabel="#{messages.All}" itemValue="and"/>
+                    <f:selectItem itemLabel="#{messages.Any}" itemValue="or"/>
+                </h:selectOneRadio>
+            </s:decorate>
+
+        </rich:simpleTogglePanel>
+
+        <div class="actionButtons">
+            <h:commandButton id="search" value="#{messages.Search}" action="/BillingResolutionList.xhtml" rendered="#{authenticator.validateShowFunction('BillingResolutionList.xhtml', 'search')}"/>
+            <s:button id="reset" value="#{messages.Reset}" includePageParams="false" rendered="#{authenticator.validateShowFunction('BillingResolutionList.xhtml', 'reset')}"  />
+        </div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">#{messages.Search_Results} (#{empty billingResolutionList.resultList ? 0 : (billingResolutionList.paginated ? billingResolutionList.resultCount : billingResolutionList.resultList.size)})</f:facet>
+    <div class="results" id="billingResolutionList">
+
+    <h:outputText value="#{messages.search_returned_no_results}"
+               rendered="#{empty billingResolutionList.resultList}"/>
+
+    <rich:dataTable id="billingResolutionList"
+                var="_billingResolution"
+              value="#{billingResolutionList.resultList}"
+           rendered="#{not empty billingResolutionList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{billingResolutionList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Id}"/>
+                    <ui:param name="propertyPath" value="billingResolution.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_billingResolution.id}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{billingResolutionList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Business_entity_id}"/>
+                    <ui:param name="propertyPath" value="billingResolution.businessEntity.nameBusinessEntity"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_billingResolution.businessEntity.nameBusinessEntity}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{billingResolutionList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Prefix}"/>
+                    <ui:param name="propertyPath" value="billingResolution.prefix"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_billingResolution.prefix}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{billingResolutionList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Min}"/>
+                    <ui:param name="propertyPath" value="billingResolution.min"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_billingResolution.min}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{billingResolutionList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Max}"/>
+                    <ui:param name="propertyPath" value="billingResolution.max"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_billingResolution.max}"/>
+        </h:column>
+        <rich:column styleClass="action">
+            <f:facet name="header">#{messages.Action}</f:facet>
+            <s:link view="/#{empty from ? 'BillingResolution' : from}.xhtml"
+                   value="#{empty from ? messages.View : messages.Select}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="billingResolutionViewId"
+                      rendered="#{authenticator.validateShowFunction('BillingResolutionList.xhtml', 'billingResolutionViewId')}">
+                <f:param name="billingResolutionId"
+                        value="#{_billingResolution.id}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/BillingResolutionEdit.xhtml"
+                   value="#{messages.Edit}"
+             propagation="none"
+                      id="billingResolutionEdit"
+                rendered="#{empty from and authenticator.validateShowFunction('BillingResolutionList.xhtml', 'billingResolutionEdit')}">
+                <f:param name="billingResolutionId"
+                        value="#{_billingResolution.id}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/BillingResolutionList.xhtml"
+            rendered="#{billingResolutionList.previousExists and authenticator.validateShowFunction('BillingResolutionList.xhtml', 'firstPage')}"
+               value="#{messages.left}#{messages.left} #{messages.First_Page}"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/BillingResolutionList.xhtml"
+            rendered="#{billingResolutionList.previousExists and authenticator.validateShowFunction('BillingResolutionList.xhtml', 'previousPage')}"
+               value="#{messages.left} #{messages.Previous_Page}"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{billingResolutionList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/BillingResolutionList.xhtml"
+            rendered="#{billingResolutionList.nextExists and authenticator.validateShowFunction('BillingResolutionList.xhtml', 'nextPage')}"
+               value="#{messages.Next_page} #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{billingResolutionList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/BillingResolutionList.xhtml"
+            rendered="#{billingResolutionList.nextExists and authenticator.validateShowFunction('BillingResolutionList.xhtml', 'lastPage')}"
+               value="#{messages.Last_Page} #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{billingResolutionList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from and authenticator.validateShowFunction('BillingResolutionList.xhtml', 'create')}" >
+        <s:button view="/BillingResolutionEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="#{messages.Create_billingResolution}">
+            <f:param name="billingResolutionId"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

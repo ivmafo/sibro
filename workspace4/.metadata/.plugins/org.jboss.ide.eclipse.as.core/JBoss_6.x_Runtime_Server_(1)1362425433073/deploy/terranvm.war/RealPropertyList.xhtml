@@ -1,0 +1,243 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="realPropertySearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="#{messages.RealProperty_Search_Filter}" switchType="ajax">
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">#{messages.Name}</ui:define>
+                <h:inputText id="namePropertyRealProperty" value="#{realPropertyList.realProperty.nameProperty}"/>
+            </s:decorate>
+
+       
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">#{messages.Enrolment_number}</ui:define>
+                <h:inputText id="enrolmentNumber" value="#{realPropertyList.realProperty.enrolmentNumber}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">#{messages.Match}</ui:define>
+                <h:selectOneRadio id="logic" value="#{realPropertyList.restrictionLogicOperator}" styleClass="radio">
+                    <f:selectItem itemLabel="#{messages.All}" itemValue="and"/>
+                    <f:selectItem itemLabel="#{messages.Any}" itemValue="or"/>
+                </h:selectOneRadio>
+            </s:decorate>
+
+        </rich:simpleTogglePanel>
+
+        <div class="actionButtons">
+            <h:commandButton id="search" value="#{messages.Search}" action="/RealPropertyList.xhtml" rendered="#{authenticator.validateShowFunction('RealPropertyList.xhtml', 'search')}"/>
+            <s:button id="reset" value="#{messages.Reset}" includePageParams="false" rendered="#{authenticator.validateShowFunction('RealPropertyList.xhtml', 'reset')}"  />
+        </div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">#{messages.Search_Results} (#{empty realPropertyList.resultList ? 0 : (realPropertyList.resultList.size)})</f:facet>
+    <div class="results" id="realPropertyList">
+
+    <h:outputText value="#{messages.search_returned_no_results}"
+               rendered="#{empty realPropertyList.resultList}"/>
+
+    <rich:dataTable id="realPropertyList"
+                var="_realProperty"
+              value="#{realPropertyList.resultList}"
+           rendered="#{not empty realPropertyList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{realPropertyList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Id}"/>
+                    <ui:param name="propertyPath" value="realProperty.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_realProperty.id}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{realPropertyList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Legal_nature_of_property_id2}"/>
+                    <ui:param name="propertyPath" value="realProperty.legalNatureOfProperty.name"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_realProperty.legalNatureOfProperty.name}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{realPropertyList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Real_property_use_type_id}"/>
+                    <ui:param name="propertyPath" value="realProperty.realPropertyUseType.name"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_realProperty.realPropertyUseType.name}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{realPropertyList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Name}"/>
+                    <ui:param name="propertyPath" value="realProperty.nameProperty"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_realProperty.nameProperty}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{realPropertyList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Year_built2}"/>
+                    <br />
+                    <ui:param name="propertyPath" value="realProperty.yearBuilt"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_realProperty.yearBuilt}">
+                <s:convertDateTime type="date" dateStyle="short"/>
+            </h:outputText>
+        </h:column>
+        
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{realPropertyList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Enrolment_number}"/>
+                    <ui:param name="propertyPath" value="realProperty.enrolmentNumber"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_realProperty.enrolmentNumber}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{realPropertyList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Purchase_date2}"/>
+                    <ui:param name="propertyPath" value="realProperty.purchaseDate"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_realProperty.purchaseDate}">
+                <s:convertDateTime type="date" dateStyle="short"/>
+            </h:outputText>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{realPropertyList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Total_surface_area2}"/>
+                    <ui:param name="propertyPath" value="realProperty.totalSurfaceArea"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_realProperty.totalSurfaceArea}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{realPropertyList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Cadastral_id}"/>
+                    <ui:param name="propertyPath" value="realProperty.cadastralId"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_realProperty.cadastralId}"/>
+        </h:column>
+        
+					
+					
+        <rich:column>
+						<f:facet name="header">
+							<ui:include src="layout/sort.xhtml">
+								<ui:param name="entityList" value="#{projectPropertyList}" />
+								<ui:param name="propertyLabel" value="#{messages.Approvals}" />
+							</ui:include>
+						</f:facet>
+						<h:selectManyCheckbox id="approved" value="#{projectPropertyList.restrictionLogicOperator}" disabled="true">
+							<f:selectItem itemLabel="Administrador Activo" itemValue="#{realPropertyHome.checkAssetManager(_realProperty)}" />
+							<f:selectItem itemLabel="Gerente" itemValue="#{realPropertyHome.checkManager(_realProperty)}" />
+						</h:selectManyCheckbox>
+					</rich:column>
+        <rich:column styleClass="action">
+        <table>
+        <tr><td>
+            <f:facet name="header"> #{messages.Action}</f:facet>
+            <s:link view="/#{empty from ? 'RealProperty' : from}.xhtml"
+                   value="#{empty from ? messages.View : messages.Select}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="realPropertyViewId"
+                      rendered="#{authenticator.validateShowFunction('RealPropertyList.xhtml', 'realPropertyViewId')}">
+                <f:param name="realPropertyId"
+                        value="#{_realProperty.id}"/>
+            </s:link></td>
+            <td>#{' '}</td>
+            <td><div id="editButton#{_realProperty.id}"><s:link view="/RealPropertyEdit.xhtml"
+                   value="#{messages.Edit}"
+             propagation="none"
+                      id="realPropertyEdit"
+                rendered="#{empty from and authenticator.validateShowFunction('RealPropertyList.xhtml', 'realPropertyEdit')}" disabled="#{realPropertyHome.realPropertyListInApprove(_realProperty)}">
+                <f:param name="realPropertyId"
+                        value="#{_realProperty.id}"/>
+            </s:link>
+            <rich:toolTip disabled="#{not realPropertyHome.realPropertyListInApprove(_realProperty)}" for="editButton#{_realProperty.id}">No se puede editar, pendiente aprobación del gerente</rich:toolTip>
+            </div></td>
+            </tr></table>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/RealPropertyList.xhtml"
+            rendered="#{realPropertyList.previousExists and authenticator.validateShowFunction('RealPropertyList.xhtml', 'firstPage')}"
+               value="#{messages.left}#{messages.left} #{messages.First_Page}"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/RealPropertyList.xhtml"
+            rendered="#{realPropertyList.previousExists and authenticator.validateShowFunction('RealPropertyList.xhtml', 'previousPage')}"
+               value="#{messages.left} #{messages.Previous_Page}"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{realPropertyList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/RealPropertyList.xhtml"
+            rendered="#{realPropertyList.nextExists and authenticator.validateShowFunction('RealPropertyList.xhtml', 'nextPage')}"
+               value="#{messages.Next_page} #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{realPropertyList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/RealPropertyList.xhtml"
+            rendered="#{realPropertyList.nextExists and authenticator.validateShowFunction('RealPropertyList.xhtml', 'lastPage')}"
+               value="#{messages.Last_Page} #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{realPropertyList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from and authenticator.validateShowFunction('RealPropertyList.xhtml', 'create')}">
+        <s:button view="/RealPropertyEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="#{messages.Create_realProperty}">
+            <f:param name="realPropertyId"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

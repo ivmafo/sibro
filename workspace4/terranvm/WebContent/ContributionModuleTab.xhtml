@@ -1,0 +1,151 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich" xmlns:a4j="http://richfaces.org/a4j">
+
+
+	<h:form>
+		<rich:extendedDataTable binding="#{tableContributionModuleBind}" width="100%" height="350px" rows="10" sortMode="multi" tableState="#{realPropertyHome.contributionModuleListTableState}" value="#{realPropertyHome.instance.contributionModules}" var="_contributionModule" id="tableContributionModuleList">
+
+			<rich:column width="25%" sortable="true" sortBy="#{_contributionModule.id}" filterBy="#{_contributionModule.id}" filterEvent="onchange" style="text-align: center">
+				<f:facet name="header">
+					<h:outputText value="#{messages.Id}" />
+				</f:facet>
+				<h:outputText value="#{_contributionModule.id > 0? _contributionModule.id : 'Pendiente por Aprobar' }" />
+			</rich:column>
+			<rich:column width="25%" sortable="true" sortBy="#{_contributionModule.name}" filterBy="#{_contributionModule.name}" filterEvent="onchange" style="text-align: center">
+				<f:facet name="header">
+					<h:outputText value="#{messages.Name}" />
+				</f:facet>
+				<h:outputText value="#{_contributionModule.name}" />
+			</rich:column>
+			<rich:column width="25%" sortable="true" sortBy="#{_contributionModule.realProperty.nameProperty}" filterBy="#{_contributionModule.realProperty.nameProperty}" filterEvent="onchange" style="text-align: center">
+				<f:facet name="header">
+					<h:outputText value="#{messages.realProperty}" />
+				</f:facet>
+				<h:outputText value="#{_contributionModule.realProperty.nameProperty}" />
+			</rich:column>
+
+			<rich:column width="25%" style="text-align: center">
+				<f:facet name="header">
+					<h:outputText value="#{messages.Action}" />
+				</f:facet>
+				<h:commandButton value="#{messages.View}" type="button">
+					<a4j:support ajaxSingle="true" ignoreDupResponses="true" event="onclick" action="#{realPropertyHome.instanceContributionModuleEdit(_contributionModule)}" oncomplete="#{rich:component('modalPanelContributionModule')}.show()" reRender="modalPanelContributionModule"></a4j:support>
+				</h:commandButton>
+			</rich:column>
+
+			<f:facet name="footer">
+				<rich:datascroller id="datascroller" />
+			</f:facet>
+		</rich:extendedDataTable>
+		<a4j:outputPanel ajaxRendered="true">
+			<h:commandButton rendered="#{editable == 1}" type="button" value="#{messages.Add_contributionModule}">
+				<a4j:support event="onclick" oncomplete="#{rich:component('modalPanelContributionModule')}.show()" ignoreDupResponses="true" action="#{realPropertyHome.instanceContributionModuleAdd()}" ajaxSingle="true" reRender="modalPanelContributionModule"></a4j:support>
+			</h:commandButton>
+		</a4j:outputPanel>
+
+	</h:form>
+
+
+	<rich:modalPanel id="modalPanelContributionModule" width="800" autosized="true">
+		<f:facet name="header">
+			<h:panelGroup>
+				<h:outputText rendered="#{realPropertyHome.statusContributionModule == 0}" value="#{messages.contributionModule_new}"></h:outputText>
+				<h:outputText rendered="#{realPropertyHome.statusContributionModule == 1}" value="#{messages.contributionModule_view}"></h:outputText>
+			</h:panelGroup>
+		</f:facet>
+		<a4j:form ajaxSingle="true" ajaxSubmit="true">
+			<h:panelGrid width="100%">
+				<s:decorate template="layout/display.xhtml">
+					<ui:define name="label">#{messages.Name}</ui:define>
+					<h:inputText disabled="#{editable == 0}" value="#{realPropertyHome.contributionModuleName}">
+						<a4j:support event="onchange" ignoreDupResponses="true" ajaxSingle="true"></a4j:support>
+					</h:inputText>
+				</s:decorate>
+				
+				<s:decorate template="layout/edit.xhtml">
+	            	<ui:define name="label">#{messages.apportionment}</ui:define>
+	            	<h:selectBooleanCheckbox id="apportionment" value="#{realPropertyHome.contributionModuleApportionment}">
+	            		<a4j:support event="onchange" ignoreDupResponses="true" ajaxSingle="true" reRender="tableRentUnitContribution" > </a4j:support>
+	            	</h:selectBooleanCheckbox>
+				</s:decorate>
+
+
+				<s:decorate rendered="#{editable == 1}" template="layout/display.xhtml">
+					<ui:define name="label">#{messages.contributionModule_template}</ui:define>
+					<a4j:region renderRegionOnly="true">
+						<h:selectOneMenu value="#{realPropertyHome.selectedTemplate}">
+							<s:selectItems var="_template" value="#{realPropertyHome.templateList}" label="#{_template.name}" />
+							<s:convertEntity></s:convertEntity>
+							<a4j:support ignoreDupResponses="true" event="onchange" ajaxSingle="true"></a4j:support>
+						</h:selectOneMenu>
+					</a4j:region>
+					<h:commandButton disabled="#{realPropertyHome.templateList.size() == 0}" type="button" value="#{messages.contributionModule_apply_template}">
+						<a4j:support ignoreDupResponses="true" event="onclick" ajaxSingle="true" action="#{realPropertyHome.useTemplateForActualContributionModule()}" reRender="tableRentUnitContribution"></a4j:support>
+					</h:commandButton>
+				</s:decorate>
+				<rich:extendedDataTable id="tableRentUnitContribution" height="400px" rendered="#{realPropertyHome.rentableUnitContributionList.size() >= 0}" width="100%" binding="#{tableRentUnitContributionBind}" rows="0" tableState="#{realPropertyHome.rentUnitContributionListTableState}" selectionMode="single" sortMode="single" var="_rentUnitContribution" value="#{realPropertyHome.rentableUnitContributionList}" reRender="modalContributionModuleButtonPanel">
+
+					<rich:column width="30%" sortable="true" sortBy="#{_rentUnitContribution.id}" filterBy="#{_rentUnitContribution.id}" filterEvent="onchange" style="text-align: center">
+						<f:facet name="header">
+							<h:outputText value="#{messages.Id}" />
+						</f:facet>
+
+						<h:outputText value="#{_rentUnitContribution.id > 0 ? _rentUnitContribution.id :'Pendiente por Guardar'}" />
+					</rich:column>
+					<rich:column width="40%" sortable="true" sortBy="#{_rentUnitContribution.rentableUnit.name}" filterBy="#{_rentUnitContribution.rentableUnit.name}" filterEvent="onchange" style="text-align: center">
+						<f:facet name="header">
+							<h:outputText value="#{messages.Name}" />
+						</f:facet>
+						<h:outputText value="#{_rentUnitContribution.rentableUnit.isDeactivate() ? salesHome.nameRentableUnitDesactivate(_rentUnitContribution.rentableUnit.name) : _rentUnitContribution.rentableUnit.name}" />
+					</rich:column>
+					
+					<rich:column width="30%" sortable="true" sortBy="#{_rentUnitContribution.contributionRate}" filterBy="#{_rentUnitContribution.contributionRate}" filterEvent="onchange" style="text-align: center" rendered="#{!realPropertyHome.whitapportionment()}">
+						<f:facet name="header">
+							<h:outputText value="#{messages.contributionModule_contribution} % " />
+						</f:facet>	  
+						<div style="width: 100%;" align="center"><rich:inputNumberSpinner rendered="#{editable == 1}" value="#{_rentUnitContribution.contributionRatePorcentual}" step="0.01" minValue="0.00" maxValue="100.00" disabled="#{_rentUnitContribution.rentableUnit.isDeactivate()}">
+							<a4j:support event="onchange" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="modalContributionModuleButtonPanel"></a4j:support> 
+						</rich:inputNumberSpinner></div>
+						<h:outputText value="#{_rentUnitContribution.contributionRatePorcentual}" rendered="#{editable == 0}" disabled = "#{_rentUnitContribution.rentableUnit.isDeactivate()}" />
+					</rich:column>
+					
+					<rich:column width="30%" sortable="true" sortBy="#{_rentUnitContribution.contributionRate}" filterBy="#{_rentUnitContribution.contributionRate}" filterEvent="onchange" style="text-align: center" rendered = "#{realPropertyHome.whitapportionment()}" disabled = "#{_rentUnitContribution.rentableUnit.isDeactivate()}">
+						<f:facet name="header">
+							<h:outputText value="#{messages.contributionModule_contribution}" />
+						</f:facet> 
+						<div style="width: 100%;" align="center" >
+						
+						<rich:inputNumberSpinner  rendered="#{editable == 1}" value="#{_rentUnitContribution.contributionRate}" step="1" minValue="0.00" maxValue="100000000000000000000000000000000" disabled = "#{_rentUnitContribution.rentableUnit.isDeactivate()}">
+							<a4j:support event="onchange" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="modalContributionModuleButtonPanel,errorContributionModuleValidate"></a4j:support>
+						</rich:inputNumberSpinner>
+						
+						</div>
+						<h:outputText value="#{_rentUnitContribution.contributionRate}" rendered="#{editable == 0}"/>
+					</rich:column>
+					
+
+				</rich:extendedDataTable>
+				<a4j:outputPanel id="modalContributionModuleButtonPanel" ajaxRendered="true">
+					<h:panelGrid columns="5">
+						<a4j:outputPanel ajaxRendered="true" rendered="#{editable == 1}">
+							<h:commandButton rendered="#{realPropertyHome.statusContributionModule == 0}"  disabled="#{!realPropertyHome.validateContributionModule() || realPropertyHome.contributionModuleName == null || realPropertyHome.contributionModuleName.equalsIgnoreCase('')}" type="button" value="#{messages.contributionModule_save}">
+								<a4j:support event="onclick" ajaxSingle="true" action="#{realPropertyHome.saveContributionModule()}" ignoreDupResponses="true" oncomplete="#{rich:component('modalPanelContributionModule')}.hide()" reRender="tableContributionModuleList,errorContributionModuleValidate"></a4j:support>
+							</h:commandButton>  
+						</a4j:outputPanel> 
+						<a4j:outputPanel ajaxRendered="true" rendered="#{editable == 1}">
+							<h:commandButton rendered="#{realPropertyHome.statusContributionModule == 1}"  disabled="#{!realPropertyHome.validateContributionModule() || realPropertyHome.contributionModuleName == null || realPropertyHome.contributionModuleName.equalsIgnoreCase('')}" type="button" value="#{messages.contributionModule_save}">
+								<a4j:support event="onclick" onsubmit="#{rich:component('modalPanelContributionModule')}.hide()" ajaxSingle="true" action="#{realPropertyHome.saveRentableUnitContributionList()}" ignoreDupResponses="true" oncomplete="actualizarBoton(#{realPropertyHome.checkPorcentFromRUC()});" reRender="tableContributionModuleList,errorContributionModuleValidate"></a4j:support>
+							</h:commandButton>
+						</a4j:outputPanel>
+						<h:commandButton type="button" value="#{messages.Cancel}">
+							<a4j:support event="onclick" ajaxSingle="true" action="#{realPropertyHome.destroyInstanceContributionModule()}" ignoreDupResponses="true" onsubmit="#{rich:component('modalPanelContributionModule')}.hide()" reRender="errorContributionModuleValidate"></a4j:support>
+						</h:commandButton>
+						<h:outputLabel style="color:red" value="#{realPropertyHome.contributionModuleSum} %  debe ser igual a 100.00 %" rendered="#{!realPropertyHome.validateContributionModule()}" />
+						<h:outputLabel style="color:red" value="#{messages.Name}" rendered="#{realPropertyHome.contributionModuleName == null || realPropertyHome.contributionModuleName.equalsIgnoreCase('')}" />
+
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</h:panelGrid>
+		</a4j:form>
+	</rich:modalPanel>
+</ui:composition>
+

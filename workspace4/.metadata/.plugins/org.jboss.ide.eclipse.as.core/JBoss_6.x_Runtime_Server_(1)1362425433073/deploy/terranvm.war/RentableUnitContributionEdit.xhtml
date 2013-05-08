@@ -1,0 +1,173 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="rentableUnitContribution" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{rentableUnitContributionHome.managed ? 'Edit' : 'Add'} Rentable unit contribution</f:facet>
+
+
+            <s:decorate id="idField" template="layout/edit.xhtml">
+                <ui:define name="label">Id</ui:define>
+                <h:inputText id="id"
+                       required="true"
+                       disabled="#{rentableUnitContributionHome.managed}"
+                          value="#{rentableUnitContributionHome.instance.id}">
+                    <a:support event="onblur" reRender="idField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+
+
+            <s:decorate id="contributionRateField" template="layout/edit.xhtml">
+                <ui:define name="label">Contribution rate</ui:define>
+                <h:inputText id="contributionRate"
+                       required="true"
+                          value="#{rentableUnitContributionHome.instance.contributionRate}">
+                    <a:support event="onblur" reRender="contributionRateField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                required fields
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Save"
+                         action="#{rentableUnitContributionHome.persist}"
+                       disabled="#{!rentableUnitContributionHome.wired}"
+                       rendered="#{!rentableUnitContributionHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Save"
+                         action="#{rentableUnitContributionHome.update}"
+                       rendered="#{rentableUnitContributionHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Delete"
+                         action="#{rentableUnitContributionHome.remove}"
+                      immediate="true"
+                       rendered="#{rentableUnitContributionHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancel"
+             propagation="end"
+                    view="/RentableUnitContribution.xhtml"
+                rendered="#{rentableUnitContributionHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancel"
+             propagation="end"
+                    view="/#{empty rentableUnitContributionFrom ? 'RentableUnitContributionList' : rentableUnitContributionFrom}.xhtml"
+                rendered="#{!rentableUnitContributionHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Rentable unit *" labelClass="required">
+    <div class="association" id="rentableUnitParent">
+
+        <h:outputText value="There is no rentableUnit associated with this rentableUnitContribution."
+                   rendered="#{rentableUnitContributionHome.instance.rentableUnit == null}"/>
+
+        <rich:dataTable var="_rentableUnit"
+                   value="#{rentableUnitContributionHome.instance.rentableUnit}"
+                rendered="#{rentableUnitContributionHome.instance.rentableUnit != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="rentableUnitTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_rentableUnit.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Business entity by owner id</f:facet>
+                <h:outputText value="#{_rentableUnit.businessEntityByOwner.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Rentable unit id</f:facet>
+                <h:outputText value="#{_rentableUnit.rentableUnit.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Business entity by lessee id</f:facet>
+                <h:outputText value="#{_rentableUnit.businessEntityByLessee.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Area id</f:facet>
+                <h:outputText value="#{_rentableUnit.area.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Name</f:facet>
+                <h:outputText value="#{_rentableUnit.name}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Square meters</f:facet>
+                <h:outputText value="#{_rentableUnit.squareMeters}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button id="#{rentableUnitContributionHome.instance.rentableUnit != null ? 'changeParent' : 'selectParent'}" value="#{rentableUnitContributionHome.instance.rentableUnit != null ? 'Change' : 'Select'} rentableUnit"
+                       view="/RentableUnitList.xhtml">
+                <f:param name="from" value="RentableUnitContributionEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab label="Contribution module *" labelClass="required">
+    <div class="association" id="contributionModuleParent">
+
+        <h:outputText value="There is no contributionModule associated with this rentableUnitContribution."
+                   rendered="#{rentableUnitContributionHome.instance.contributionModule == null}"/>
+
+        <rich:dataTable var="_contributionModule"
+                   value="#{rentableUnitContributionHome.instance.contributionModule}"
+                rendered="#{rentableUnitContributionHome.instance.contributionModule != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="contributionModuleTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_contributionModule.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Real property id</f:facet>
+                <h:outputText value="#{_contributionModule.realProperty.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Name</f:facet>
+                <h:outputText value="#{_contributionModule.name}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button id="#{rentableUnitContributionHome.instance.contributionModule != null ? 'changeParent' : 'selectParent'}" value="#{rentableUnitContributionHome.instance.contributionModule != null ? 'Change' : 'Select'} contributionModule"
+                       view="/ContributionModuleList.xhtml">
+                <f:param name="from" value="RentableUnitContributionEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

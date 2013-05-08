@@ -1,0 +1,88 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:a="http://richfaces.org/a4j" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<h:form id="systemVariable" styleClass="edit">
+
+			<rich:panel>
+				<f:facet name="header">#{systemVariableHome.managed ? 'Editar' : 'Agregar'} Variable del sistema</f:facet>
+
+
+				<s:decorate id="nameField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Name}</ui:define>
+					<h:inputText id="name" size="50" maxlength="50" value="#{systemVariableHome.instance.name}" required="true">
+						<a4j:support event="onblur" limitToList="true" ignoreDupResponses="true" ajaxSingle="true" />
+					</h:inputText>
+				</s:decorate>
+
+
+				<s:decorate id="sintaxField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Sintax}</ui:define>
+					<h:inputText id="sintax" size="50" maxlength="50" value="#{systemVariableHome.instance.sintax}" required="true">
+						<a4j:support event="onblur" limitToList="true" ignoreDupResponses="true" ajaxSingle="true" />
+					</h:inputText>
+				</s:decorate>
+
+
+				<s:decorate id="valueField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Value}</ui:define>
+					<h:inputTextarea id="value" cols="80" rows="3" value="#{systemVariableHome.instance.value}" required="true">
+						<a4j:support event="onblur" limitToList="true" ignoreDupResponses="true" ajaxSingle="true" />
+					</h:inputTextarea>
+				</s:decorate>
+
+
+
+				<div style="clear: both"><span class="required">*</span> #{messages.required_fields}</div>
+
+			</rich:panel>
+
+			<div class="actionButtons"><h:commandButton id="save" value="#{messages.Save}" action="#{systemVariableHome.persist}" disabled="#{!systemVariableHome.wired}" rendered="#{!systemVariableHome.managed}" /> <h:commandButton id="update" value="#{messages.Save}" action="#{systemVariableHome.update}" rendered="#{systemVariableHome.managed}" /> <s:button id="cancelEdit" value="#{messages.Cancel}" propagation="end" view="/SystemVariable.xhtml" rendered="#{systemVariableHome.managed}" /> <s:button id="cancelAdd" value="#{messages.Cancel}" propagation="end" view="/#{empty systemVariableFrom ? 'SystemVariableList' : systemVariableFrom}.xhtml" rendered="#{!systemVariableHome.managed}" /></div>
+		</h:form>
+
+		<rich:tabPanel switchType="ajax">
+
+			<rich:tab label="#{messages.Projects}">
+				<div class="association" id="projectParent"><h:outputText value="#{messages.There_is_no_project_associated_with_this_systemVariable}" rendered="#{systemVariableHome.instance.project == null}" /> <rich:dataTable var="_project" value="#{systemVariableHome.instance.project}" rendered="#{systemVariableHome.instance.project != null}" rowClasses="rvgRowOne,rvgRowTwo" id="projectTable">
+					<h:column>
+						<f:facet name="header">#{messages.Id}</f:facet>
+						<h:outputText value="#{_project.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Business_entity_id}</f:facet>
+						<h:outputText value="#{_project.businessEntity.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Business_line_id}</f:facet>
+						<h:outputText value="#{_project.businessLine.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Name_project}</f:facet>
+						<h:outputText value="#{_project.nameProject}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Cost_center_project}</f:facet>
+						<h:outputText value="#{_project.costCenterProject}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Prefix}</f:facet>
+						<h:outputText value="#{_project.projectPrefix}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Rounding}</f:facet>
+						<h:outputText value="#{_project.rounding}" />
+					</h:column>
+				</rich:dataTable>
+
+				<div class="actionButtons"><s:button id="#{systemVariableHome.instance.project != null ? 'changeParent' : 'selectParent'}" value="#{systemVariableHome.instance.project != null ? messages.Change : messages.Select} #{messages.Projects}" view="/ProjectList.xhtml">
+					<f:param name="from" value="SystemVariableEdit" />
+				</s:button></div>
+
+				</div>
+			</rich:tab>
+		</rich:tabPanel>
+	</ui:define>
+
+</ui:composition>

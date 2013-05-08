@@ -1,0 +1,33 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<rich:panel>
+			<f:facet name="header">#{messages.Ipc_yearly_details}</f:facet>
+
+			<s:decorate id="year" template="layout/display.xhtml">
+				<ui:define name="label">#{messages.Year}</ui:define>
+				<h:outputText value="#{ipcYearlyHome.instance.year}" />
+			</s:decorate>
+
+			<s:decorate id="value" template="layout/display.xhtml">
+				<ui:define name="label">#{messages.Value}</ui:define>
+				<h:outputText value="#{ipcYearlyHome.value}" />
+			</s:decorate>
+
+			<div style="clear: both" />
+
+		</rich:panel>
+
+		<div class="actionButtons">
+
+			<s:button view="/IpcYearlyEdit.xhtml" id="edit" value="#{messages.Edit}" />
+
+			<s:button view="/#{empty ipcYearlyFrom ? 'Ipcs' : ipcYearlyFrom}.xhtml" id="done" value="#{messages.Done}" />
+
+		</div>
+	</ui:define>
+
+</ui:composition>

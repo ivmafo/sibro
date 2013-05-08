@@ -1,0 +1,148 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Retention rate Details</f:facet>
+
+        <s:decorate id="id" template="layout/display.xhtml">
+            <ui:define name="label">Id</ui:define>
+            <h:outputText value="#{retentionRateHome.instance.id}"/>
+        </s:decorate>
+
+        <s:decorate id="name" template="layout/display.xhtml">
+            <ui:define name="label">Name</ui:define>
+            <h:outputText value="#{retentionRateHome.instance.name}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/RetentionRateEdit.xhtml"
+                    id="edit"
+                 value="Edit"/>
+
+        <s:button view="/#{empty retentionRateFrom ? 'RetentionRateList' : retentionRateFrom}.xhtml"
+                    id="done"
+                 value="Done"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Retention rate accounts</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="retentionRateAccountsChildren">
+
+        <h:outputText value="There are no retentionRateAccounts associated with this retentionRate."
+                   rendered="#{empty retentionRateHome.retentionRateAccounts}"/>
+
+        <rich:dataTable value="#{retentionRateHome.retentionRateAccounts}"
+                       var="_retentionRateAccount"
+                  rendered="#{not empty retentionRateHome.retentionRateAccounts}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="retentionRateAccountsTable">
+            <rich:column sortBy="#{_retentionRateAccount.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_retentionRateAccount.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_retentionRateAccount.name}">
+                <f:facet name="header">Name</f:facet>
+                <h:outputText value="#{_retentionRateAccount.name}"/>
+            </rich:column>
+            <rich:column sortBy="#{_retentionRateAccount.account}">
+                <f:facet name="header">Account</f:facet>
+                <h:outputText value="#{_retentionRateAccount.account}"/>
+            </rich:column>
+            <rich:column sortBy="#{_retentionRateAccount.value}">
+                <f:facet name="header">Value</f:facet>
+                <h:outputText value="#{_retentionRateAccount.value}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Action</f:facet>
+                <s:link id="selectretentionRateAccount"
+                     value="Select"
+                      view="/RetentionRateAccount.xhtml">
+                    <f:param name="retentionRateAccountId"
+                            value="#{_retentionRateAccount.id}"/>
+                    <f:param name="retentionRateAccountFrom" value="RetentionRate"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Add retentionRateAccount"
+                view="/RetentionRateAccountEdit.xhtml">
+            <f:param name="retentionRateId"
+                    value="#{retentionRateHome.instance.id}"/>
+            <f:param name="retentionRateAccountFrom" value="RetentionRate"/>
+        </s:button>
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>Tax configurations</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="taxConfigurationsChildren">
+
+        <h:outputText value="There are no taxConfigurations associated with this retentionRate."
+                   rendered="#{empty retentionRateHome.taxConfigurations}"/>
+
+        <rich:dataTable value="#{retentionRateHome.taxConfigurations}"
+                       var="_taxConfiguration"
+                  rendered="#{not empty retentionRateHome.taxConfigurations}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="taxConfigurationsTable">
+            <rich:column sortBy="#{_taxConfiguration.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_taxConfiguration.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_taxConfiguration.name}">
+                <f:facet name="header">Name</f:facet>
+                <h:outputText value="#{_taxConfiguration.name}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Action</f:facet>
+                <s:link id="selecttaxConfiguration"
+                     value="Select"
+                      view="/TaxConfiguration.xhtml">
+                    <f:param name="taxConfigurationId"
+                            value="#{_taxConfiguration.id}"/>
+                    <f:param name="taxConfigurationFrom" value="RetentionRate"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="Add taxConfiguration"
+                view="/TaxConfigurationEdit.xhtml">
+            <f:param name="retentionRateId"
+                    value="#{retentionRateHome.instance.id}"/>
+            <f:param name="taxConfigurationFrom" value="RetentionRate"/>
+        </s:button>
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

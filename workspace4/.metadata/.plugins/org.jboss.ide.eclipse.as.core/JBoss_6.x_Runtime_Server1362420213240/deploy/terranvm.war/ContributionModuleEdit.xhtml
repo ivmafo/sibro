@@ -1,0 +1,192 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="contributionModule" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{contributionModuleHome.managed ? 'Edit' : 'Add'} Contribution module</f:facet>
+
+
+            <s:decorate id="idField" template="layout/edit.xhtml">
+                <ui:define name="label">Id</ui:define>
+                <h:inputText id="id"
+                       required="true"
+                       disabled="#{contributionModuleHome.managed}"
+                          value="#{contributionModuleHome.instance.id}">
+                    <a:support event="onblur" reRender="idField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+
+            <s:decorate id="nameField" template="layout/edit.xhtml">
+                <ui:define name="label">Name</ui:define>
+                <h:inputTextarea id="name"
+                               cols="80"
+                               rows="3"
+                           required="true"
+                              value="#{contributionModuleHome.instance.name}"/>
+            </s:decorate>
+
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                required fields
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Save"
+                         action="#{contributionModuleHome.persist}"
+                       disabled="#{!contributionModuleHome.wired}"
+                       rendered="#{!contributionModuleHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Save"
+                         action="#{contributionModuleHome.update}"
+                       rendered="#{contributionModuleHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Delete"
+                         action="#{contributionModuleHome.remove}"
+                      immediate="true"
+                       rendered="#{contributionModuleHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancel"
+             propagation="end"
+                    view="/ContributionModule.xhtml"
+                rendered="#{contributionModuleHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancel"
+             propagation="end"
+                    view="/#{empty contributionModuleFrom ? 'ContributionModuleList' : contributionModuleFrom}.xhtml"
+                rendered="#{!contributionModuleHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Real property *" labelClass="required">
+    <div class="association" id="realPropertyParent">
+
+        <h:outputText value="There is no realProperty associated with this contributionModule."
+                   rendered="#{contributionModuleHome.instance.realProperty == null}"/>
+
+        <rich:dataTable var="_realProperty"
+                   value="#{contributionModuleHome.instance.realProperty}"
+                rendered="#{contributionModuleHome.instance.realProperty != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="realPropertyTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_realProperty.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Legal nature of property id</f:facet>
+                <h:outputText value="#{_realProperty.legalNatureOfProperty.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Real property use type id</f:facet>
+                <h:outputText value="#{_realProperty.realPropertyUseType.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Name property</f:facet>
+                <h:outputText value="#{_realProperty.nameProperty}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Year built</f:facet>
+                <h:outputText value="#{_realProperty.yearBuilt}">
+                    <s:convertDateTime type="date" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Enrolment number</f:facet>
+                <h:outputText value="#{_realProperty.enrolmentNumber}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Purchase date</f:facet>
+                <h:outputText value="#{_realProperty.purchaseDate}">
+                    <s:convertDateTime type="date" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Total surface area</f:facet>
+                <h:outputText value="#{_realProperty.totalSurfaceArea}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Cadastral id</f:facet>
+                <h:outputText value="#{_realProperty.cadastralId}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Total contruction area</f:facet>
+                <h:outputText value="#{_realProperty.totalContructionArea}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button id="#{contributionModuleHome.instance.realProperty != null ? 'changeParent' : 'selectParent'}" value="#{contributionModuleHome.instance.realProperty != null ? 'Change' : 'Select'} realProperty"
+                       view="/RealPropertyList.xhtml">
+                <f:param name="from" value="ContributionModuleEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab label="Rentable unit contributions">
+        <h:form styleClass="association" id="rentableUnitContributionsChildren">
+
+            <h:outputText value="There are no rentableUnitContributions associated with this contributionModule."
+                       rendered="#{empty contributionModuleHome.rentableUnitContributions}"/>
+
+            <rich:dataTable value="#{contributionModuleHome.rentableUnitContributions}"
+                           var="_rentableUnitContribution"
+                      rendered="#{not empty contributionModuleHome.rentableUnitContributions}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="rentableUnitContributionsTable">
+                <rich:column sortBy="#{_rentableUnitContribution.id}">
+                    <f:facet name="header">Id</f:facet>
+                    <h:outputText value="#{_rentableUnitContribution.id}"/>
+                </rich:column>
+                <rich:column sortBy="#{_rentableUnitContribution.contributionRate}">
+                    <f:facet name="header">Contribution rate</f:facet>
+                    <h:outputText value="#{_rentableUnitContribution.contributionRate}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{contributionModuleHome.managed}" id="rentableUnitContributions">
+        <div class="actionButtons">
+            <s:button id="addrentableUnitContribution"
+                   value="Add rentableUnitContribution"
+                    view="/RentableUnitContributionEdit.xhtml"
+             propagation="none">
+                 <f:param name="contributionModuleId"
+                         value="#{contributionModuleHome.instance.id}"/>
+                 <f:param name="rentableUnitContributionFrom" value="ContributionModule"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

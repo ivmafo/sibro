@@ -1,0 +1,102 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">#{messages.Economic_sector_Details}</f:facet>
+
+        <s:decorate id="id" template="layout/display.xhtml">
+            <ui:define name="label">Id</ui:define>
+            <h:outputText value="#{economicSectorHome.instance.id}"/>
+        </s:decorate>
+
+        <s:decorate id="name" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Name}</ui:define>
+            <h:outputText value="#{economicSectorHome.instance.name}"/>
+        </s:decorate>
+
+        <s:decorate id="description" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Description}</ui:define>
+            <h:outputText value="#{economicSectorHome.instance.description}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/EconomicSectorEdit.xhtml"
+                    id="edit"
+                 value="#{messages.Edit}"/>
+
+        <s:button view="/#{empty economicSectorFrom ? 'EconomicSectorList' : economicSectorFrom}.xhtml"
+                    id="done"
+                 value="#{messages.Done}"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>#{messages.Economic_activities}</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="economicActivitiesChildren">
+
+        <h:outputText value="#{messages.There_are_no_economicActivities_associated_with_this_economicSector}"
+                   rendered="#{empty economicSectorHome.economicActivities}"/>
+
+        <rich:dataTable value="#{economicSectorHome.economicActivities}"
+                       var="_economicActivity"
+                  rendered="#{not empty economicSectorHome.economicActivities}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="economicActivitiesTable">
+             <rich:column sortBy="#{_economicActivity.name}">
+                <f:facet name="header">#{messages.Name}</f:facet>
+                <h:outputText value="#{_economicActivity.name}"/>
+            </rich:column>
+            <rich:column sortBy="#{_economicActivity.description}">
+                <f:facet name="header">#{messages.Description}</f:facet>
+                <h:outputText value="#{_economicActivity.description}"/>
+            </rich:column>
+            <rich:column sortBy="#{_economicActivity.code}">
+                <f:facet name="header">#{messages.Code}</f:facet>
+                <h:outputText value="#{_economicActivity.code}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">#{messages.Action}</f:facet>
+                <s:link id="selecteconomicActivity"
+                     value="#{messages.Select}"
+                      view="/EconomicActivity.xhtml">
+                    <f:param name="economicActivityId"
+                            value="#{_economicActivity.code}"/>
+                    <f:param name="economicActivityFrom" value="EconomicSector"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="#{messages.Add_economicActivity}"
+                view="/EconomicActivityEdit.xhtml">
+            <f:param name="economicSectorId"
+                    value="#{economicSectorHome.instance.id}"/>
+            <f:param name="economicActivityFrom" value="EconomicSector"/>
+        </s:button>
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

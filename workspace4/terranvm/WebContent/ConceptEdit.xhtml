@@ -1,0 +1,368 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<h:form id="concept" styleClass="edit">
+
+			<rich:panel>
+				<f:facet name="header">#{conceptHome.managed ? messages.Edit : messages.Add} #{messages.Concept}</f:facet>
+
+
+<!--				<s:decorate id="idField" template="layout/edit.xhtml">-->
+<!--					<ui:define name="label">Id</ui:define>-->
+<!--					<h:inputText id="id" required="true"-->
+<!--						disabled="#{conceptHome.managed}"-->
+<!--						value="#{conceptHome.instance.id}">-->
+<!--						<a:support event="onblur" reRender="idField" bypassUpdates="true"-->
+<!--							ajaxSingle="true" />-->
+<!--					</h:inputText>-->
+<!--				</s:decorate>-->
+
+				<s:decorate id="nameField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Name}</ui:define>
+					<h:inputTextarea id="nameConcept" cols="30" rows="1" required="true"
+						value="#{conceptHome.instance.name}">
+						<a4j:support event="onblur" ajaxSingle="true"></a4j:support>
+						</h:inputTextarea>
+				</s:decorate>
+
+
+				<s:decorate id="descriptionField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Description}</ui:define>
+					<h:inputTextarea id="description" cols="80" rows="3"
+						required="true" value="#{conceptHome.instance.description}">
+						<a4j:support event="onblur" ajaxSingle="true"></a4j:support>
+						</h:inputTextarea>
+				</s:decorate>
+
+
+				<s:decorate id="taxField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Tax}</ui:define>
+					<h:inputText id="tax" required="true"
+						value="#{conceptHome.instance.tax}">
+						<a:support event="onblur" reRender="taxField" bypassUpdates="true"
+							ajaxSingle="true" />
+					</h:inputText>
+				</s:decorate>
+
+				<s:decorate id="startDateField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Start_date}</ui:define>
+					<rich:calendar id="startDate" required="true"
+							  value="#{conceptHome.instance.startDate}" datePattern="MM/dd/yyyy" ajaxSingle="true" bypassUpdates="true" 
+							  reRender="startDateField,endDateField">
+				  		<a4j:support event="onchanged" reRender="startDateField,endDateField" ajaxSingle="true"/>
+			  		</rich:calendar>
+				</s:decorate>
+			
+				<s:decorate id="periodField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.periodicity}</ui:define>
+					<h:inputText id="period" required="true"
+						value="#{conceptHome.instance.periodicity}">
+						<a4j:support event="onchange" reRender="periodField,endDateField" ajaxSingle="true"/>
+					</h:inputText>
+					<h:selectOneMenu value="#{conceptHome.instance.periodicityType}">
+						<f:selectItem itemValue="1" itemLabel="Días" />
+						<f:selectItem itemValue="2" itemLabel="Meses" />
+						<f:selectItem itemValue="3" itemLabel="Años" />
+						<a4j:support event="onchange" reRender="periodField,endDateField" ajaxSingle="true"/>
+					</h:selectOneMenu>
+				</s:decorate>
+				
+				<s:decorate id="numberPeriodsField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.number_periods}</ui:define>
+					<h:inputText id="numberPeriods" required="true"
+							  value="#{conceptHome.instance.numberPeriods}">
+						<a4j:support event="onchange" reRender="numberPeriods,endDateField" ajaxSingle="true"/>
+					</h:inputText>
+				</s:decorate>
+	            
+				<a4j:outputPanel ajaxRendered="true">
+					<s:decorate id="endDateField" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.end_date}</ui:define>
+						<h:outputText value="#{conceptHome.instance.endDate}">
+			                <s:convertDateTime type="date" />
+			            </h:outputText>
+					</s:decorate>
+				</a4j:outputPanel>
+
+				<s:decorate id="printDescriptionField" template="layout/edit.xhtml">
+	                <ui:define name="label">#{messages.Print_description}</ui:define>
+	                <h:inputTextarea id="printDescription"
+	                               cols="80"
+	                               rows="3"
+	                           required="true"
+	                              value="#{conceptHome.instance.printDescription}">
+	                              <a4j:support event="onblur" ajaxSingle="true"></a4j:support>
+	                              </h:inputTextarea>
+	            </s:decorate>
+	            <s:decorate id="expressionField" template="layout/edit.xhtml">
+								<ui:define name="label">#{messages.Expression}</ui:define>
+								<h:inputTextarea id="expressionField" cols="80" rows="3"
+									required="false"
+									value="#{conceptHome.instance.expression}">
+									 <a4j:support event="onblur" ajaxSingle="true"></a4j:support>
+								</h:inputTextarea>
+				</s:decorate>
+	            
+				<s:decorate id="promptPaymentDiscountField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.prompt_payment_discount}</ui:define>
+					<h:inputText id="promptPaymentDiscount"
+							  value="#{conceptHome.instance.promptPaymentDiscount}">
+							  <a4j:support event="onblur" ajaxSingle="true"></a4j:support>
+						<a:support event="onblur" reRender="promptPaymentDiscountField" bypassUpdates="true" ajaxSingle="true"/>
+					</h:inputText>
+				</s:decorate>
+				
+				<s:decorate id="discountDaysField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.discount_days}</ui:define>
+					<h:inputText id="discountDays"
+							  value="#{conceptHome.instance.discountDays}">
+							  <a4j:support event="onblur" ajaxSingle="true"></a4j:support>
+						<a:support event="onblur" reRender="discountDaysField" bypassUpdates="true" ajaxSingle="true"/>
+					</h:inputText>
+				</s:decorate>
+
+
+				<s:decorate id="documentTypeField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.periodicity_type}</ui:define>
+					<h:selectOneRadio id="documentType" value="#{conceptHome.instance.documentType}" styleClass="radio" required="true">
+	                    <f:selectItem itemLabel="Factura" itemValue="0"/>
+	                    <f:selectItem itemLabel="Cuenta de Cobro" itemValue="1"/>
+	                    <a4j:support event="onblur" ajaxSingle="true"></a4j:support>
+	                    <a:support event="onblur" reRender="documentTypeField" bypassUpdates="true" ajaxSingle="true"/>
+	                </h:selectOneRadio>
+				</s:decorate>
+				
+				<s:decorate id="responsibleField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.responsible}</ui:define>
+					<h:selectOneRadio id="responsible" value="#{conceptHome.instance.responsible}" styleClass="radio">
+	                    <f:selectItem itemLabel="Propietario" itemValue="1"/>
+	                    <f:selectItem itemLabel="Arrendatario" itemValue="0"/>
+	                    <a4j:support event="onblur" ajaxSingle="true"></a4j:support>
+	                    <a:support event="onblur" reRender="responsibleField" bypassUpdates="true" ajaxSingle="true"/>
+	                </h:selectOneRadio>
+				</s:decorate>
+				
+				<s:decorate id="isEarlyPaymentField" template="layout/edit.xhtml">
+	                <ui:define name="label">#{messages.Is_early_payment}</ui:define>
+	                <h:selectBooleanCheckbox id="isEarlyPayment"
+	                                   required="true"
+	                                      value="#{conceptHome.instance.earlyPayment}"/>
+	            </s:decorate>
+				<a4j:region renderRegionOnly="true">
+					<s:decorate id="paymentFormField3" template="layout/edit.xhtml">
+						<ui:define name="label">#{messages.Payment_form}:</ui:define>
+						<h:inputTextarea readonly="true" rows="3" required="true" value="#{conceptHome.instance.paymentForm.description}" />
+						<h:panelGrid rendered="#{!empty paymentFormList.resultList}" columns="2">
+							<rich:extendedDataTable binding="#{tablePaymentFormBind}" width="600px" height="200px" selection="#{conceptHome.selectionPaymentForm}" selectionMode="single" rows="0" sortMode="single" tableState="#{conceptHome.tableState}" value="#{conceptHome.paymentForms}" var="_paymentForm" id="tablePaymentForm">
+								
+								<rich:column sortable="true" width="10%" sortBy="#{_paymentForm.id}" id="col_0" filterBy="#{_paymentForm.id}" filterEvent="onkeyup" label="Código">
+									<f:facet name="header">
+										<h:outputText value="Código" />
+									</f:facet>
+									<h:outputText value="#{_paymentForm.id}" />
+								</rich:column>
+								
+								<rich:column sortable="true" width="20%" sortBy="#{_paymentForm.count}" id="col_2" filterBy="#{_paymentForm.count}" filterEvent="onkeyup" label="Número de cuenta">
+									<f:facet name="header">
+										<h:outputText value="Número de cuenta" />
+									</f:facet>
+									<h:outputText value="#{_paymentForm.count}" />
+								</rich:column>
+								
+								<rich:column sortable="true" width="70%" sortBy="#{_paymentForm.description}" id="col_3" filterBy="#{_paymentForm.description}" filterEvent="onkeyup" label="Concepto">
+									<f:facet name="header">
+										<h:outputText value="Concepto" />
+									</f:facet>
+									<h:outputText value="#{_paymentForm.description}" />
+								</rich:column>
+								
+								<a4j:support ajaxSingle="true" reRender="paymentFormField3" action="#{conceptHome.onSelectionChanged}" event="onselectionchange" />
+							</rich:extendedDataTable>
+						</h:panelGrid>
+					</s:decorate>
+				</a4j:region>
+
+		
+				<a4j:region rendered="#{conceptHome.instance.id != 0}">
+					<a4j:outputPanel id="conceptRegion">
+						<s:decorate id="contractTypeField" template="layout/edit.xhtml">
+							<ui:define name="label">#{messages.Plugin_type}</ui:define>
+							<h:selectOneMenu required="false"
+								value="#{conceptHome.instance.plugin}"
+								defaultLabel="Haga click para escoger un plugin">
+								<s:selectItems id="pluginsItems"
+									value="#{conceptHome.pluginList}" var="plugin"
+									label="#{plugin.name}"/>
+								<s:convertEntity></s:convertEntity>
+								<a4j:support event="onchange" ajaxSingle="true"
+									reRender="iframe,buttonConceptField"></a4j:support>
+							</h:selectOneMenu>
+						</s:decorate>   
+						<s:decorate id="buttonConceptField" template="layout/edit.xhtml">
+							<h:commandButton type="button" id="addConcept"
+								value="Editar Plugin"
+								rendered="#{authenticator.validateShowFunction('ConceptEdit.xhtml', 'addConcept')}">
+								<rich:componentControl for="panelConcepts" attachTo="addConcept"
+									operation="show" event="onclick" />
+								<a4j:support event="onclick" ajaxSingle="true"
+									action="#{conceptHome.instanceIframeUrl()}" reRender="iframe"></a4j:support>
+							</h:commandButton>
+						</s:decorate>
+					</a4j:outputPanel>
+					<rich:modalPanel id="panelConcepts" width="820" height="700">
+						<f:facet name="header">
+							<h:panelGroup>
+								<h:outputText value="#{messages.Add_concept}"></h:outputText>
+							</h:panelGroup>
+						</f:facet>
+						<a4j:outputPanel ajaxRendered="true" id="iframePanel">
+							<h:panelGrid columns="1">
+								<iframe id="iframe" width="800" height="600" src="#{conceptHome.mainUrl}">
+								<p>#{messages.This_browser_does_not_support_IFRAMES}</p>
+								</iframe>
+								<h:commandButton type="button" id="addConcept" value="#{messages.Close}" rendered="#{authenticator.validateShowFunction('ConceptEdit.xhtml', 'addConcept')}">
+									<rich:componentControl for="panelConcepts" attachTo="addConcept" operation="hide" event="onclick" />
+									<a4j:support event="onclick" ajaxSingle="true" reRender="conceptRegion"></a4j:support>
+								</h:commandButton>
+							</h:panelGrid>
+						</a4j:outputPanel>
+					</rich:modalPanel>
+				</a4j:region>
+
+				<div style="clear: both"><span class="required">*</span>
+				#{messages.required_fields}</div>
+
+			</rich:panel>
+
+			<div class="actionButtons"><h:commandButton id="save"
+				value="#{messages.Save}" action="#{conceptHome.persist}"
+				disabled="#{!conceptHome.wired}" rendered="#{!conceptHome.managed and authenticator.validateShowFunction('ConceptEdit.xhtml', 'save')}" />
+			<h:commandButton id="update" value="#{messages.Save}"
+				action="#{conceptHome.update}" rendered="#{conceptHome.managed and authenticator.validateShowFunction('ConceptEdit.xhtml', 'update')}" />
+			<h:commandButton id="delete" value="#{messages.Delete}"
+				action="#{conceptHome.remove}" immediate="true"
+				rendered="#{conceptHome.managed and authenticator.validateShowFunction('ConceptEdit.xhtml', 'delete')}" /> <s:button id="cancelEdit"
+				value="#{messages.Cancel}" propagation="end" view="/Concept.xhtml"
+				rendered="#{conceptHome.managed and authenticator.validateShowFunction('ConceptEdit.xhtml', 'cancelAdd')}" /> <s:button id="cancelAdd"
+				value="#{messages.Cancel}" propagation="end"
+				view="/#{empty conceptFrom ? 'ConceptList' : conceptFrom}.xhtml"
+				rendered="#{!conceptHome.managed }" /></div>
+		</h:form>
+
+		<rich:tabPanel rendered="#{conceptHome.instance.id == 0}" switchType="ajax">
+
+			<rich:tab label="#{messages.Project_properties} *" labelClass="required">
+				<div class="association" id="projectPropertyParent"><h:outputText
+					value="#{messages.There_is_no_projectProperty_associated_with_this_concept}"
+					rendered="#{conceptHome.instance.projectProperty == null}" /> <rich:dataTable
+					var="_projectProperty"
+					value="#{conceptHome.instance.projectProperty}"
+					rendered="#{conceptHome.instance.projectProperty != null}"
+					rowClasses="rvgRowOne,rvgRowTwo" id="projectPropertyTable">
+					<h:column>
+						<f:facet name="header">Id</f:facet>
+						<h:outputText value="#{_projectProperty.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Business_entity_by_billed_id}</f:facet>
+						<h:outputText value="#{_projectProperty.billed.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Business_entity_by_biller_id}</f:facet>
+						<h:outputText value="#{_projectProperty.biller.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Contract_type_id}</f:facet>
+						<h:outputText value="#{_projectProperty.contractType.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Project_id}</f:facet>
+						<h:outputText value="#{_projectProperty.project.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Real_property_id}</f:facet>
+						<h:outputText value="#{_projectProperty.realProperty.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Subscription_date}</f:facet>
+						<h:outputText value="#{_projectProperty.subscriptionDate}">
+							<s:convertDateTime type="date" dateStyle="short" />
+						</h:outputText>
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Expiration_date}</f:facet>
+						<h:outputText value="#{_projectProperty.expirationDate}">
+							<s:convertDateTime type="date" dateStyle="short" />
+						</h:outputText>
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Status}</f:facet>
+						<h:outputText value="#{_projectProperty.status}" />
+					</h:column>
+				</rich:dataTable>
+
+				<div class="actionButtons"><s:button
+					id="#{conceptHome.instance.projectProperty != null ? 'changeParent' : 'selectParent'}"
+					value="#{conceptHome.instance.projectProperty != null ? messages.Change : messages.Select} #{messages.Project_properties}"
+					view="/ProjectPropertyList.xhtml"
+					rendered="#{authenticator.validateShowFunction('ConceptEdit.xhtml', 'Project_properties_change') and authenticator.validateShowFunction('ConceptEdit.xhtml', 'Project_properties_select')}">
+					<f:param name="from" value="ConceptEdit" />
+				</s:button></div>
+
+				</div>
+			</rich:tab>
+
+			<rich:tab rendered="false" label="#{messages.Plugin}">
+				<div class="association" id="pluginParent"><h:outputText
+					value="#{messages.There_is_no_plugin_associated_with_this_concept}"
+					rendered="#{conceptHome.instance.plugin == null}" /> <rich:dataTable
+					var="_plugin" value="#{conceptHome.instance.plugin}"
+					rendered="#{conceptHome.instance.plugin != null}"
+					rowClasses="rvgRowOne,rvgRowTwo" id="pluginTable">
+					<h:column>
+						<f:facet name="header">Id</f:facet>
+						<h:outputText value="#{_plugin.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Name}</f:facet>
+						<h:outputText value="#{_plugin.name}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Main_url}</f:facet>
+						<h:outputText value="#{_plugin.mainUrl}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Summary_url}</f:facet>
+						<h:outputText value="#{_plugin.summaryUrl}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Wsdl_url}</f:facet>
+						<h:outputText value="#{_plugin.wsdlUrl}" />
+					</h:column>
+				</rich:dataTable>
+
+				<div class="actionButtons"><s:button
+					id="#{conceptHome.instance.plugin != null ? 'changeParent1' : 'selectParent1'}"
+					value="#{conceptHome.instance.plugin != null ? messages.Change : messages.Select} #{messages.Plugin}"
+					view="/PluginList.xhtml"
+					rendered="#{authenticator.validateShowFunction('ConceptEdit.xhtml', 'Plugin_change') and authenticator.validateShowFunction('ConceptEdit.xhtml', 'Plugin_select')}">
+					<f:param name="from" value="ConceptEdit" />
+				</s:button></div>
+
+				</div>
+			</rich:tab>
+
+		</rich:tabPanel>
+	</ui:define>
+
+</ui:composition>

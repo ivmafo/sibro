@@ -1,0 +1,170 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="floorSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="#{messages.Floor_Search_Filter}" switchType="ajax">
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">#{messages.Area} (mts²)</ui:define>
+                <h:inputText id="areaFloor" value="#{floorList.floor.area}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">#{messages.Floor_number}</ui:define>
+                <h:inputText id="floorNumberApartmentBuilding" value="#{floorList.floor.floorNumber}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">#{messages.Match}</ui:define>
+                <h:selectOneRadio id="logic" value="#{floorList.restrictionLogicOperator}" styleClass="radio">
+                    <f:selectItem itemLabel="#{messages.All}" itemValue="and"/>
+                    <f:selectItem itemLabel="#{messages.Any}" itemValue="or"/>
+                </h:selectOneRadio>
+            </s:decorate>
+
+        </rich:simpleTogglePanel>
+
+        <div class="actionButtons">
+            <h:commandButton id="search" value="#{messages.Search}" action="/FloorList.xhtml"/>
+            <s:button id="reset" value="#{messages.Reset}" includePageParams="false"/>
+        </div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">#{messages.Search_Results} (#{empty floorList.resultList ? 0 : (floorList.paginated ? floorList.resultCount : floorList.resultList.size)})</f:facet>
+    <div class="results" id="floorList">
+
+    <h:outputText value="#{messages.search_returned_no_results}"
+               rendered="#{empty floorList.resultList}"/>
+
+    <rich:dataTable id="floorList"
+                var="_floor"
+              value="#{floorList.resultList}"
+           rendered="#{not empty floorList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{floorList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Id}"/>
+                    <ui:param name="propertyPath" value="floor.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_floor.id}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{floorList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Building}"/>
+                    <ui:param name="propertyPath" value="floor.construction.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_floor.construction.name}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{floorList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Area} (mts²)"/>
+                    <ui:param name="propertyPath" value="floor.area"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_floor.area}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{floorList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Floor_number}"/>
+                    <ui:param name="propertyPath" value="floor.floorNumber"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_floor.floorNumber}"/>
+        </h:column>
+        <rich:column styleClass="action">
+        <table>
+        <tr><td>
+            <f:facet name="header">#{messages.Action}</f:facet>
+            <s:link view="/#{empty from ? 'Floor' : from}.xhtml"
+                   value="#{empty from ? messages.View : messages.Select}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="floorViewId">
+                <f:param name="floorId"
+                        value="#{_floor.id}"/>
+            </s:link></td>
+            <td>#{' '}</td>
+            <td><div id="editButton#{_floor.id}"><s:link view="/FloorEdit.xhtml"
+                   value="#{messages.Edit}"
+             propagation="none"
+                      id="floorEdit"
+                rendered="#{empty from}" disabled="#{floorHome.floorListInApprove(_floor)}">
+                <f:param name="floorId"
+                        value="#{_floor.id}"/>                       
+            </s:link>
+            <rich:toolTip disabled="#{not floorHome.floorListInApprove(_floor)}" for="editButton#{_floor.id}">No se puede editar, pendiente aprobación de un cambio</rich:toolTip>
+            </div>
+            </td></tr></table>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/FloorList.xhtml"
+            rendered="#{floorList.previousExists}"
+               value="#{messages.left}#{messages.left} #{messages.First_Page}"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/FloorList.xhtml"
+            rendered="#{floorList.previousExists}"
+               value="#{messages.left} #{messages.Previous_Page}"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{floorList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/FloorList.xhtml"
+            rendered="#{floorList.nextExists}"
+               value="#{messages.Next_page} #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{floorList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/FloorList.xhtml"
+            rendered="#{floorList.nextExists}"
+               value="#{messages.Last_Page} #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{floorList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/FloorEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="#{messages.Create_floor}">
+            <f:param name="floorId"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

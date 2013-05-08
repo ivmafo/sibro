@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page login-required="true"
+ no-conversation-view-id="/BusinessEntityList.xhtml"
+ xmlns="http://jboss.com/products/seam/pages"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd">
+ <begin-conversation flush-mode="MANUAL" join="true"/>
+ 
+ <action execute="#{businessEntityHome.wire}"/>
+ <action execute="#{businessEntityHome.configImegeFile()}"/>
+ <action execute="#{businessEntityHome.addPhoneNumber(phoneNumberId)}" if="#{not empty phoneNumberId}"/>
+ <action execute="#{businessEntityHome.addAddress(addressId)}" if="#{not empty addressId}" />
+ 
+ <param name="businessEntityFrom"/>
+ <param name="businessEntityId" value="#{businessEntityHome.businessEntityId}"/>
+ <param name="economicActivityFrom"/>
+ <param name="economicActivityId" value="#{economicActivityHome.economicActivityId}"/>
+ <param name="economicSectorFrom"/>
+ <param name="economicSectorId" value="#{economicSectorHome.economicSectorId}"/>
+ 
+ <param name="phoneNumberId" value="#{phoneNumberHome.phoneNumberId}"/>
+  <param name="addressId" value="#{addressHome.addressId}"/>
+  
+ <navigation from-action="#{businessEntityHome.persist}">
+  <rule if-outcome="persisted">
+   <end-conversation/>
+   <redirect view-id="/BusinessEntity.xhtml"/>
+  </rule>
+ </navigation>
+ <navigation from-action="#{businessEntityHome.update}">
+  <rule if-outcome="updated">
+   <end-conversation/>
+   <redirect view-id="/BusinessEntity.xhtml"/>
+  </rule>
+ </navigation>
+ <navigation from-action="#{businessEntityHome.remove}">
+  <rule if-outcome="removed">
+   <end-conversation/>
+   <redirect view-id="/BusinessEntityList.xhtml"/>
+  </rule>
+ </navigation>
+</page>

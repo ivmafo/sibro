@@ -1,0 +1,119 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:s="http://jboss.com/products/seam/taglib"
+ xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" 
+ xmlns:h="http://java.sun.com/jsf/html" xmlns:a="http://richfaces.org/a4j" xmlns:a4j="http://richfaces.org/a4j"
+ xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<h:form id="area" styleClass="edit">
+
+			<rich:panel>
+				<f:facet name="header">#{areaHome.managed ? messages.Edit : messages.Add} #{messages.Area}</f:facet>
+
+				<s:decorate id="nameField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Name}</ui:define>
+					<h:inputTextarea id="name" cols="40" rows="1" required="true" value="#{areaHome.instance.name}">
+					<a4j:support event="onblur" ajaxSingle="true"></a4j:support>
+					</h:inputTextarea>
+				</s:decorate>
+
+
+				<s:decorate id="areaField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Area}</ui:define>
+					<h:inputText id="area" required="true" value="#{areaHome.instance.area}">
+						<a:support event="onblur" reRender="areaField" bypassUpdates="false" ajaxSingle="true" />
+					</h:inputText>
+				</s:decorate>
+
+
+				<div style="clear: both"><span class="required">*</span> #{messages.required_fields}</div>
+
+			</rich:panel>
+
+			<div class="actionButtons">
+				<h:commandButton id="save" value="#{messages.Save}" action="#{areaHome.persist}" disabled="#{!areaHome.wired}" rendered="#{!areaHome.managed and authenticator.validateShowFunction('AreaEdit.xhtml', 'save')}" />
+				<h:commandButton id="update" value="#{messages.Save}" action="#{areaHome.update}" rendered="#{areaHome.managed and authenticator.validateShowFunction('AreaEdit.xhtml', 'update')}" /> 
+				<h:commandButton id="delete" value="#{messages.Delete}" action="#{areaHome.remove}" immediate="true" rendered="#{areaHome.managed and authenticator.validateShowFunction('AreaEdit.xhtml', 'delete')}" /> 
+				<s:button id="cancelEdit" value="Cancel" propagation="end" view="/Area.xhtml" rendered="#{areaHome.managed and authenticator.validateShowFunction('AreaEdit.xhtml', 'cancelEdit')}"/>
+				<s:button id="cancelAdd" value="Cancel" propagation="end" view="/#{empty areaFrom ? 'AreaList' : areaFrom}.xhtml" rendered="#{!areaHome.managed and authenticator.validateShowFunction('AreaEdit.xhtml', 'cancelAdd')}" />
+			</div>
+		</h:form>
+
+		<rich:tabPanel switchType="ajax">
+
+			<rich:tab label="#{messages.Area_type} *" labelClass="required">
+				<div class="association" id="areaTypeParent"><h:outputText value="#{messages.There_is_no_areaType_associated_with_this_area}" rendered="#{areaHome.instance.areaType == null}" />
+				 <rich:dataTable var="_areaType" value="#{areaHome.instance.areaType}" rendered="#{areaHome.instance.areaType != null}" rowClasses="rvgRowOne,rvgRowTwo" id="areaTypeTable">
+					<h:column>
+						<f:facet name="header">Id</f:facet>
+						<h:outputText value="#{_areaType.id}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Name}</f:facet>
+						<h:outputText value="#{_areaType.name}" />
+					</h:column>
+				</rich:dataTable>
+
+				<div class="actionButtons"><s:button id="#{areaHome.instance.areaType != null ? 'changeParent' : 'selectParent'}" value="#{areaHome.instance.areaType != null ? messages.Change : messages.Select} #{messages.areaType}" view="/AreaTypeList.xhtml" rendered="#{authenticator.validateShowFunction('AreaEdit.xhtml', 'Area_type_change') or authenticator.validateShowFunction('AreaEdit.xhtml', 'Area_type_select')}"  >
+					<f:param name="from" value="AreaEdit" />
+				</s:button></div>
+
+				</div>
+			</rich:tab>
+
+			<rich:tab label="#{messages.Floor} *" labelClass="required">
+				<div class="association" id="floorParent"><h:outputText value="#{messages.There_is_no_floor_associated_with_this_area}" rendered="#{areaHome.instance.floor == null}" /> 
+				<rich:dataTable var="_floor" value="#{areaHome.instance.floor}" rendered="#{areaHome.instance.floor != null}" rowClasses="rvgRowOne,rvgRowTwo" id="floorTable">
+					<h:column>
+						<f:facet name="header">#{messages.Area}</f:facet>
+						<h:outputText value="#{_floor.area}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Floor_number}</f:facet>
+						<h:outputText value="#{_floor.floorNumber}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Building}</f:facet>
+						<h:outputText value="#{_floor.construction.name}" />
+					</h:column>
+					<h:column>
+						<f:facet name="header">#{messages.Property}</f:facet>
+						<h:outputText value="#{_floor.construction.realProperty.nameProperty}" />
+					</h:column>
+
+				</rich:dataTable>
+
+				<div class="actionButtons"><s:button id="#{areaHome.instance.floor != null ? 'changeParent1' : 'selectParent1'}" value="#{areaHome.instance.floor != null ? messages.Change : messages.Select} #{messages.Floor}" view="/FloorList.xhtml"  rendered="#{authenticator.validateShowFunction('AreaEdit.xhtml', 'Floor_change') or authenticator.validateShowFunction('AreaEdit.xhtml', 'Area_type_select')}" >
+					<f:param name="from" value="AreaEdit" /> 
+				</s:button></div>
+
+				</div>
+			</rich:tab>
+
+			<rich:tab label="#{messages.Rentable_units}">
+				<h:form styleClass="association" id="rentableUnitsChildren">
+
+					<h:outputText value="#{messages.There_are_no_rentableUnits_associated_with_this_area}" rendered="#{empty areaHome.rentableUnits}" />
+
+					<rich:dataTable value="#{areaHome.rentableUnits}" var="_rentableUnit" rendered="#{not empty areaHome.rentableUnits}" rowClasses="rvgRowOne,rvgRowTwo" id="rentableUnitsTable">
+						<rich:column sortBy="#{_rentableUnit.id}">
+							<f:facet name="header">Id</f:facet>
+							<h:outputText value="#{_rentableUnit.id}" />
+						</rich:column>
+					</rich:dataTable>
+
+				</h:form>
+
+				<f:subview rendered="#{areaHome.managed}" id="rentableUnits">
+					<div class="actionButtons"><s:button id="addrentableUnit" value="#{messages.Add_rentableUnit}" view="/RentableUnitEdit.xhtml" propagation="none" rendered="#{authenticator.validateShowFunction('AddressEdit.xhtml', 'addrentableUnit')}" >
+						<f:param name="areaId" value="#{areaHome.instance.id}" />
+						<f:param name="rentableUnitFrom" value="Area" />
+					</s:button></div>
+				</f:subview>
+			</rich:tab>
+		</rich:tabPanel>
+	</ui:define>
+
+</ui:composition>

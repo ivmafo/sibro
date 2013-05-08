@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd">
+
+   <param name="firstResult" value="#{floorList.firstResult}"/>
+   <param name="sort" value="#{floorList.orderColumn}"/>
+   <param name="dir" value="#{floorList.orderDirection}"/>
+   <param name="logic" value="#{floorList.restrictionLogicOperator}"/>
+
+   <param name="from"/>
+   <param name="area" value="#{floorList.floor.area}"/>
+   <param name="floorNumber" value="#{floorList.floor.floorNumber}"/>
+
+</page>

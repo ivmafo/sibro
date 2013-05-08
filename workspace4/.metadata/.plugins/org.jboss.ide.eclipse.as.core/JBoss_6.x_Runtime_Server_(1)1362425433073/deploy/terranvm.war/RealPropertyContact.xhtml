@@ -1,0 +1,165 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Real property contact Details</f:facet>
+
+        <s:decorate id="id" template="layout/display.xhtml">
+            <ui:define name="label">Id</ui:define>
+            <h:outputText value="#{realPropertyContactHome.instance.id}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/RealPropertyContactEdit.xhtml"
+                    id="edit"
+                 value="Edit"/>
+
+        <s:button view="/#{empty realPropertyContactFrom ? 'RealPropertyContactList' : realPropertyContactFrom}.xhtml"
+                    id="done"
+                 value="Done"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Contact</h:panelGroup>
+        </f:facet>
+    <div class="association" id="contactParent">
+
+        <h:outputText value="There is no contact associated with this realPropertyContact."
+                   rendered="#{realPropertyContactHome.instance.contact == null}"/>
+
+        <rich:dataTable var="_contact"
+                   value="#{realPropertyContactHome.instance.contact}"
+                rendered="#{realPropertyContactHome.instance.contact != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="contactTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_contact.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Contact type id</f:facet>
+                <h:outputText value="#{_contact.contactType.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">First name</f:facet>
+                <h:outputText value="#{_contact.firstName}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Last name</f:facet>
+                <h:outputText value="#{_contact.lastName}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Id number</f:facet>
+                <h:outputText value="#{_contact.idNumber}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="viewcontact"
+                     value="View"
+                      view="/Contact.xhtml">
+                    <f:param name="contactId"
+                           value="#{_contact.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Real property</h:panelGroup>
+        </f:facet>
+    <div class="association" id="realPropertyParent">
+
+        <h:outputText value="There is no realProperty associated with this realPropertyContact."
+                   rendered="#{realPropertyContactHome.instance.realProperty == null}"/>
+
+        <rich:dataTable var="_realProperty"
+                   value="#{realPropertyContactHome.instance.realProperty}"
+                rendered="#{realPropertyContactHome.instance.realProperty != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="realPropertyTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_realProperty.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Legal nature of property id</f:facet>
+                <h:outputText value="#{_realProperty.legalNatureOfProperty.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Real property use type id</f:facet>
+                <h:outputText value="#{_realProperty.realPropertyUseType.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Name property real property</f:facet>
+                <h:outputText value="#{_realProperty.namePropertyRealProperty}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Year built real property</f:facet>
+                <h:outputText value="#{_realProperty.yearBuiltRealProperty}">
+                    <s:convertDateTime type="date" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Construction license real property</f:facet>
+                <h:outputText value="#{_realProperty.constructionLicenseRealProperty}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Fund real property</f:facet>
+                <h:outputText value="#{_realProperty.fundRealProperty}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Enrolment number real property</f:facet>
+                <h:outputText value="#{_realProperty.enrolmentNumberRealProperty}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Purchase date</f:facet>
+                <h:outputText value="#{_realProperty.purchaseDate}">
+                    <s:convertDateTime type="date" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Total surface area real property</f:facet>
+                <h:outputText value="#{_realProperty.totalSurfaceAreaRealProperty}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Cadastral id</f:facet>
+                <h:outputText value="#{_realProperty.cadastralId}"/>
+            </h:column>
+            <h:column styleClass="action">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="viewrealProperty"
+                     value="View"
+                      view="/RealProperty.xhtml">
+                    <f:param name="realPropertyId"
+                           value="#{_realProperty.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

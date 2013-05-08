@@ -1,0 +1,109 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:a="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich" xmlns:a4j="http://richfaces.org/a4j" template="layout/template.xhtml">
+
+	<ui:define name="body">
+		<a4j:keepAlive beanName="userTerranvmHome"></a4j:keepAlive>
+		<h:form id="userTerranvm" styleClass="edit">
+
+			<rich:panel>
+				<f:facet name="header">#{userTerranvmHome.managed ? messages.Edit : messages.Add} #{messages.Users}</f:facet>
+
+				<s:decorate id="nombreField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Names}</ui:define>
+					<h:inputTextarea id="nombre" cols="40" rows="1" required="true" value="#{userTerranvmHome.instance.nombre}" >
+						<a4j:support ajaxSingle="true" event="onblur" disableDefault="true"></a4j:support>
+					</h:inputTextarea>
+				</s:decorate>
+
+
+				<s:decorate id="loginField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Username}</ui:define>
+					<h:inputTextarea id="login" cols="40" rows="1" required="true" value="#{userTerranvmHome.instance.login}" >
+						<a4j:support limitToList="true"  ajaxSingle="true" event="onblur" action="#{userTerranvmHome.userExist()}" reRender="loginField, messageUserWrong" ></a4j:support>
+					</h:inputTextarea>
+					<s:label id="messageUserWrong" style="color: #FF0000;" value="#{userTerranvmHome.messageuser}" rendered="#{not empty userTerranvmHome.messageuser}"> </s:label>
+				</s:decorate>
+
+				<s:decorate id="passwordField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Password}</ui:define>
+					<h:inputSecret redisplay="true" required="true" value="#{userTerranvmHome.password}"> 
+						<a4j:support ajaxSingle="true" event="onblur" disableDefault="true"></a4j:support>
+					</h:inputSecret>
+				</s:decorate>
+
+				<s:decorate id="stateField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.State}</ui:define>
+					<h:selectOneMenu value="#{userTerranvmHome.instance.state}">
+						<f:selectItems value="#{userTerranvmHome.states}" />
+						<a4j:support event="onchange" reRender="stateField" limitToList="true" ajaxSingle="true" />
+					</h:selectOneMenu>
+				</s:decorate>
+
+
+				<s:decorate id="mailField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.Email}</ui:define>
+					<h:inputTextarea id="mail" cols="40" rows="1" required="true" value="#{userTerranvmHome.instance.mail}">
+						<a4j:support ajaxSingle="true" event="onchange" disableDefault="true"></a4j:support>
+					</h:inputTextarea>
+				</s:decorate>
+
+				<s:decorate id="roleField" template="layout/edit.xhtml">
+					<ui:define name="label">#{messages.name_role}</ui:define>
+					<h:selectOneMenu id="rols" value="#{userTerranvmHome.instance.role}">
+						<s:selectItems value="#{userTerranvmHome.roles}" var="rol" label="#{rol.roleName}"></s:selectItems>
+						<s:convertEntity></s:convertEntity>
+						<a4j:support ajaxSingle="true" event="onchange" disableDefault="true"></a4j:support>
+					</h:selectOneMenu>
+				</s:decorate>
+				<div style="clear: both"><span class="required">*</span> #{messages.required_fields}</div>
+
+			</rich:panel>
+
+			<div class="actionButtons">
+				<h:commandButton id="save" value="#{messages.Save}" action="#{userTerranvmHome.persist}" disabled="#{!userTerranvmHome.wired}" rendered="#{!userTerranvmHome.managed}" /> 
+				<h:commandButton id="update" value="#{messages.Save}" action="#{userTerranvmHome.update}" rendered="#{userTerranvmHome.managed}" /> 
+				<s:button id="cancelEdit" value="#{messages.Cancel}" propagation="end" view="/UserTerranvm.xhtml" rendered="#{userTerranvmHome.managed}" /> 
+				<s:button id="cancelAdd" value="#{messages.Cancel}" propagation="end" view="/#{empty userTerranvmFrom ? 'UserTerranvmList' : userTerranvmFrom}.xhtml" rendered="#{!userTerranvmHome.managed}" /></div>
+		</h:form>
+
+		<rich:tabPanel switchType="ajax">
+			
+				<rich:tab label="Projecto del Usuario">
+					<h:form styleClass="association" id="projectUsersChildren">
+	
+						<h:outputText value="#{messages.There_are_no_projectUsers_associated_with_this_userTerranvm}" rendered="#{empty userTerranvmHome.projectUsers}" />
+						<a4j:outputPanel id="projects">
+							<rich:dataTable value="#{userTerranvmHome.projectUsers}" var="_projectUser" rendered="#{not empty userTerranvmHome.projectUsers}" rowClasses="rvgRowOne,rvgRowTwo" id="projectUsersTable">
+								<rich:column sortBy="#{_projectUser.id}">
+									<f:facet name="header">#{messages.Id}</f:facet>
+									<h:outputText value="#{_projectUser.id}" />
+								</rich:column>
+								<rich:column sortBy="#{_projectUser.nameProject}">
+									<f:facet name="header">#{messages.Name}</f:facet>
+									<h:outputText value="#{_projectUser.nameProject}" />
+								</rich:column>
+								<rich:column>
+									<f:facet name="header">#{messages.Action}</f:facet>
+									<h:outputLink type="button" id="removeProject" value="#">
+										#{messages.Remover_Project}
+										<a4j:support event="onclick" ajaxSingle="true" action="#{userTerranvmHome.removeProject(_projectUser)}" reRender="projects"/>
+									</h:outputLink>
+								</rich:column>
+							</rich:dataTable>
+						</a4j:outputPanel>
+	
+					</h:form>
+	
+					<f:subview id="projectUsers">
+						<div class="actionButtons"><s:button id="addproject" value="#{messages.Select_project}" view="/ProjectList.xhtml">
+							<f:param name="userTerranvmId" value="#{userTerranvmHome.instance.id}" />
+							<f:param name="from" value="UserTerranvmEdit" />
+						</s:button></div>
+					</f:subview>
+				</rich:tab>
+		</rich:tabPanel>
+		
+	</ui:define>
+
+</ui:composition>

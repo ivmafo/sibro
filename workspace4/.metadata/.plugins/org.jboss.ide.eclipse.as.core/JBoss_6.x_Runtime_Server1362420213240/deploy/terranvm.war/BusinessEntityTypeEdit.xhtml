@@ -1,0 +1,121 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="businessEntityType" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{businessEntityTypeHome.managed ? messages.Edit : messages.Add} #{messages.Business_entity_type}</f:facet>
+
+
+            <s:decorate id="nameBusinessEntityTypeField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Name}</ui:define>
+                <h:inputTextarea id="nameBusinessEntityType"
+                               cols="35"
+                               rows="1"
+                           required="true"
+                              value="#{businessEntityTypeHome.instance.nameBusinessEntityType}"/>
+            </s:decorate>
+
+
+            <s:decorate id="descriptionField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Description}</ui:define>
+                <h:inputTextarea id="description"
+                               cols="60"
+                               rows="2"
+                           required="true"
+                              value="#{businessEntityTypeHome.instance.description}"/>
+            </s:decorate>
+
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                #{messages.required_fields}
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="#{messages.Save}"
+                         action="#{businessEntityTypeHome.persist}"
+                       disabled="#{!businessEntityTypeHome.wired}"
+                       rendered="#{!businessEntityTypeHome.managed and authenticator.validateShowFunction('BusinessEntityTypeEdit.xhtml', 'save')}"/>
+                       
+                       
+
+            <h:commandButton id="update"
+                          value="#{messages.Save}"
+                         action="#{businessEntityTypeHome.update}"
+                       rendered="#{businessEntityTypeHome.managed and authenticator.validateShowFunction('BusinessEntityTypeEdit.xhtml', 'update')}"/>
+
+            <h:commandButton id="delete"
+                          value="#{messages.Delete}"
+                         action="#{businessEntityTypeHome.remove}"
+                      immediate="true"
+                       rendered="#{businessEntityTypeHome.managed and authenticator.validateShowFunction('BusinessEntityTypeEdit.xhtml', 'delete')}"/>
+
+            <s:button id="cancelEdit"
+                   value="#{messages.Cancel}"
+             propagation="end"
+                    view="/BusinessEntityType.xhtml"
+                rendered="#{businessEntityTypeHome.managed and authenticator.validateShowFunction('BusinessEntityTypeEdit.xhtml', 'cancelEdit')}"/>
+
+            <s:button id="cancelAdd"
+                   value="#{messages.Cancel}"
+             propagation="end"
+                    view="/#{empty businessEntityTypeFrom ? 'BusinessEntityTypeList' : businessEntityTypeFrom}.xhtml"
+                rendered="#{!businessEntityTypeHome.managed and authenticator.validateShowFunction('BusinessEntityTypeEdit.xhtml', 'cancelAdd')}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab rendered="false" label="#{messages.Business_entity}">
+        <h:form styleClass="association" id="entityTypesChildren">
+
+            <h:outputText value="#{messages.There_are_no_entityTypes_associated_with_this_businessEntityType}"
+                       rendered="#{empty businessEntityTypeHome.entities}"/>
+
+            <rich:dataTable value="#{businessEntityTypeHome.entities}"
+                           var="_entityType"
+                      rendered="#{not empty businessEntityTypeHome.entities}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="entityTypesTable">
+                <rich:column sortBy="#{_entityType.id}">
+                    <f:facet name="header">Id</f:facet>
+                    <h:outputText value="#{_entityType.id}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{businessEntityTypeHome.managed}" id="entityTypes">
+        <div class="actionButtons">
+            <s:button id="addentityType"
+                   value="#{messages.Add_entityType}"
+                    view="/BusinessEntityEdit.xhtml"
+             propagation="none"
+             rendered="#{authenticator.validateShowFunction('BusinessEntityTypeEdit.xhtml', 'addentityType')}">
+                 <f:param name="businessEntityTypeId"
+                         value="#{businessEntityHome.instance.id}"/>
+                 <f:param name="entityTypeFrom" value="BusinessEntity"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

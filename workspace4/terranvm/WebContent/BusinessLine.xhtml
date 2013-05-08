@@ -1,0 +1,298 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a4j="http://richfaces.org/a4j"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">#{messages.Business_line_Details}</f:facet>
+
+        <s:decorate id="id" template="layout/display.xhtml">
+            <ui:define name="label">Id</ui:define>
+            <h:outputText value="#{businessLineHome.instance.id}"/>
+        </s:decorate>
+
+        <s:decorate id="nameBusinessLine" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Name}</ui:define>
+            <h:outputText value="#{businessLineHome.instance.nameBusinessLine}"/>
+        </s:decorate>
+
+        <s:decorate id="costCenterBusinessLine" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Cost_center}</ui:define>
+            <h:outputText value="#{businessLineHome.instance.costCenterBusinessLine}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+    <table><tr>
+    <td><div id="editButton">
+            <s:button view="/BusinessLineEdit.xhtml"
+                    id="edit"
+                 value="#{messages.Edit}" disabled="#{businessLineHome.businessLineListInApprove(businessLineHome.instance)}" rendered="#{empty makerCheckerId and authenticator.validateShowFunction('BusinessLine.xhtml', 'edit')}"/>
+                 <rich:toolTip disabled="#{not businessLineHome.businessLineListInApprove(businessLineHome.instance)}" for="editButton">#{messages.You_can_not_edit_pending_approval_of_a_change}</rich:toolTip>
+                 </div>
+                 </td>
+
+        <td><s:button view="/#{empty businessLineFrom ? 'BusinessLineList' : businessLineFrom}.xhtml"
+                    id="done"
+                 value="#{messages.Done}" rendered="#{empty makerCheckerId and authenticator.validateShowFunction('BusinessLine.xhtml', 'done')}"/>
+                 </td>
+                 </tr>
+                 </table>
+                 <s:button view="/MakerCheckerBusinessLineList.xhtml" action="#{businessLineHome.approveChange()}" id="approved" value="#{messages.ApproveChange}" rendered="#{not empty makerCheckerId and authenticator.validateShowFunction('BusinessLine.xhtml', 'approved')}"/>
+		 	<s:button view="/MakerCheckerBusinessLineList.xhtml" action="#{businessLineHome.cancelChange()}" id="cancel" value="#{messages.Cancel}" rendered="#{not empty makerCheckerId and authenticator.validateShowFunction('BusinessLine.xhtml', 'cancel')}"/>
+           
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>#{messages.Business_entity}</h:panelGroup>
+        </f:facet>
+    <div class="association" id="businessEntityParent">
+
+        <h:outputText value="#{messages.There_is_no_businessEntity_associated_with_this_businessLine}"
+                   rendered="#{businessLineHome.instance.businessEntity == null}"/>
+
+        <rich:dataTable var="_businessEntity"
+                   value="#{businessLineHome.instance.businessEntity}"
+                rendered="#{businessLineHome.instance.businessEntity != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="businessEntityTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_businessEntity.id}"/>
+            </h:column>
+             <h:column>
+                <f:facet name="header">#{messages.Name}</f:facet>
+                <h:outputText value="#{_businessEntity.nameBusinessEntity}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Id_number}</f:facet>
+                <h:outputText value="#{_businessEntity.idNumber}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Verification_number}</f:facet>
+                <h:outputText value="#{_businessEntity.verificationNumber}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Trade_Name}</f:facet>
+                <h:outputText value="#{_businessEntity.tradeName}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Email}</f:facet>
+                <h:outputText value="#{_businessEntity.email}"/>
+            </h:column>
+            <h:column styleClass="action" rendered="#{authenticator.validateShowFunction('BusinessLine.xhtml', 'viewbusinessEntity')}">
+                <f:facet name="header">#{messages.Action}</f:facet>
+                <s:link id="viewbusinessEntity"
+                     value="#{messages.View}"
+                      view="/BusinessEntity.xhtml">
+                    <f:param name="businessEntityId"
+                           value="#{_businessEntity.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab rendered="false">
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>#{messages.Business_line}</h:panelGroup>
+        </f:facet>
+    <div class="association" id="businessLineParent">
+
+        <h:outputText value="#{messages.There_is_no_businessLine_associated_with_this_businessLine}"
+                   rendered="#{businessLineHome.instance.businessLine == null}"/>
+
+        <rich:dataTable var="_businessLine"
+                   value="#{businessLineHome.instance.businessLine}"
+                rendered="#{businessLineHome.instance.businessLine != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="businessLineTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_businessLine.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Business_entity_id}</f:facet>
+                <h:outputText value="#{_businessLine.businessEntity.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Business_line_id}</f:facet>
+                <h:outputText value="#{_businessLine.businessLine.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Name}</f:facet>
+                <h:outputText value="#{_businessLine.nameBusinessLine}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Cost_center}</f:facet>
+                <h:outputText value="#{_businessLine.costCenterBusinessLine}"/>
+            </h:column>
+            <h:column styleClass="action" rendered="#{authenticator.validateShowFunction('BusinessLine.xhtml', 'viewbusinessLine')}">
+                <f:facet name="header">#{messages.Action}</f:facet>
+                <s:link id="viewbusinessLine"
+                     value="#{messages.View}"
+                      view="/BusinessLine.xhtml">
+                    <f:param name="businessLineId"
+                           value="#{_businessLine.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>#{messages.Business_lines}</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="businessLinesChildren">
+
+        <h:outputText value="#{messages.There_is_no_businessLines_associated_with_this_businessLine}"
+                   rendered="#{empty businessLineHome.businessLines}"/>
+
+        <rich:dataTable value="#{businessLineHome.businessLines}"
+                       var="_businessLine"
+                  rendered="#{not empty businessLineHome.businessLines}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="businessLinesTable">
+            <rich:column sortBy="#{_businessLine.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_businessLine.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_businessLine.nameBusinessLine}">
+                <f:facet name="header">#{messages.Name}</f:facet>
+                <h:outputText value="#{_businessLine.nameBusinessLine}"/>
+            </rich:column>
+            <rich:column sortBy="#{_businessLine.costCenterBusinessLine}">
+                <f:facet name="header">#{messages.Cost_center}</f:facet>
+                <h:outputText value="#{_businessLine.costCenterBusinessLine}"/>
+            </rich:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+       <h:form>
+            <h:commandButton  id="addbusinessLine" type="button"  value="#{messages.Add_businessLines}" rendered="#{authenticator.validateShowFunction('BusinessLine.xhtml', 'addbusinessLine')}" >
+               <a4j:support event="onclick" ajaxSingle="true" oncomplete="#{rich:component('modalPanelCreateBusinessLines')}.show()" action="#{businessLineHome.setBusinessLine(_businessLine)}"
+                reRender="modalPanelCreateBusinessLines"></a4j:support>
+            </h:commandButton></h:form>
+    </div>
+    </rich:tab>
+
+    <rich:tab rendered="false">
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>#{messages.Projects}</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="projectsChildren">
+
+        <h:outputText value="#{messages.There_are_no_projects_associated_with_this_businessLine}"
+                   rendered="#{empty businessLineHome.projects}"/>
+
+        <rich:dataTable value="#{businessLineHome.projects}"
+                       var="_project"
+                  rendered="#{not empty businessLineHome.projects}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="projectsTable">
+            <rich:column sortBy="#{_project.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_project.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_project.nameProject}">
+                <f:facet name="header">#{messages.Name}</f:facet>
+                <h:outputText value="#{_project.nameProject}"/>
+            </rich:column>
+            <rich:column sortBy="#{_project.costCenterProject}">
+                <f:facet name="header">#{messages.Cost_center}</f:facet>
+                <h:outputText value="#{_project.costCenterProject}"/>
+            </rich:column>
+            <h:column rendered="#{authenticator.validateShowFunction('BusinessLine.xhtml', 'selectproject')}" >
+                <f:facet name="header">#{messages.Action}</f:facet>
+                <s:link id="selectproject"
+                     value="#{messages.Select}"
+                      view="/Project.xhtml">
+                    <f:param name="projectId"
+                            value="#{_project.id}"/>
+                    <f:param name="projectFrom" value="BusinessLine"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="#{messages.Add_project}"
+                view="/ProjectEdit.xhtml">
+            <f:param name="businessLineId"
+                    value="#{businessLineHome.instance.id}"/>
+            <f:param name="projectFrom" value="BusinessLine"/>
+        </s:button>
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+<rich:modalPanel id="modalPanelCreateBusinessLines" width="500" autosized="true">
+
+ <h:form id="businessLines" styleClass="edit">
+ <a4j:outputPanel ajaxRendered="true">
+ 
+
+        <rich:panel>
+            <f:facet name="header">#{messages.Add} #{messages.Business_lines}</f:facet>
+
+
+            <s:decorate id="nameBusinessLineFields" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Name}</ui:define>
+                <h:inputTextarea id="nameBusinessLine" cols="40" rows="1" required="true"
+                              value="#{businessLineHome.businessLine.nameBusinessLine}">
+                              </h:inputTextarea>
+            </s:decorate>
+
+
+            <s:decorate id="costCenterBusinessLineFields" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Cost_center}</ui:define>
+                <h:inputText id="costCenterBusinessLine" cols="10" rows="3" required="true"
+                              value="#{businessLineHome.businessLine.costCenterBusinessLine}">
+                </h:inputText>              
+            </s:decorate>
+
+
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                #{messages.required_fields}
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save" value="#{messages.Save}" action="#{businessLineHome.persistSubLine()}"
+            rendered="#{authenticator.validateShowFunction('BusinessLine.xhtml', 'save')}">
+             </h:commandButton>
+
+            <h:commandButton type="button" id="cancelAdd" value="#{messages.Cancel}" view="/BusinessLineEdit.xhtml" rendered="#{authenticator.validateShowFunction('BusinessLine.xhtml', 'cancel')}">
+            <a4j:support ajaxSingle="true" event="onclick" ignoreDupResponses="true" onsubmit="#{rich:component('modalPanelCreateBusinessLines')}.hide()" action="#{businessLineHome.clearbusinessLine()}" reRender="modalPanelCreateBusinessLines"></a4j:support>
+            </h:commandButton>
+        </div></a4j:outputPanel>
+    </h:form>
+
+</rich:modalPanel>
+</ui:define>
+
+</ui:composition>

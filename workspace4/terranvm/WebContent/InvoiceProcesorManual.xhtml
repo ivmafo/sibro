@@ -1,0 +1,61 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:p="http://primefaces.prime.com.tr/ui" xmlns:a4j="http://richfaces.org/a4j" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+	<ui:define name="body">
+	
+		<a4j:keepAlive beanName="InvoiceProcessorManual"></a4j:keepAlive>
+ 
+		<rich:simpleTogglePanel id="cronJobManualTogglePanelId" opened="true" switchType="client" ignoreDupResponses="true">
+			<f:facet name="header">CRON JOB MANUAL</f:facet>
+			<h:form>
+
+				<s:decorate id="conceptId" template="layout/display.xhtml">
+					<ui:define name="label">Concept ID:</ui:define>
+					<h:inputText id="idInputConcept" value="#{InvoiceProcessorManual.conceptId}">
+						<a4j:support event="onchange" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="buttonCronJob"></a4j:support>
+					</h:inputText>  
+				</s:decorate>
+
+				<s:decorate id="termSheetId" template="layout/display.xhtml">
+					<ui:define name="label">TermSheet ID:</ui:define>
+					<h:inputText id="idInputTermSheet" value="#{InvoiceProcessorManual.termSheetId}">
+						<a4j:support event="onchange" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="buttonCronJob"></a4j:support>
+					</h:inputText>
+				</s:decorate>
+
+
+				<a4j:outputPanel id="buttonCronJob">
+					<s:decorate template="layout/edit.xhtml">
+						<h:commandButton type="button" value="Execute Cron Job">
+							<a4j:support event="onclick" ajaxSingle="true" limitToList="true" ignoreDupResponses="true" action="#{InvoiceProcessorManual.callExecution()}" reRender="buttonCronJob"></a4j:support>
+						</h:commandButton>
+					</s:decorate>
+				</a4j:outputPanel>
+				
+				<a4j:outputPanel id="buttonNewBalance">
+					<s:decorate template="layout/edit.xhtml" rendered="#{InvoiceProcessorManual.showButton()}">
+						<h:commandButton type="button" value="Execute New Balance">
+							<a4j:support event="onclick" ajaxSingle="true" limitToList="true" ignoreDupResponses="true" action="#{InvoiceProcessorManual.newBalance()}" reRender="buttonCronJob"></a4j:support>
+						</h:commandButton>
+					</s:decorate>
+				</a4j:outputPanel>
+				
+				<a4j:outputPanel id="buttonInterest">
+					<s:decorate template="layout/edit.xhtml">
+						<h:commandButton type="button" value="Calcular intereses">
+							<a4j:support event="onclick" ajaxSingle="true" limitToList="true" ignoreDupResponses="true" action="#{InvoiceProcessorManual.executeInvoiceProcessorInterest()}" reRender="buttonCronJob"></a4j:support>
+						</h:commandButton>
+					</s:decorate>
+				</a4j:outputPanel>
+
+
+			</h:form>
+		</rich:simpleTogglePanel>
+
+
+
+
+
+	</ui:define>
+
+</ui:composition>

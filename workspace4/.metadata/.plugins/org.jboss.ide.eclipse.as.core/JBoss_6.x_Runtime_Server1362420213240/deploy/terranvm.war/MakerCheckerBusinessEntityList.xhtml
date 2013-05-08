@@ -1,0 +1,125 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:a4j="http://richfaces.org/a4j" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">#{messages.Approved_list_BusinessEntity} (#{empty makerCheckerBusinessEntityList.resultList ? 0 : (makerCheckerBusinessEntityList.paginated ? makerCheckerBusinessEntityList.resultCount : makerCheckerBusinessEntityList.resultList.size)})</f:facet>
+			<div class="results" id="makerCheckerBusinessEntityList"><h:outputText value="#{messages.There_are_no_businessentity_to_pass}" rendered="#{empty makerCheckerBusinessEntityList.resultList}" /> <a4j:outputPanel ajaxRendered="true">
+				<h:form styleClass="association">
+					<rich:dataTable id="makerCheckerRealPropertyList" var="_makerChecker" value="#{makerCheckerBusinessEntityList.resultList}" rendered="#{not empty makerCheckerBusinessEntityList.resultList}">
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{makerCheckerBusinessEntityList}" />
+									<ui:param name="propertyLabel" value="Id" />
+									<ui:param name="propertyPath" value="makerChecker.id" />
+								</ui:include>
+							</f:facet>
+							<h:outputText value="#{_makerChecker.id}" />
+						</h:column>
+						<h:column rendered="false">
+				            <f:facet name="header">
+				                <ui:include src="layout/sort.xhtml">
+				                    <ui:param name="entityList" value="#{businessEntityList}"/>
+				                    <ui:param name="propertyLabel" value="#{messages.Economic_activity_id}"/>
+				                </ui:include>
+				            </f:facet>
+				            <h:outputText value="#{businessEntityHome.getInstanceMaker(_makerChecker).economicActivity.code}"/>
+				        </h:column>
+				        <h:column>
+				            <f:facet name="header">
+				                <ui:include src="layout/sort.xhtml">
+				                    <ui:param name="entityList" value="#{businessEntityList}"/>
+				                    <ui:param name="propertyLabel" value="#{messages.Id_type}"/>
+				                </ui:include>
+				            </f:facet>
+				            <h:outputText value="#{businessEntityHome.getIdentificationTypes(businessEntityHome.getInstanceMaker(_makerChecker))}"/>
+				        </h:column>
+				        
+				        <h:column>
+				            <f:facet name="header">
+				                <ui:include src="layout/sort.xhtml">
+				                    <ui:param name="entityList" value="#{businessEntityList}"/>
+				                    <ui:param name="propertyLabel" value="#{messages.Id_number}"/>
+				                </ui:include>
+				            </f:facet>
+				            <h:outputText value="#{businessEntityHome.getInstanceMaker(_makerChecker).idNumber()}" rendered="#{businessEntityHome.getInstanceMaker(_makerChecker).idType!=31}"/>
+				            <h:outputText value="#{businessEntityHome.getInstanceMaker(_makerChecker).idNumber()} - #{businessEntityHome.getInstanceMaker(_makerChecker).verificationNumber}" rendered="#{businessEntityHome.getInstanceMaker(_makerChecker).idType==31}"/>
+				        </h:column>
+				        <h:column>
+				            <f:facet name="header">
+				                <ui:include src="layout/sort.xhtml">
+				                    <ui:param name="entityList" value="#{businessEntityList}"/>
+				                    <ui:param name="propertyLabel" value="#{messages.Name}"/>
+				                </ui:include>
+				            </f:facet>
+				            <h:outputText value="#{businessEntityHome.getInstanceMaker(_makerChecker).nameBusinessEntity}"/>
+				        </h:column>
+				        
+				        <h:column>
+				        <f:facet name="header">
+				        <ui:include src="layout/sort.xhtml">
+				        <ui:param name="entityList" value="#{businessEntityList}"/>
+				        <ui:param name="propertyLabel" value="#{messages.Trade_Name}"/>
+				        </ui:include>
+				        </f:facet>
+				        <h:outputText value="#{businessEntityHome.getInstanceMaker(_makerChecker).tradeName}"/>
+				        </h:column>
+				        
+				        
+				        <h:column>
+				            <f:facet name="header">
+				                <ui:include src="layout/sort.xhtml">
+				                    <ui:param name="entityList" value="#{businessEntityList}"/>
+				                    <ui:param name="propertyLabel" value="#{messages.Third_type}"/>
+				                </ui:include>
+				            </f:facet>
+				            <h:outputText value="#{businessEntityHome.convertEntitiesType(businessEntityHome.getInstanceMaker(_makerChecker))}"/> 
+				        </h:column>
+				        
+				        
+				        
+				        <h:column>
+				            <f:facet name="header">
+				                <ui:include src="layout/sort.xhtml">
+				                    <ui:param name="entityList" value="#{businessEntityList}"/>
+				                    <ui:param name="propertyLabel" value="#{messages.Email}"/>
+				                </ui:include>
+				            </f:facet>
+				            <h:outputText value="#{businessEntityHome.getInstanceMaker(_makerChecker).email}"/>
+				        </h:column>
+				        <h:column>
+				            <f:facet name="header">
+				                <ui:include src="layout/sort.xhtml">
+				                    <ui:param name="entityList" value="#{businessEntityList}"/>
+				                    <ui:param name="propertyLabel" value="#{messages.Legal_entity_type}"/>
+				                </ui:include>
+				            </f:facet>
+				            <h:outputText value="#{businessEntityHome.getLegalEntityType(businessEntityHome.getInstanceMaker(_makerChecker))}"/>
+				        </h:column>
+						<rich:column styleClass="action">
+							<f:facet name="header">#{messages.Action}</f:facet>
+							<s:link rendered="#{_makerChecker.conceptId == null}" view="/#{makerCheckerHome.getPageView(_makerChecker.className)}" value="#{empty from ? messages.View : messages.Select}" propagation="#{empty from ? 'none' : 'default'}" id="makerCheckerViewId">
+								<f:param name="makerCheckerId" value="#{_makerChecker.id}" />
+								<f:param name="#{makerCheckerHome.getParamNameView(_makerChecker.className)}" value="#{_makerChecker.objectId}" />
+							</s:link>
+							</rich:column>
+					</rich:dataTable>
+				</h:form>
+			</a4j:outputPanel></div>
+		</rich:panel>
+
+		<div class="tableControl"><s:link view="/MakerCheckerBusinessEntityList.xhtml" rendered="#{makerCheckerBusinessEntityList.previousExists}" value="#{messages.left}#{messages.left} #{messages.First_Page} " id="firstPage">
+			<f:param name="firstResult" value="0" />
+		</s:link> <s:link view="/MakerCheckerBusinessEntityList.xhtml" rendered="#{makerCheckerBusinessEntityList.previousExists}" value="#{messages.left} #{messages.Previous_Page} " id="previousPage">
+			<f:param name="firstResult" value="#{makerCheckerBusinessEntityList.previousFirstResult}" />
+		</s:link> <s:link view="/MakerCheckerBusinessEntityList.xhtml" rendered="#{makerCheckerBusinessEntityList.nextExists}" value="#{messages.Next_page}  #{messages.right}" id="nextPage">
+			<f:param name="firstResult" value="#{makerCheckerList.nextFirstResult}" />
+		</s:link> <s:link view="/MakerCheckerBusinessEntityList.xhtml" rendered="#{makerCheckerBusinessEntityList.nextExists}" value="#{messages.Last_Page}  #{messages.right}#{messages.right}" id="lastPage">
+			<f:param name="firstResult" value="#{makerCheckerBusinessEntityList.lastFirstResult}" />
+		</s:link></div>
+
+	</ui:define>
+
+</ui:composition>

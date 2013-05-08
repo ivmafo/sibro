@@ -1,0 +1,208 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:p="http://primefaces.prime.com.tr/ui"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+
+	<ui:define name="body">
+		<a4j:keepAlive beanName="userTerranvmHome"></a4j:keepAlive>
+
+		<h:form>
+			<rich:simpleTogglePanel label="#{messages.Project_Search_Filter}"
+				switchType="ajax">
+				<s:decorate template="layout/display.xhtml">
+					<ui:define name="label">#{messages.Project_name_List}</ui:define>
+					<h:inputText id="nameProject"
+						value="#{projectList.project.nameProject}" />
+				</s:decorate>
+
+				<s:decorate template="layout/display.xhtml">
+					<ui:define name="label">#{messages.Cost_center}</ui:define>
+					<h:inputText id="costCenterProject"
+						value="#{projectList.project.costCenterProject}" />
+				</s:decorate>
+
+				<s:decorate template="layout/display.xhtml">
+					<ui:define name="label">#{messages.Business_line_id}</ui:define>
+					<h:inputText id="businesLine"
+						value="#{projectList.project.businesLine}">
+					</h:inputText>
+				</s:decorate>
+
+				<s:decorate template="layout/display.xhtml">
+					<ui:define name="label">#{messages.Match}</ui:define>
+					<h:selectOneRadio id="logic"
+						value="#{projectList.restrictionLogicOperator}" styleClass="radio">
+						<f:selectItem itemLabel="#{messages.All}" itemValue="and" />
+						<f:selectItem itemLabel="#{messages.Any}" itemValue="or" />
+					</h:selectOneRadio>
+				</s:decorate>
+			</rich:simpleTogglePanel>
+
+			<div class="actionButtons">
+				<h:commandButton id="search" value="#{messages.Search}"
+					action="/ProjectList.xhtml" />
+				<s:button id="reset" value="#{messages.Reset}"
+					includePageParams="false" />
+			</div>
+		</h:form>
+
+		<rich:panel>
+			<f:facet name="header">#{messages.ProjectList} (#{empty projectList.resultList ? 0 : (projectList.paginated ? projectList.resultCount : projectList.resultList.size)})</f:facet>
+			<div class="results" id="projectList">
+				<h:outputText value="#{messages.search_returned_no_results}"
+					rendered="#{empty projectList.resultList}" />
+				<h:form>
+					<rich:dataTable id="projectList" var="_project"
+						value="#{projectList.resultList}"
+						rendered="#{not empty projectList.resultList}">
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{projectList}" />
+									<ui:param name="propertyLabel" value="Id" />
+									<ui:param name="propertyPath" value="project.id" />
+								</ui:include>
+							</f:facet>
+
+							<h:outputText value="#{_project.id}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{projectList}" />
+									<ui:param name="propertyLabel"
+										value="#{messages.Project_name_List}" />
+									<ui:param name="propertyPath" value="project.nameProject" />
+								</ui:include>
+							</f:facet>
+							<h:outputText value="#{_project.nameProject}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{projectList}" />
+									<ui:param name="propertyLabel"
+										value="#{messages.Business_entity_id}" />
+									<ui:param name="propertyPath"
+										value="project.businessEntity.nameBusinessEntity" />
+								</ui:include>
+
+							</f:facet>
+							<h:outputText
+								value="#{_project.businessEntity.nameBusinessEntity}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{projectList}" />
+									<ui:param name="propertyLabel"
+										value="#{messages.Business_line_id}" />
+									<ui:param name="propertyPath"
+										value="project.businessLine.nameBusinessLine" />
+								</ui:include>
+							</f:facet>
+							<h:outputText value="#{_project.businessLine.nameBusinessLine}" />
+						</h:column>
+
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{projectList}" />
+
+									<ui:param name="propertyLabel"
+										value="#{messages.BusinessEntityLine}" />
+									<ui:param name="propertyPath"
+										value="project.businessLine.businessEntity.nameBusinessEntity" />
+								</ui:include>
+							</f:facet>
+							<h:outputText
+								value="#{_project.businessLine.businessEntity.nameBusinessEntity}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{projectList}" />
+									<ui:param name="propertyLabel" value="#{messages.Cost_center}" />
+
+									<ui:param name="propertyPath" value="project.costCenterProject" />
+								</ui:include>
+							</f:facet>
+							<h:outputText value="#{_project.costCenterProject}" />
+						</h:column>
+						<rich:column styleClass="action">
+							<table>
+								<tr>
+									<td><f:facet name="header">#{messages.Action}</f:facet> <s:link
+											view="/#{empty from ? 'Project' : from}.xhtml"
+											value="#{empty from ? messages.View : messages.Select}"
+											propagation="#{empty from ? 'none' : 'default'}"
+											id="projectViewId"
+											rendered="#{authenticator.validateShowFunction('ProjectList.xhtml', 'projectViewId')}">
+											<f:param name="projectId" value="#{_project.id}" />
+										</s:link></td>
+									<td>#{' '}</td>
+									<td>
+										<div id="editButton#{_project.id}">
+											<s:link view="/ProjectEdit.xhtml" value="#{messages.Edit}"
+												propagation="none" id="projectEdit"
+												rendered="#{ empty from and authenticator.validateShowFunction('ProjectList.xhtml', 'projectEdit')}"
+												disabled="#{projectHome.projectListInApprove(_project)}">
+												<f:param name="projectId" value="#{_project.id}" />
+											</s:link>
+											<rich:toolTip
+												disabled="#{not projectHome.projectListInApprove(_project)}"
+												for="editButton#{_project.id}">#{messages.You_can_not_edit_pending_approval_of_a_change}</rich:toolTip>
+										</div>
+									</td>
+
+								</tr>
+							</table>
+						</rich:column>
+					</rich:dataTable>
+				</h:form>
+			</div>
+			<div class="tableControl">
+				<s:link view="/ProjectList.xhtml"
+					rendered="#{projectList.previousExists and authenticator.validateShowFunction('ProjectList.xhtml', 'firstPage')}"
+					value="#{messages.left}#{messages.left} #{messages.First_Page}"
+					id="firstPage">
+					<f:param name="firstResult" value="0" />
+				</s:link>
+				<s:link view="/ProjectList.xhtml"
+					rendered="#{projectList.previousExists and authenticator.validateShowFunction('ProjectList.xhtml', 'previousPage')}"
+					value="#{messages.left} #{messages.Previous_Page}"
+					id="previousPage">
+					<f:param name="firstResult"
+						value="#{projectList.previousFirstResult}" />
+				</s:link>
+				<s:link view="/ProjectList.xhtml"
+					rendered="#{projectList.nextExists and authenticator.validateShowFunction('ProjectList.xhtml', 'nextPage')}"
+					value="#{messages.Next_page} #{messages.right}" id="nextPage">
+					<f:param name="firstResult" value="#{projectList.nextFirstResult}" />
+				</s:link>
+				<s:link view="/ProjectList.xhtml"
+					rendered="#{projectList.nextExists and authenticator.validateShowFunction('ProjectList.xhtml', 'lastPage')}"
+					value="#{messages.Last_Page} #{messages.right}#{messages.right}"
+					id="lastPage">
+					<f:param name="firstResult" value="#{projectList.lastFirstResult}" />
+				</s:link>
+			</div>
+
+			<s:div styleClass="actionButtons" rendered="#{empty from}">
+				<s:button view="/ProjectEdit.xhtml" id="create" propagation="none"
+					value="#{messages.Create_project}"
+					rendered="#{authenticator.validateShowFunction('ProjectList.xhtml', 'projectEdit')}">
+					<f:param name="projectId" />
+				</s:button>
+			</s:div>
+		</rich:panel>
+
+	</ui:define>
+
+</ui:composition>

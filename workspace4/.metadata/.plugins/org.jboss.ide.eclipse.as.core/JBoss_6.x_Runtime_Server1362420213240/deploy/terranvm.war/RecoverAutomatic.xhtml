@@ -1,0 +1,132 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:p="http://primefaces.prime.com.tr/ui" xmlns:a4j="http://richfaces.org/a4j" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+	<ui:define name="body">
+		<a4j:keepAlive beanName="recoverHome"></a4j:keepAlive>
+
+		<rich:simpleTogglePanel switchType="ajax">
+			<f:facet name="header">#{messages.recover_manual}</f:facet>
+				<div style="width: 100%; height: 80px; text-align: center; vertical-align: middle;">
+
+					<rich:panel>
+						<h:form enctype="multipart/form-data">
+						<table style="width: 100%">
+							<tr>
+								<td align="center">
+										<s:decorate template="layout/edit.xhtml">
+											<ui:define name="label">Formato</ui:define>
+											<h:selectOneMenu id="formats" value="#{asobancariaItemsHome.format}">
+												<s:selectItems value="#{asobancariaItemsHome.formats}" var="format" label="#{format.name}"></s:selectItems>
+												<s:convertEntity></s:convertEntity>
+												<a4j:support ajaxSingle="true" event="onchange" disableDefault="true"></a4j:support>
+											</h:selectOneMenu>
+										</s:decorate>
+								</td>
+								
+								<td align="center">
+									<s:decorate template="layout/edit.xhtml">
+										<ui:define name="label">Archivo Asobancaria</ui:define>
+										<s:fileUpload accept="*/*" data="#{asobancariaItemsHome.asobancariaData}">
+										</s:fileUpload>
+									</s:decorate>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2" align="center">
+									<h:commandButton value="Procesar" action="#{asobancariaItemsHome.asobancariaProcess()}"/>
+								</td>
+							</tr>
+							
+						</table>
+						</h:form>
+					</rich:panel>
+				</div>
+				<div align="center" style="width: 100%; vertical-align: middle;">
+					<h:form id="recoverAutomatic">
+						<h:outputText value="No surgieron errores durante el proceso" rendered="#{asobancariaItemsHome.afterProcess and (asobancariaItemsHome.errors == null or (asobancariaItemsHome.errors != null and asobancariaItemsHome.errors.isEmpty())) and empty asobancariaItemsHome.messageError}" />
+						<h:outputText value="#{asobancariaItemsHome.messageError}" style="color:red;" rendered="#{asobancariaItemsHome.afterProcess and (asobancariaItemsHome.errors == null or (asobancariaItemsHome.errors != null and asobancariaItemsHome.errors.isEmpty())) and not empty asobancariaItemsHome.messageError}" />
+						<rich:extendedDataTable height="200px" selectionMode="single" rows="0" sortMode="single" rendered="#{asobancariaItemsHome.errors != null and asobancariaItemsHome.errors.size()>0}" value="#{asobancariaItemsHome.errors}" var="_error" id="errorTable">
+		
+							<rich:column width="20%" sortable="true" sortBy="#{_error[0]}">
+								<f:facet name="header">
+									<h:outputText value="Línea" />
+								</f:facet>
+								<h:outputText value="#{_error[0]}" />
+							</rich:column>
+							<rich:column width="80%" sortable="true" sortBy="#{_error[1]}">
+								<f:facet name="header">
+									<h:outputText value="Error" />
+								</f:facet>
+								<h:outputText value="#{_error[1]}" />
+							</rich:column>
+						</rich:extendedDataTable>
+						
+						<table style="width: 100%">
+							<tr>
+								<td>
+									<table align="left" style="width: 50px">
+										<tr>
+											<td>
+												<h:commandButton type="button" value="Generar Archivo SIIGO" rendered="#{asobancariaItemsHome.afterProcess and asobancariaItemsHome.linkSIIGO != null}">
+													<a4j:support action="#{asobancariaItemsHome.generateSIIGO()}" event="onclick" oncomplete="#{rich:component('modalPanelRecoverSIIGO')}.show()" ajaxSingle="true" limitToList="true" reRender="modalPanelRecoverSIIGO"></a4j:support>
+												</h:commandButton>
+											</td>
+											<td>
+												<h:commandButton type="button" value="Generar Recibos de Caja" rendered="#{asobancariaItemsHome.afterProcess}">
+													<a4j:support action="#{recoverHome.createRecoverPDF()}" event="onclick" oncomplete="#{rich:component('modalPanelPdf')}.show()" ajaxSingle="true" limitToList="true" reRender="modalPanelPdf,linkPDF">  </a4j:support>
+												</h:commandButton> 
+											</td>
+										</tr>
+									</table>
+								</td>
+								<td>
+									<a4j:outputPanel rendered="#{asobancariaItemsHome.errors != null and asobancariaItemsHome.errors.size()>0}" style="height:50px">
+										<div style="width: 100%; text-align: right;">
+											<h:commandLink value="Descarga Errores Excel     "  id="linkComparable" action="#{org.jboss.seam.excel.exporter.excelExporter.export('recoverAutomatic:errorTable')}">
+												<h:graphicImage value="/img/excel_32px.png" />
+											</h:commandLink>
+										</div>	
+									</a4j:outputPanel>
+								</td>
+							</tr>
+						</table>
+					</h:form>
+				</div>
+		</rich:simpleTogglePanel>
+
+		<rich:modalPanel id="modalPanelRecoverSIIGO" autosized="true">
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText value="#{messages.Download}">
+					</h:outputText>
+				</h:panelGroup>
+			</f:facet>
+			<h:form>
+				<s:link id="linkSIIGO" rendered="#{asobancariaItemsHome.linkSIIGO != null}" value="#{messages.Download_SIIGO}" action="#{downloadAttachment.download()}">
+					<f:param name="relativePath" value="#{asobancariaItemsHome.linkSIIGO}"></f:param>
+				</s:link>
+				<h:outputText value="No hay Recaudo realizados" rendered="#{asobancariaItemsHome.recovers.size() == 0}" />
+
+				<h:commandButton type="button" id="closemodalPanelRecoverSIIGO" value="#{messages.Close}">
+					<a4j:support event="onclick" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" onsubmit="#{rich:component('modalPanelRecoverSIIGO')}.hide()" reRender="modalPanelRecoverSIIGO, linkSIIGO"></a4j:support>
+				</h:commandButton>
+			</h:form>
+		</rich:modalPanel>
+		<rich:modalPanel id="modalPanelPdf" autosized="true">
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText value="#{messages.recover_automatic} - #{messages.Generate_PDF}"/>
+				</h:panelGroup>
+			</f:facet>
+			<a4j:form>
+				<a4j:outputPanel ajaxRendered="true">
+					<s:link value="#{messages.Download}" id="pdf" action="#{asobancariaItemsHome.ConcatenatePdf()}" rendered="#{not empty asobancariaItemsHome.linksPDFS}"/>
+				</a4j:outputPanel>	
+				
+				<h:commandButton type="button" value="#{messages.Close}">
+					<a4j:support event="onclick" ajaxSingle="true" ignoreDupResponses="true" limitToList="true" oncomplete="#{rich:component('modalPanelPdf')}.hide()"></a4j:support>
+				</h:commandButton>
+			</a4j:form>
+		</rich:modalPanel>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,728 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">#{messages.Business_entity_Details}</f:facet>
+
+        <s:decorate id="id" template="layout/display.xhtml">
+            <ui:define name="label">Id</ui:define>
+            <h:outputText value="#{businessEntityHome.instance.id}"/>
+        </s:decorate>
+
+        <s:decorate id="idType" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Id_type}</ui:define>
+            <h:outputText value="#{businessEntityHome.getIdentificationTypes(businessEntityHome.instance)}"/>
+        </s:decorate>
+
+        <s:decorate id="idNumber" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Id_number}</ui:define>
+            <h:outputText value="#{businessEntityHome.instance.idNumber}"/>
+        </s:decorate>
+
+        <s:decorate id="verificationNumber" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Verification_number}</ui:define>
+            <h:outputText value="#{businessEntityHome.instance.verificationNumber}"/>
+        </s:decorate>
+
+        <s:decorate id="nameBusinessEntity" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Name}</ui:define>
+            <h:outputText value="#{businessEntityHome.instance.nameBusinessEntity}"/>
+        </s:decorate>
+        
+        <s:decorate id="tradeName" template="layout/display.xhtml">
+        <ui:define name="label">#{messages.Trade_Name}</ui:define>
+        <h:outputText value="#{businessEntityHome.instance.tradeName}" />
+        </s:decorate>
+        
+        <s:decorate id="email" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Email}</ui:define>
+            <h:outputText value="#{businessEntityHome.instance.email}"/>
+        </s:decorate>
+
+        <s:decorate id="legalEntityType" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Legal_entity_type}</ui:define>
+            <h:outputText value="#{businessEntityHome.getLegalEntityType(businessEntityHome.instance)}"/>
+        </s:decorate>
+		
+		<s:decorate id = "image" template="layout/display.xhtml">
+			<ui:define name="label">#{messages.Image}</ui:define>
+			<s:graphicImage id="Showimage" value="#{businessEntityHome.instance.logo}">
+				<s:transformImageSize  maintainRatio="true"/>
+			</s:graphicImage>
+		</s:decorate>
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+        <table>
+        <tr>
+        <td><div id="editButton"><s:button view="/BusinessEntityEdit.xhtml"
+                    id="edit"
+                 value="#{messages.Edit}" disabled="#{businessEntityHome.businessEntityListInApprove(businessEntityHome.instance)}" rendered="#{empty makerCheckerId  and authenticator.validateShowFunction('BusinessEntity.xhtml', 'edit')}"/>
+                 <rich:toolTip disabled="#{not businessEntityHome.businessEntityListInApprove(businessEntityHome.instance)}" for="editButton">#{messages.You_can_not_edit_pending_approval_of_a_change}</rich:toolTip>
+                 </div></td>
+        <td><s:button view="/#{empty businessEntityFrom ? 'BusinessEntityList' : businessEntityFrom}.xhtml"
+                    id="done"
+                    propagation="none"
+                 value="#{messages.Done}" rendered="#{empty makerCheckerId and authenticator.validateShowFunction('BusinessEntity.xhtml', 'done')}"/></td>
+                 </tr>
+                 </table>
+            <s:button view="/MakerCheckerBusinessEntityList.xhtml" action="#{businessEntityHome.approveChange()}" id="approved" value="#{messages.ApproveChange}" rendered="#{not empty makerCheckerId and authenticator.validateShowFunction('BusinessEntity.xhtml', 'approved')}"/>
+		 	<s:button view="/MakerCheckerBusinessEntityList.xhtml" action="#{businessEntityHome.cancelChange()}" id="cancel" value="#{messages.Cancel}" rendered="#{not empty makerCheckerId and authenticator.validateShowFunction('BusinessEntity.xhtml', 'cancel')}" />
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab rendered="false">
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>#{messages.Economic_activity}</h:panelGroup>
+        </f:facet>
+    <div class="association" id="economicActivityParent">
+
+        <h:outputText value="#{messages.There_is_no_economicActivity_associated_with_this_businessEntity}"
+                   rendered="#{businessEntityHome.instance.economicActivity == null}"/>
+
+        <rich:dataTable var="_economicActivity"
+                   value="#{businessEntityHome.instance.economicActivity}"
+                rendered="#{businessEntityHome.instance.economicActivity != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="economicActivityTable">
+            <h:column>
+                <f:facet name="header">#{messages.Economic_sector_id}</f:facet>
+                <h:outputText value="#{_economicActivity.economicSector.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Name}</f:facet>
+                <h:outputText value="#{_economicActivity.name}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Description}</f:facet>
+                <h:outputText value="#{_economicActivity.description}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Code}</f:facet>
+                <h:outputText value="#{_economicActivity.code}"/>
+            </h:column>
+            <h:column styleClass="action" rendered="#{authenticator.validateShowFunction('BusinessEntity.xhtml', 'vieweconomicActivity')}" >
+                <f:facet name="header">#{messages.Action}</f:facet>
+                <s:link id="vieweconomicActivity"
+                     value="#{messages.View}"
+                      view="/EconomicActivity.xhtml">
+                    <f:param name="economicActivityId"
+                           value="#{_economicActivity.code}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>#{messages.Phone_numbers}</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="phoneNumbersChildren">
+
+        <h:outputText value="#{messages.There_are_no_phoneNumbers_associated_with_this_businessEntity}"
+                   rendered="#{empty businessEntityHome.phoneNumbers}"/>
+
+        <rich:dataTable value="#{businessEntityHome.phoneNumbers}"
+                       var="_phoneNumber"
+                  rendered="#{not empty businessEntityHome.phoneNumbers}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="phoneNumbersTable">
+            <rich:column sortBy="#{_phoneNumber.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_phoneNumber.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_phoneNumber.number}">
+                <f:facet name="header">#{messages.Phone_number}</f:facet>
+                <h:outputText value="#{_phoneNumber.number}"/>
+            </rich:column>
+            <rich:column sortBy="#{_phoneNumber.indicative}">
+                <f:facet name="header">#{messages.Indicative}</f:facet>
+                <h:outputText value="#{_phoneNumber.indicative}"/>
+            </rich:column>
+            <rich:column sortBy="#{_phoneNumber.extension}">
+                <f:facet name="header">#{messages.Extension}</f:facet>
+                <h:outputText value="#{_phoneNumber.extension}"/>
+            </rich:column>
+            <h:column rendered="#{authenticator.validateShowFunction('BusinessEntity.xhtml', 'selectphoneNumber')}">
+                <f:facet name="header">#{messages.Action}</f:facet>
+                <s:link id="selectphoneNumber"
+                     value="#{messages.Select}"
+                      view="/PhoneNumber.xhtml">
+                    <f:param name="phoneNumberId"
+                            value="#{_phoneNumber.id}"/>
+                    <f:param name="phoneNumberFrom" value="BusinessEntity"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+        		id="AddphoneNumber"
+               value="#{messages.Add_phoneNumber}"
+                view="/PhoneNumberEdit.xhtml"
+                rendered="#{authenticator.validateShowFunction('BusinessEntity.xhtml', 'AddphoneNumber')}">
+            <f:param name="businessEntityId"
+                    value="#{businessEntityHome.instance.id}"/>
+            <f:param name="phoneNumberFrom" value="BusinessEntity"/>
+        </s:button>
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>#{messages.Addresses}</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="addressesChildren">
+
+        <h:outputText value="#{messages.There_are_no_addresses_associated_with_this_businessEntity}"
+                   rendered="#{empty businessEntityHome.addresses}"/>
+
+        <rich:dataTable value="#{businessEntityHome.addresses}"
+                       var="_address"
+                  rendered="#{not empty businessEntityHome.addresses}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="addressesTable">
+            <rich:column sortBy="#{_address.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_address.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_address.kindOfWay}">
+                <f:facet name="header">#{messages.Kind_of_way}</f:facet>
+                <h:outputText value="#{_address.kindOfWay}"/>
+            </rich:column>
+            <rich:column sortBy="#{_address.wayNumber}">
+                <f:facet name="header">#{messages.Way_number}</f:facet>
+                <h:outputText value="#{_address.wayNumber}"/>
+            </rich:column>
+            <rich:column sortBy="#{_address.wayLetter}">
+                <f:facet name="header">#{messages.Way_letter}</f:facet>
+                <h:outputText value="#{_address.wayLetter}"/>
+            </rich:column>
+            <rich:column sortBy="#{_address.isWayBis}">
+                <f:facet name="header">#{messages.Is_way_bis}</f:facet>
+                <h:outputText value="#{_address.isWayBis}"/>
+            </rich:column>
+            <rich:column sortBy="#{_address.wayBisLetter}">
+                <f:facet name="header">#{messages.Way_bis_letter}</f:facet>
+                <h:outputText value="#{_address.wayBisLetter}"/>
+            </rich:column>
+            <rich:column sortBy="#{_address.wayEastOrSouth}">
+                <f:facet name="header">#{messages.Way_east_or_south}</f:facet>
+                <h:outputText value="#{_address.wayEastOrSouth}"/>
+            </rich:column>
+            <rich:column sortBy="#{_address.number}">
+                <f:facet name="header">#{messages.Number}</f:facet>
+                <h:outputText value="#{_address.number}"/>
+            </rich:column>
+            <rich:column sortBy="#{_address.numberLetter}">
+                <f:facet name="header">#{messages.Number_letter}</f:facet>
+                <h:outputText value="#{_address.numberLetter}"/>
+            </rich:column>
+            <rich:column sortBy="#{_address.additionalNumber}">
+                <f:facet name="header">#{messages.Additional_number}</f:facet>
+                <h:outputText value="#{_address.additionalNumber}"/>
+            </rich:column>
+            <rich:column sortBy="#{_address.numberEastOrSouth}">
+                <f:facet name="header">#{messages.Number_east_or_south}</f:facet>
+                <h:outputText value="#{_address.numberEastOrSouth}"/>
+            </rich:column>
+            <rich:column sortBy="#{_address.other}">
+                <f:facet name="header">#{messages.Other}</f:facet>
+                <h:outputText value="#{_address.other}"/>
+            </rich:column>
+            <h:column rendered="#{authenticator.validateShowFunction('BusinessEntity.xhtml', 'selectaddress')}">
+                <f:facet name="header">#{messages.Action}</f:facet>
+                <s:link id="selectaddress"
+                     value="#{messages.Select}"
+                      view="/Address.xhtml">
+                    <f:param name="addressId"
+                            value="#{_address.id}"/>
+                    <f:param name="addressFrom" value="BusinessEntity"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+        		id="Addaddress"
+               value="#{messages.Add_address}"
+                view="/AddressEdit.xhtml"
+                rendered="#{authenticator.validateShowFunction('BusinessEntity.xhtml', 'Addaddress')}">
+            <f:param name="businessEntityId"
+                    value="#{businessEntityHome.instance.id}"/>
+            <f:param name="addressFrom" value="BusinessEntity"/>
+        </s:button>
+    </div>
+    </rich:tab>
+
+    <rich:tab rendered="false">
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>#{messages.Projects}</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="projectsChildren">
+
+        <h:outputText value="#{messages.There_are_no_projects_associated_with_this_businessEntity}"
+                   rendered="#{empty businessEntityHome.projects}"/>
+
+        <rich:dataTable value="#{businessEntityHome.projects}"
+                       var="_project"
+                  rendered="#{not empty businessEntityHome.projects}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="projectsTable">
+            <rich:column sortBy="#{_project.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_project.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_project.nameProject}">
+                <f:facet name="header">#{messages.Name}</f:facet>
+                <h:outputText value="#{_project.nameProject}"/>
+            </rich:column>
+            <rich:column sortBy="#{_project.costCenterProject}">
+                <f:facet name="header">#{messages.Cost_center}</f:facet>
+                <h:outputText value="#{_project.costCenterProject}"/>
+            </rich:column>
+            <h:column rendered="#{authenticator.validateShowFunction('BusinessEntity.xhtml', 'selectproject')}">
+                <f:facet name="header">#{messages.Action}</f:facet>
+                <s:link id="selectproject"
+                     value="#{messages.Select}"
+                      view="/Project.xhtml">
+                    <f:param name="projectId"
+                            value="#{_project.id}"/>
+                    <f:param name="projectFrom" value="BusinessEntity"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="#{messages.Add_project}"
+                view="/ProjectEdit.xhtml">
+            <f:param name="businessEntityId"
+                    value="#{businessEntityHome.instance.id}"/>
+            <f:param name="projectFrom" value="BusinessEntity"/>
+        </s:button>
+    </div>
+    </rich:tab>
+
+    <rich:tab rendered="false">
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>#{messages.Entity_types}</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="entityTypesChildren">
+
+        <h:outputText value="#{messages.There_are_no_entityTypes_associated_with_this_businessEntity}"
+                   rendered="#{empty businessEntityHome.entityTypes}"/>
+
+        <rich:dataTable value="#{businessEntityHome.entityTypes}"
+                       var="_entityType"
+                  rendered="#{not empty businessEntityHome.entityTypes}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="entityTypesTable">
+            <rich:column sortBy="#{_entityType.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_entityType.id}"/>
+            </rich:column>
+            <h:column rendered="#{authenticator.validateShowFunction('BusinessEntity.xhtml', 'selectentityType')}">
+                <f:facet name="header">#{messages.Action}</f:facet>
+                <s:link id="selectentityType"
+                     value="#{messages.Select}"
+                      view="/EntityType.xhtml">
+                    <f:param name="entityTypeId"
+                            value="#{_entityType.id}"/>
+                    <f:param name="entityTypeFrom" value="BusinessEntity"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="#{messages.Add_entityType}"
+                view="/EntityTypeEdit.xhtml">
+            <f:param name="businessEntityId"
+                    value="#{businessEntityHome.instance.id}"/>
+            <f:param name="entityTypeFrom" value="BusinessEntity"/>
+        </s:button>
+    </div>
+    </rich:tab>
+
+    <rich:tab rendered="false">
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>#{messages.Business_line}</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="businessLinesChildren">
+
+        <h:outputText value="#{messages.There_are_no_businessLine_associated_with_this_businessEntity}"
+                   rendered="#{empty businessEntityHome.businessLines}"/>
+
+        <rich:dataTable value="#{businessEntityHome.businessLines}"
+                       var="_businessLine"
+                  rendered="#{not empty businessEntityHome.businessLines}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="businessLinesTable">
+            <rich:column sortBy="#{_businessLine.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_businessLine.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_businessLine.nameBusinessLine}">
+                <f:facet name="header">#{messages.Name}</f:facet>
+                <h:outputText value="#{_businessLine.nameBusinessLine}"/>
+            </rich:column>
+            <rich:column sortBy="#{_businessLine.costCenterBusinessLine}">
+                <f:facet name="header">#{messages.Cost_center}</f:facet>
+                <h:outputText value="#{_businessLine.costCenterBusinessLine}"/>
+            </rich:column>
+            <h:column rendered="#{authenticator.validateShowFunction('BusinessEntity.xhtml', 'selectbusinessLine')}">
+                <f:facet name="header">#{messages.Action}</f:facet>
+                <s:link id="selectbusinessLine"
+                     value="#{messages.Select}"
+                      view="/BusinessLine.xhtml">
+                    <f:param name="businessLineId"
+                            value="#{_businessLine.id}"/>
+                    <f:param name="businessLineFrom" value="BusinessEntity"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="#{messages.Add_businessLine}"
+                view="/BusinessLineEdit.xhtml">
+            <f:param name="businessEntityId"
+                    value="#{businessEntityHome.instance.id}"/>
+            <f:param name="businessLineFrom" value="BusinessEntity"/>
+        </s:button>
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>#{messages.Business_entity_contacts}</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="businessEntityContactsChildren">
+
+        <h:outputText value="#{messages.There_are_no_businessEntityContacts_associated_with_this_businessEntity}"
+                   rendered="#{empty businessEntityHome.businessEntityContacts}"/>
+
+        <rich:dataTable value="#{businessEntityHome.businessEntityContacts}"
+                       var="_businessEntityContact"
+                  rendered="#{not empty businessEntityHome.businessEntityContacts}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="businessEntityContactsTable">
+            <rich:column sortBy="#{_businessEntityContact.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_businessEntityContact.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_businessEntityContact.contact.firstName}">
+				<f:facet name="header">Nombre</f:facet>
+							<h:outputText value="#{_businessEntityContact.contact.firstName} #{_businessEntityContact.contact.firstName}" />
+						</rich:column>
+						<rich:column sortBy="#{_businessEntityContact.contact.idNumber}">
+							<f:facet name="header">Número de identificación</f:facet>
+							<h:outputText value="#{_businessEntityContact.contact.idNumber}" />
+						</rich:column>
+            <h:column rendered="#{authenticator.validateShowFunction('BusinessEntity.xhtml', 'selectbusinessEntityContact')}">
+                <f:facet name="header">#{messages.Action}</f:facet>
+                <s:link id="selectbusinessEntityContact"
+                     value="#{messages.Select}"
+                      view="/BusinessEntityContact.xhtml">
+                    <f:param name="businessEntityContactId"
+                            value="#{_businessEntityContact.id}"/>
+                    <f:param name="businessEntityContactFrom" value="BusinessEntity"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="#{messages.Add_businessEntityContact}"
+                view="/BusinessEntityContactEdit.xhtml">
+            <f:param name="businessEntityId"
+                    value="#{businessEntityHome.instance.id}"/>
+            <f:param name="businessEntityContactFrom" value="BusinessEntity"/>
+        </s:button>
+    </div>
+    </rich:tab>
+	
+		
+	<rich:tab rendered="#{businessEntityHome.instance.isBiller == true}">
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>#{messages.Billing_resolutions}</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="billingResolutionsChildren">
+
+        <h:outputText value="#{messages.There_are_no_billingResolutions_associated_with_this_businessEntity}"
+                   rendered="#{empty businessEntityHome.billingResolutions}"/>
+
+        <rich:dataTable value="#{businessEntityHome.billingResolutions}"
+                       var="_billingResolution"
+                  rendered="#{not empty businessEntityHome.billingResolutions}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="billingResolutionsTable">
+            <rich:column sortBy="#{_billingResolution.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_billingResolution.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_billingResolution.prefix}">
+                <f:facet name="header">#{messages.Prefix}</f:facet>
+                <h:outputText value="#{_billingResolution.prefix}"/>
+            </rich:column>
+            <rich:column sortBy="#{_billingResolution.min}">
+                <f:facet name="header">#{messages.Min}</f:facet>
+                <h:outputText value="#{_billingResolution.min}"/>
+            </rich:column>
+            <rich:column sortBy="#{_billingResolution.max}">
+                <f:facet name="header">#{messages.Max}</f:facet>
+                <h:outputText value="#{_billingResolution.max}"/>
+            </rich:column>
+            <h:column rendered="#{authenticator.validateShowFunction('BusinessEntity.xhtml', 'selectbillingResolution')}">
+                <f:facet name="header">#{messages.Action}</f:facet>
+                <s:link id="selectbillingResolution"
+                     value="#{messages.Select}"
+                      view="/BillingResolution.xhtml">
+                    <f:param name="billingResolutionId"
+                            value="#{_billingResolution.id}"/>
+                    <f:param name="billingResolutionFrom" value="BusinessEntity"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+        		id="AddbillingResolution"
+               value="#{messages.Add_billingResolution}"
+                view="/BillingResolutionEdit.xhtml"
+                rendered="#{authenticator.validateShowFunction('BusinessEntity.xhtml', 'AddbillingResolution')}">
+            <f:param name="businessEntityId"
+                    value="#{businessEntityHome.instance.id}"/>
+            <f:param name="billingResolutionFrom" value="BusinessEntity"/>
+        </s:button>
+    </div>
+    </rich:tab>
+	
+	
+	<rich:tab rendered="#{businessEntityHome.instance.isBiller == true}">
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>#{messages.Consecutive_accounts_billings}</h:panelGroup>
+        </f:facet>
+    	<h:form styleClass="association" id="consecutiveAccountsBillingsChildren">
+
+        <h:outputText value="#{messages.There_are_no_consecutiveAccountsBillings_associated_with_this_businessEntity}"
+                   rendered="#{empty businessEntityHome.consecutiveAccountsBillings}"/>
+
+        <rich:dataTable value="#{businessEntityHome.consecutiveAccountsBillings}"
+                       var="_consecutiveAccountsBilling"
+                  rendered="#{not empty businessEntityHome.consecutiveAccountsBillings}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="consecutiveAccountsBillingsTable">
+            <rich:column sortBy="#{_consecutiveAccountsBilling.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_consecutiveAccountsBilling.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_consecutiveAccountsBilling.suffix}">
+                <f:facet name="header">#{messages.Suffix}</f:facet>
+                <h:outputText value="#{_consecutiveAccountsBilling.suffix}"/>
+            </rich:column>
+            <rich:column sortBy="#{_consecutiveAccountsBilling.prefix}">
+                <f:facet name="header">#{messages.Prefix}</f:facet>
+                <h:outputText value="#{_consecutiveAccountsBilling.prefix}"/>
+            </rich:column>
+            <rich:column sortBy="#{_consecutiveAccountsBilling.siigoCode}">
+                <f:facet name="header">#{messages.SIIGO_code}</f:facet>
+                <h:outputText value="#{_consecutiveAccountsBilling.siigoCode}"/>
+            </rich:column>
+           
+            
+           
+			<rich:column sortBy="#{_consecutiveAccountsBilling.min}">
+                <f:facet name="header">#{messages.current_position_of_consecutive}</f:facet>
+                <h:outputText value="#{_consecutiveAccountsBilling.min}"/>
+            </rich:column>
+            <h:column rendered="#{authenticator.validateShowFunction('BusinessEntity.xhtml', 'selectconsecutiveAccountsBilling')}">
+                <f:facet name="header">#{messages.Action}</f:facet>
+                <s:link id="selectconsecutiveAccountsBilling"
+                     value="#{messages.Select}"
+                      view="/ConsecutiveAccountsBilling.xhtml">
+                    <f:param name="consecutiveAccountsBillingId"
+                            value="#{_consecutiveAccountsBilling.id}"/>
+                    <f:param name="consecutiveAccountsBillingFrom" value="BusinessEntity"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+        		id="AddconsecutiveAccountsBilling"
+               value="#{messages.Add_consecutiveAccountsBilling}"
+                view="/ConsecutiveAccountsBillingEdit.xhtml"
+                rendered="#{authenticator.validateShowFunction('BusinessEntity.xhtml', 'AddconsecutiveAccountsBilling')}">
+            <f:param name="businessEntityId"
+                    value="#{businessEntityHome.instance.id}"/>
+            <f:param name="consecutiveAccountsBillingFrom" value="BusinessEntity"/>
+        </s:button>
+    </div>
+    </rich:tab>
+	
+		
+	<rich:tab rendered="#{businessEntityHome.instance.isBiller == true}">
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>#{messages.Consecutive_credit_noteses}</h:panelGroup>
+        </f:facet>
+    	<h:form styleClass="association" id="consecutiveCreditNotesesChildren">
+
+        <h:outputText value="#{messages.There_are_no_consecutiveCreditNoteses_associated_with_this_businessEntity}"
+                   rendered="#{empty businessEntityHome.consecutiveCreditNoteses}"/>
+
+        <rich:dataTable value="#{businessEntityHome.consecutiveCreditNoteses}"
+                       var="_consecutiveCreditNotes"
+                  rendered="#{not empty businessEntityHome.consecutiveCreditNoteses}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="consecutiveCreditNotesesTable">
+            <rich:column sortBy="#{_consecutiveCreditNotes.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_consecutiveCreditNotes.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_consecutiveCreditNotes.prefix}">
+                <f:facet name="header">#{messages.Prefix}</f:facet>
+                <h:outputText value="#{_consecutiveCreditNotes.prefix}"/>
+            </rich:column>
+            <rich:column sortBy="#{_consecutiveCreditNotes.suffix}">
+                <f:facet name="header">#{messages.Suffix}</f:facet>
+                <h:outputText value="#{_consecutiveCreditNotes.suffix}"/>
+            </rich:column>
+            <rich:column sortBy="#{_consecutiveCreditNotes.siigoCode}">
+                <f:facet name="header">#{messages.SIIGO_code}</f:facet>
+                <h:outputText value="#{_consecutiveCreditNotes.siigoCode}"/>
+            </rich:column>
+            
+            
+            <rich:column sortBy="#{_consecutiveCreditNotes.min}">
+                <f:facet name="header">#{messages.current_position_of_consecutive}</f:facet>
+                <h:outputText value="#{_consecutiveCreditNotes.min}"/>
+            </rich:column>
+            <h:column rendered="#{authenticator.validateShowFunction('BusinessEntity.xhtml', 'selectconsecutiveCreditNotes')}" >
+                <f:facet name="header">#{messages.Action}</f:facet>
+                <s:link id="selectconsecutiveCreditNotes"
+                     value="#{messages.Select}"
+                      view="/ConsecutiveCreditNotes.xhtml">
+                    <f:param name="consecutiveCreditNotesId"
+                            value="#{_consecutiveCreditNotes.id}"/>
+                    <f:param name="consecutiveCreditNotesFrom" value="BusinessEntity"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+        		id="AddconsecutiveCreditNotes"
+               value="#{messages.Add_consecutiveCreditNotes}"
+                view="/ConsecutiveCreditNotesEdit.xhtml"
+                rendered="#{authenticator.validateShowFunction('BusinessEntity.xhtml', 'AddconsecutiveCreditNotes')}">
+            <f:param name="businessEntityId"
+                    value="#{businessEntityHome.instance.id}"/>
+            <f:param name="consecutiveCreditNotesFrom" value="BusinessEntity"/>
+        </s:button>
+    </div>
+    </rich:tab>
+
+			<rich:tab rendered="#{businessEntityHome.instance.isBiller == true}">
+				<f:facet name="label">
+					<h:panelGroup>
+						<h:graphicImage value="/img/onetomany.gif"
+							style="vertical-align: middle; padding-right: 4px;" />#{messages.Consecutive_collection_accounts}</h:panelGroup>
+				</f:facet>
+				<h:form styleClass="association"
+					id="consecutiveCollectionAccountsChildren">
+
+					<h:outputText
+						value="#{messages.There_are_no_consecutiveCollectionAccounts_associated_with_this_businessEntity}"
+						rendered="#{empty businessEntityHome.consecutiveCollectionAccounts}" />
+
+					<rich:dataTable
+						value="#{businessEntityHome.consecutiveCollectionAccounts}"
+						var="_consecutiveCollectionAccount"
+						rendered="#{not empty businessEntityHome.consecutiveCollectionAccounts}"
+						rowClasses="rvgRowOne,rvgRowTwo"
+						id="consecutiveCollectionAccountsTable">
+						<rich:column sortBy="#{_consecutiveCollectionAccount.id}">
+							<f:facet name="header">Id</f:facet>
+							<h:outputText value="#{_consecutiveCollectionAccount.id}" />
+						</rich:column>
+						<rich:column sortBy="#{_consecutiveCollectionAccount.suffix}">
+							<f:facet name="header">#{messages.Suffix}</f:facet>
+							<h:outputText value="#{_consecutiveCollectionAccount.suffix}" />
+						</rich:column>
+						<rich:column sortBy="#{_consecutiveCollectionAccount.prefix}">
+							<f:facet name="header">#{messages.Prefix}</f:facet>
+							<h:outputText value="#{_consecutiveCollectionAccount.prefix}" />
+						</rich:column>
+						<rich:column sortBy="#{_consecutiveCollectionAccount.siigoCode}">
+							<f:facet name="header">#{messages.SIIGO_code}</f:facet>
+							<h:outputText value="#{_consecutiveCollectionAccount.siigoCode}" />
+						</rich:column>
+						<rich:column sortBy="#{_consecutiveCollectionAccount.min}">
+							<f:facet name="header">#{messages.current_position_of_consecutive}</f:facet>
+							<h:outputText value="#{_consecutiveCollectionAccount.min}" />
+						</rich:column>
+						<h:column>
+							<f:facet name="header">#{messages.Action}</f:facet>
+							<s:link id="selectconsecutiveCollectionAccount" value="#{messages.Select}"
+								view="/ConsecutiveCollectionAccount.xhtml">
+								<f:param name="consecutiveCollectionAccountId"
+									value="#{_consecutiveCollectionAccount.id}" />
+								<f:param name="consecutiveCollectionAccountFrom"
+									value="BusinessEntity" />
+							</s:link>
+						</h:column>
+					</rich:dataTable>
+
+				</h:form>
+
+				<div class="actionButtons">
+				<s:button
+						id="AddconsecutiveCollectionAccount"
+					value="#{messages.Add_consecutiveCollectionAccount}"
+					view="/ConsecutiveCollectionAccountEdit.xhtml"
+					rendered="#{authenticator.validateShowFunction('BusinessEntity.xhtml', 'AddconsecutiveCollectionAccount')}">
+					<f:param name="businessEntityId"
+						value="#{businessEntityHome.instance.id}" />
+					<f:param name="consecutiveCollectionAccountFrom"
+						value="BusinessEntity" />
+				</s:button></div>
+			</rich:tab>
+
+
+		</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

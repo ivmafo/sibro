@@ -1,0 +1,143 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">Avaluation Details</f:facet>
+
+        <s:decorate id="id" template="layout/display.xhtml">
+            <ui:define name="label">Id</ui:define>
+            <h:outputText value="#{avaluationHome.instance.id}"/>
+        </s:decorate>
+
+        <s:decorate id="date" template="layout/display.xhtml">
+            <ui:define name="label">Date</ui:define>
+            <h:outputText value="#{avaluationHome.instance.date}">
+                <s:convertDateTime type="date" dateStyle="short"/>
+            </h:outputText>
+        </s:decorate>
+
+        <s:decorate id="activation" template="layout/display.xhtml">
+            <ui:define name="label">Activation</ui:define>
+            <h:outputText value="#{avaluationHome.instance.activation}">
+                <s:convertDateTime type="date" dateStyle="short"/>
+            </h:outputText>
+        </s:decorate>
+
+        <s:decorate id="terrainValue" template="layout/display.xhtml">
+            <ui:define name="label">Terrain value</ui:define>
+            <h:outputText value="#{avaluationHome.instance.terrainValue}"/>
+        </s:decorate>
+
+        <s:decorate id="buldingValue" template="layout/display.xhtml">
+            <ui:define name="label">Bulding value</ui:define>
+            <h:outputText value="#{avaluationHome.instance.buldingValue}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/AvaluationEdit.xhtml"
+                    id="edit"
+                 value="Edit"
+                 rendered="#{authenticator.validateShowFunction('Avaluation.xhtml', 'edit')}"/>
+
+        <s:button view="/#{empty avaluationFrom ? 'AvaluationList' : avaluationFrom}.xhtml"
+                    id="done"
+                 value="Done"
+                 rendered="#{authenticator.validateShowFunction('Avaluation.xhtml', 'done')}"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>Real property</h:panelGroup>
+        </f:facet>
+    <div class="association" id="realPropertyParent">
+
+        <h:outputText value="There is no realProperty associated with this avaluation."
+                   rendered="#{avaluationHome.instance.realProperty == null}"/>
+
+        <rich:dataTable var="_realProperty"
+                   value="#{avaluationHome.instance.realProperty}"
+                rendered="#{avaluationHome.instance.realProperty != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="realPropertyTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_realProperty.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Legal nature of property id</f:facet>
+                <h:outputText value="#{_realProperty.legalNatureOfProperty.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Real property use type id</f:facet>
+                <h:outputText value="#{_realProperty.realPropertyUseType.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Name property</f:facet>
+                <h:outputText value="#{_realProperty.nameProperty}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Year built</f:facet>
+                <h:outputText value="#{_realProperty.yearBuilt}">
+                    <s:convertDateTime type="date" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Construction license</f:facet>
+                <h:outputText value="#{_realProperty.constructionLicense}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Fund</f:facet>
+                <h:outputText value="#{_realProperty.fund}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Enrolment number</f:facet>
+                <h:outputText value="#{_realProperty.enrolmentNumber}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Purchase date</f:facet>
+                <h:outputText value="#{_realProperty.purchaseDate}">
+                    <s:convertDateTime type="date" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Total surface area</f:facet>
+                <h:outputText value="#{_realProperty.totalSurfaceArea}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Cadastral id</f:facet>
+                <h:outputText value="#{_realProperty.cadastralId}"/>
+            </h:column>
+            <h:column styleClass="action" rendered="#{authenticator.validateShowFunction('Avaluation.xhtml', 'viewrealProperty')}">
+                <f:facet name="header">Action</f:facet>
+                <s:link id="viewrealProperty"
+                     value="View"
+                      view="/RealProperty.xhtml">
+                    <f:param name="realPropertyId"
+                           value="#{_realProperty.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

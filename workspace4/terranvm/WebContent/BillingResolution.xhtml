@@ -1,0 +1,138 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">#{messages.Billing_resolution_Details}</f:facet>
+
+        <s:decorate id="id" template="layout/display.xhtml">
+            <ui:define name="label">Id</ui:define>
+            <h:outputText value="#{billingResolutionHome.instance.id}"/>
+        </s:decorate>
+
+        <s:decorate id="prefix" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Prefix}</ui:define>
+            <h:outputText value="#{billingResolutionHome.instance.prefix}"/>
+        </s:decorate>
+
+        <s:decorate id="min" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Min}</ui:define>
+            <h:outputText value="#{billingResolutionHome.instance.min}"/>
+        </s:decorate>
+
+        <s:decorate id="max" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Max}</ui:define>
+            <h:outputText value="#{billingResolutionHome.instance.max}"/>
+        </s:decorate>
+        
+        <s:decorate id="siigoCode" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.SIIGO_code}</ui:define>
+            <h:outputText value="#{billingResolutionHome.instance.siigoCode}"/>
+        </s:decorate>
+
+			<s:decorate id="resolutionDateField" template="layout/edit.xhtml">
+				<ui:define name="label">#{messages.Delivery_date}</ui:define>
+				<h:outputText
+					value="#{billingResolutionHome.instance.resolutionDate}">
+					<s:convertDateTime type="date" dateStyle="short" pattern="dd/MM/yyyy" />
+				</h:outputText>
+			</s:decorate>
+
+			<s:decorate id="endDateField" template="layout/edit.xhtml">
+				<ui:define name="label">#{messages.End_date}</ui:define>
+				<h:outputText value="#{billingResolutionHome.instance.endDate}">
+					<s:convertDateTime type="date" dateStyle="short" pattern="dd/MM/yyyy" />
+				</h:outputText>
+			</s:decorate>
+
+			<div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/BillingResolutionEdit.xhtml"
+                    id="edit"
+                 value="#{messages.Edit}"
+                 rendered="#{authenticator.validateShowFunction('BillingResolution.xhtml', 'edit')}"/>
+
+        <s:button view="/#{empty billingResolutionFrom ? 'BillingResolutionList' : billingResolutionFrom}.xhtml"
+                    id="done"
+                 value="#{messages.Done}"
+                 rendered="#{authenticator.validateShowFunction('BillingResolution.xhtml', 'done')}"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>#{messages.Business_entity}</h:panelGroup>
+        </f:facet>
+    <div class="association" id="businessEntityParent">
+
+        <h:outputText value="#{messages.There_is_no_businessEntity_associated_with_this_billingResolution}"
+                   rendered="#{billingResolutionHome.instance.businessEntity == null}"/>
+
+        <rich:dataTable var="_businessEntity"
+                   value="#{billingResolutionHome.instance.businessEntity}"
+                rendered="#{billingResolutionHome.instance.businessEntity != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="businessEntityTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_businessEntity.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Economic_activity_id}</f:facet>
+                <h:outputText value="#{_businessEntity.economicActivity.code}"/>
+            </h:column>
+           <h:column>
+                <f:facet name="header">#{messages.Id_type}</f:facet>
+                <h:outputText value="#{_businessEntity.idType}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Id_number}</f:facet>
+                <h:outputText value="#{_businessEntity.idNumber}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Verification_number}</f:facet>
+                <h:outputText value="#{_businessEntity.verificationNumber}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Name}</f:facet>
+                <h:outputText value="#{_businessEntity.nameBusinessEntity}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Email}</f:facet>
+                <h:outputText value="#{_businessEntity.email}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Legal_entity_type}</f:facet>
+                <h:outputText value="#{_businessEntity.legalEntityType}"/>
+            </h:column>
+            <h:column styleClass="action" rendered="#{authenticator.validateShowFunction('BillingResolution.xhtml', 'viewbusinessEntity')}" >
+                <f:facet name="header">#{messages.Action}</f:facet>
+                <s:link id="viewbusinessEntity"
+                     value="#{messages.View}"
+                      view="/BusinessEntity.xhtml">
+                    <f:param name="businessEntityId"
+                           value="#{_businessEntity.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

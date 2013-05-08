@@ -1,0 +1,776 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:p="http://primefaces.prime.com.tr/ui" xmlns:a4j="http://richfaces.org/a4j" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+
+	<ui:define name="body">
+		<a4j:keepAlive beanName="projectHome" />
+		<a4j:keepAlive beanName="projectList" />
+		<h:form id="projectSearch" styleClass="edit">
+
+			<rich:simpleTogglePanel label="#{messages.Project_Search_Filter}" switchType="ajax">
+				<s:decorate template="layout/display.xhtml">
+					<ui:define name="label">#{messages.Name}</ui:define>
+					<h:inputText id="nameProject" value="#{projectList.project.nameProject}" />
+				</s:decorate>
+
+				<s:decorate template="layout/display.xhtml">
+					<ui:define name="label">#{messages.Cost_center_project}</ui:define>
+					<h:inputText id="costCenterProject" value="#{projectList.project.costCenterProject}" />
+
+				</s:decorate>
+
+				<s:decorate template="layout/display.xhtml">
+					<ui:define name="label">#{messages.Match}</ui:define>
+					<h:selectOneRadio id="logic" value="#{projectList.restrictionLogicOperator}" styleClass="radio">
+						<f:selectItem itemLabel="#{messages.All}" itemValue="and" />
+						<f:selectItem itemLabel="#{messages.Any}" itemValue="or" />
+					</h:selectOneRadio>
+				</s:decorate>
+
+			</rich:simpleTogglePanel>
+
+			<div class="actionButtons">
+				<h:commandButton id="search" value="#{messages.Search}" action="/BillingList.xhtml" rendered="#{authenticator.validateShowFunction('BillingList.xhtml', 'search')}" />
+				<s:button id="reset" value="#{messages.Reset}" includePageParams="false" rendered="#{authenticator.validateShowFunction('BillingList.xhtml', 'reset')}" />
+			</div>
+
+		</h:form>
+
+		<rich:panel>
+			<f:facet name="header">#{messages.Search_Results} (#{empty projectList.resultList ? 0 : (projectList.paginated ? projectList.resultCount : projectList.resultList.size)})</f:facet>
+			<div class="results" id="projectList">
+				<h:outputText value="#{messages.search_returned_no_results}" rendered="#{empty projectList.resultList}" />
+				<h:form>
+
+					<rich:dataTable id="projectList" var="_project" value="#{projectList.resultList}" rendered="#{not empty projectList.resultList}">
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{projectList}" />
+									<ui:param name="propertyLabel" value="Id" />
+									<ui:param name="propertyPath" value="project.id" />
+								</ui:include>
+							</f:facet>
+
+							<h:outputText value="#{_project.id}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{projectList}" />
+									<ui:param name="propertyLabel" value="#{messages.Business_entity_id}" />
+									<ui:param name="propertyPath" value="project.businessEntity.nameBusinessEntity" />
+								</ui:include>
+
+							</f:facet>
+							<h:outputText value="#{_project.businessEntity.nameBusinessEntity}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{projectList}" />
+									<ui:param name="propertyLabel" value="#{messages.Business_line_id}" />
+									<ui:param name="propertyPath" value="project.businessLine.nameBusinessLine" />
+
+								</ui:include>
+							</f:facet>
+							<h:outputText value="#{_project.businessLine.nameBusinessLine}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{projectList}" />
+									<ui:param name="propertyLabel" value="#{messages.Name}" />
+
+									<ui:param name="propertyPath" value="project.nameProject" />
+								</ui:include>
+							</f:facet>
+							<h:outputText value="#{_project.nameProject}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{projectList}" />
+
+									<ui:param name="propertyLabel" value="#{messages.Cost_center}" />
+									<ui:param name="propertyPath" value="project.costCenterProject" />
+								</ui:include>
+							</f:facet>
+							<h:outputText value="#{_project.costCenter()}" />
+						</h:column>
+						<rich:column styleClass="action">
+							<table>
+								<tr>
+									<td><f:facet name="header">#{messages.Action}</f:facet> <s:link view="/InvoiceList.xhtml" value="Reversion" propagation="none" rendered="#{authenticator.validateShowFunction('BillingList.xhtml', 'Reversion')}">
+										</s:link></td>
+									<td>#{' '}</td>
+
+
+									<td>#{' '}</td>
+									<td><a4j:commandLink id="idLinkPreliquidation" value="#{messages.View_Preliquidation}" type="button" ajaxSingle="true" ignoreDupResponses="true" rendered="#{authenticator.validateShowFunction('BillingList.xhtml', 'openModalPanelInvoice')}">
+											<a4j:support event="onclick" ajaxSingle="true" ignoreDupResponses="true" limitToList="true" oncomplete="#{rich:component('modalPanelInvoice')}.show()" action="#{projectHome.openModalPanelInvoicesAction(_project)}" reRender="tabPanelPreliquidation,modalPanelInvoiceTitle,tabPanelPreliquidation,outputpanelButtonsPreliquidation">
+											</a4j:support>
+										</a4j:commandLink></td>
+									<td>#{' '}</td>
+									<td><h:outputLink type="button" id="openModalPanelNews" value="#" rendered="#{authenticator.validateShowFunction('BillingList.xhtml', 'openModalPanelNews')}">
+									#{messages.News}
+									<a4j:support event="onclick" ajaxSingle="true" oncomplete="#{rich:component('modalPanelNews')}.show()" action="#{projectHome.instanceProject(_project)}" reRender="projectNews">
+											</a4j:support>
+										</h:outputLink></td>
+									<td>#{' '}</td>
+									<td><h:outputLink type="button" id="openModalPanelProjectClosure" value="#" rendered="#{authenticator.validateShowFunction('BillingList.xhtml', 'openModalPanelProjectClosure')}">
+									#{messages.Close_Billing}
+									<a4j:support event="onclick" ajaxSingle="true" ignoreDupResponses="true" limitToList="true" oncomplete="#{rich:component('modalPanelProjectClosure')}.show()" action="#{projectHome.instanceProject(_project)}" reRender="ouputPanelProjectClosure,titleCloseProject" />
+										</h:outputLink></td>
+									<td>#{' '}</td>
+									<td><h:outputLink type="button" id="openModalPanelGroup" value="#" rendered="#{authenticator.validateShowFunction('BillingList.xhtml', 'openModalPanelGroup')}">
+									#{messages.Group}
+									<a4j:support limitToList="true" event="onclick" ajaxSingle="true" ignoreDupResponses="true" oncomplete="#{rich:component('modalPanelGroup')}.show()" action="#{projectHome.instanceProject(_project)}" reRender="panelGroupList,groupList,modalPanelGroup" />
+										</h:outputLink></td>
+
+									<td>#{' '}</td>
+									<td><s:link immediate="true" target="_self" value="#{messages.Generate_PDF}" id="pdf" action="#{projectHome.createBillingResolutionPDF2()}">
+											<f:param name="idProject" value="#{_project.id}" />
+										</s:link></td>
+								</tr>
+							</table>
+						</rich:column>
+					</rich:dataTable>
+				</h:form>
+
+			</div>
+
+			<a4j:region renderRegionOnly="true">
+				<rich:modalPanel id="modalPanelInvoice" width="1000" autosized="true">
+					<f:facet name="header">
+						<h:panelGroup>
+							<a4j:outputPanel ajaxRendered="true">
+								<h:outputText id="modalPanelInvoiceTitle" value="#{messages.preliquidation} #{projectHome.billingPeriod}&nbsp;"></h:outputText>
+							</a4j:outputPanel>
+							<a4j:status style="width:20px;text-align:right;" startStyle="padding-left:10px;width:20px;text-align:right;">
+								<f:facet name="start">
+									<h:graphicImage value="img/ajax2.gif" />
+								</f:facet>
+							</a4j:status>
+						</h:panelGroup>
+					</f:facet>
+
+					<rich:tabPanel id="tabPanelPreliquidation" height="450px" switchType="ajax">
+						<rich:tab switchType="client" label="#{messages.preliquidation_aprove}">
+							<h:form>
+								<rich:extendedDataTable reRender="invoiceList" binding="#{preliquidationTableInvoiceBind}" tableState="#{projectHome.preliquidationTableInvoiceState}" noDataLabel="#{messages.table_no_data}" width="100%" height="400px" rows="0" selectionMode="none" sortMode="single" id="invoiceList" var="_invoice" value="#{projectHome.invoiceList}">
+
+									<rich:column width="6%" sortable="true" sortBy="#{_invoice.id}" filterBy="#{_invoice.id}" filterEvent="onchange" style="text-align: center">
+										<f:facet name="header">
+											<h:outputText value="id" />
+										</f:facet>
+										<h:outputText value="#{_invoice.id}" />
+									</rich:column>
+
+									<rich:column width="18%" sortable="true" sortBy="#{_invoice.biller.nameBusinessEntity}" filterBy="#{_invoice.biller.nameBusinessEntity}" filterEvent="onchange" style="text-align: center">
+										<f:facet name="header">
+											<h:outputText value="#{messages.Biller}" />
+										</f:facet>
+										<h:outputText value="#{_invoice.biller.nameBusinessEntity}" />
+									</rich:column>
+
+									<rich:column width="17%" sortable="true" sortBy="#{_invoice.billed.nameBusinessEntity}" filterBy="#{_invoice.billed.nameBusinessEntity}" filterEvent="onchange" style="text-align: left">
+										<f:facet name="header">
+											<h:outputText value="#{messages.Billed}" />
+										</f:facet>
+										<h:outputText value="#{_invoice.billed.nameBusinessEntity}" />
+									</rich:column>
+
+									<rich:column width="11%" sortable="true" sortBy="#{_invoice.subTotal()}" filterBy="#{_invoice.subtotal}" filterEvent="onchange" style="text-align: right">
+										<f:facet name="header">
+											<h:outputText value="#{messages.subtotal}" />
+										</f:facet>
+										<h:outputText value="#{_invoice.subtotal}">
+											<f:convertNumber currencySymbol="$ " type="currency" />
+										</h:outputText>
+									</rich:column>
+
+									<rich:column width="11%" sortable="true" sortBy="#{_invoice.iva}" filterBy="#{_invoice.iva}" filterEvent="onchange" style="text-align: right">
+										<f:facet name="header">
+											<h:outputText value="#{messages.Tax}" />
+										</f:facet>
+										<h:outputText value="#{_invoice.iva}">
+											<f:convertNumber currencySymbol="$ " type="currency" />
+										</h:outputText>
+									</rich:column>
+
+									<rich:column width="11%" sortable="true" sortBy="#{_invoice.total}" filterBy="#{_invoice.total}" filterEvent="onchange" style="text-align: right">
+										<f:facet name="header">
+											<h:outputText value="#{messages.Fac_total}" />
+										</f:facet>
+										<h:outputText value="#{_invoice.total}">
+											<f:convertNumber currencySymbol="$ " type="currency" />
+										</h:outputText>
+									</rich:column>
+
+									<rich:column width="11%" sortable="true" sortBy="#{_invoice.selected}" style="text-align: center">
+										<f:facet name="header">
+											<h:outputText value="#{messages.Approve} ?" />
+										</f:facet>
+										<a4j:outputPanel id="checkPreliquidationApproveColumn">
+											<rich:toolTip disabled="#{!_invoice.billingError}" direction="top-left" showDelay="300" layout="block">
+												<h:outputText value="#{_invoice.messajeError}" />
+											</rich:toolTip>
+											<h:selectBooleanCheckbox value="#{_invoice.selected}" rendered="#{!_invoice.billingError}">
+												<a4j:support event="onchange" action="#{projectHome.validateInvoices(_invoice)}" limitToList="true" ignoreDupResponses="true" ajaxSingle="true" reRender="outputpanelApproveButton"></a4j:support>
+											</h:selectBooleanCheckbox>
+											<h:graphicImage id="errorImage_#{_invoice.id}" value="/img/error.gif" rendered="#{_invoice.billingError}">
+											</h:graphicImage>
+										</a4j:outputPanel>
+									</rich:column>
+									<rich:column width="15%" sortable="false">
+										<f:facet name="header">
+											<h:outputText value="#{messages.Action}" />
+										</f:facet>
+										<div style="text-align: center">
+											<h:commandButton type="button" id="openModalPanelInvoiceConcept" value="#{messages.view_concepts}" rendered="#{authenticator.validateShowFunction('BillingList.xhtml', 'openModalPanelInvoiceConcept')}">
+												<a4j:support event="onclick" ajaxSingle="true" ignoreDupResponses="true" limitToList="true" oncomplete="rerenderConceptCharts()" action="#{projectHome.instanceInvoice(_invoice)}" reRender="regionConceptCharts">
+												</a4j:support>
+											</h:commandButton>
+										</div>
+									</rich:column>
+								</rich:extendedDataTable>
+							</h:form>
+							<h:form>
+								<a4j:outputPanel style="height:50px">
+									<h:panelGrid rendered="#{projectHome.invoiceList.size()> 0}">
+										<s:decorate template="layout/display.xhtml">
+											<ui:define name="label">#{messages.check_all}?</ui:define>
+											<h:selectBooleanCheckbox id="checkAll" value="#{projectHome.allInvoices}">
+												<a4j:support event="onclick" ignoreDupResponses="true" limitToList="true" action="#{projectHome.checkAllInvoices(projectHome.allInvoices)}" ajaxSingle="true" reRender="outputpanelApproveButton,checkPreliquidationApproveColumn"></a4j:support>
+											</h:selectBooleanCheckbox>
+										</s:decorate>
+									</h:panelGrid>
+								</a4j:outputPanel>
+							</h:form>
+						</rich:tab>
+						<rich:tab switchType="ajax" label="#{messages.preliquidation_concept_compare}">
+
+							<h:form id="formConceptComparablePreliquidation">
+
+								<a4j:region renderRegionOnly="true">
+
+									<rich:extendedDataTable noDataLabel="#{messages.table_no_data}" height="400px" width="100%" reRender="dataScrollerGroup" rows="0" tableState="#{projectHome.tableConceptCamparableState}" selectionMode="none" sortMode="single" id="invoiceList2" var="_conceptCompare" value="#{projectHome.conceptComparableList}">
+
+										<rich:column width="10%" sortable="true" sortBy="#{_conceptCompare[0]}" filterBy="#{_conceptCompare[0]}" filterEvent="onchange" style="text-align: center">
+											<f:facet name="header">
+												<h:outputText value="#{messages.Billed}" />
+											</f:facet>
+											<h:outputText value="#{_conceptCompare[0]}" />
+										</rich:column>
+										<rich:column width="10%" sortable="true" sortBy="#{_conceptCompare[1]}" filterBy="#{_conceptCompare[1]}" filterEvent="onchange" style="text-align: center">
+											<f:facet name="header">
+												<h:outputText value="Unidad Arrendable" />
+											</f:facet>
+											<h:outputText value="#{_conceptCompare[1]}" />
+										</rich:column>
+										<rich:column width="10%" sortable="true" sortBy="#{_conceptCompare[2]}" filterBy="#{_conceptCompare[2]}" filterEvent="onchange" style="text-align: center">
+											<f:facet name="header">
+												<h:outputText value="Estado Unidad Arrendable" />
+											</f:facet>
+											<h:outputText value="#{_conceptCompare[2]}">
+												<f:convertNumber currencySymbol="$ " type="currency" />
+											</h:outputText>
+										</rich:column>
+										<rich:column width="10%" sortable="true" sortBy="#{_conceptCompare[1]}" filterBy="#{_conceptCompare[1]}" filterEvent="onchange" style="text-align: center">
+											<f:facet name="header">
+												<h:outputText value="#{messages.Concept}" />
+											</f:facet>
+											<h:outputText value="#{_conceptCompare[3]}" />
+										</rich:column>
+										<rich:column width="10%" sortable="true" sortBy="#{_conceptCompare[2]}" filterBy="#{_conceptCompare[2]}" filterEvent="onchange" style="text-align: center">
+											<f:facet name="header">
+												<h:outputText value="#{messages.last_month}" />
+											</f:facet>
+											<h:outputText value="#{_conceptCompare[4]}">
+												<f:convertNumber currencySymbol="$ " type="currency" />
+											</h:outputText>
+										</rich:column>
+										<rich:column width="10%" sortable="true" sortBy="#{_conceptCompare[3]}" filterBy="#{_conceptCompare[3]}" filterEvent="onchange" style="text-align: center">
+											<f:facet name="header">
+												<h:outputText value="#{messages.current_month}" />
+											</f:facet>
+											<h:outputText value="#{_conceptCompare[5]}">
+												<f:convertNumber currencySymbol="$ " type="currency" />
+											</h:outputText>
+										</rich:column>
+										<rich:column width="10%" sortable="true" sortBy="#{_conceptCompare[4]}" filterBy="#{_conceptCompare[4]}" filterEvent="onchange" style="text-align: center">
+											<f:facet name="header">
+												<h:outputText value="#{messages.diference}" />
+											</f:facet>
+											<h:outputText value="#{_conceptCompare[6]}">
+												<f:convertNumber currencySymbol="$ " type="currency" />
+											</h:outputText>
+										</rich:column>
+										<rich:column width="10%" sortable="true" sortBy="#{_conceptCompare[5]}" filterBy="#{_conceptCompare[5]}" filterEvent="onchange" style="text-align: center">
+											<f:facet name="header">
+												<h:outputText value="#{messages.term_sheet_valor}" />
+											</f:facet>
+											<h:outputText value="#{_conceptCompare[7]}" />
+										</rich:column>
+										<rich:column width="10%" sortable="true" sortBy="#{_conceptCompare[6]}" filterBy="#{_conceptCompare[6]}" filterEvent="onchange" style="text-align: center">
+											<f:facet name="header">
+												<h:outputText value="#{messages.TermSheetDiference}" />
+											</f:facet>
+											<h:outputText value="#{_conceptCompare[8]}" />
+										</rich:column>
+										<rich:column width="10%" sortable="true" sortBy="#{_conceptCompare[9]}" filterBy="#{_conceptCompare[9]}" filterEvent="onchange" style="text-align: center">
+											<f:facet name="header">
+												<h:outputText value="#{messages.Cost_center}" />
+											</f:facet>
+											<h:outputText value="#{_conceptCompare[9]}" />
+										</rich:column>
+									</rich:extendedDataTable>
+								</a4j:region>
+							</h:form>
+							<h:form>
+								<a4j:outputPanel rendered="#{projectHome.invoiceList.size()> 0}" style="height:50px">
+									<div style="width: 100%; text-align: right;">
+										<h:commandLink value="Descargar Preliquidación" id="linkComparable" action="#{org.jboss.seam.excel.exporter.excelExporter.export('formConceptComparablePreliquidation:invoiceList2')}">
+
+										</h:commandLink>
+									</div>
+								</a4j:outputPanel>
+							</h:form>
+						</rich:tab>
+					</rich:tabPanel>
+
+					<h:form>
+						<a4j:region selfRendered="true">
+							<a4j:outputPanel id="outputpanelButtonsPreliquidation">
+								<h:panelGrid columns="4">
+									<h:commandButton type="button" id="closeModalPanelInvoice" value="#{messages.Close}" onclick="#{rich:component('modalPanelInvoice')}.hide()" rendered="#{authenticator.validateShowFunction('BillingList.xhtml', 'closeModalPanelInvoice')}">
+									</h:commandButton>
+
+									<s:link value="#{messages.Generate_PDF}" id="pdf" action="#{projectHome.createPDF()}">
+									</s:link>
+
+									<a4j:outputPanel id="outputpanelApproveButton">
+										<h:commandButton rendered="#{projectHome.invoiceListApproveAble and usuryRateHome.quarterExist()}" type="button" id="okModalPanelInvoice" value="#{messages.Approve}">
+											<a4j:support event="onclick" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" oncomplete="#{rich:component('modalPanelApproveConfirmation')}.show()" reRender="linklink,doApprovePreliquidationButton,titleConceptApprove"></a4j:support>
+										</h:commandButton>
+										<s:link id="linklink" rendered="#{projectHome.linkSiigoFile != null}" value="#{messages.Download_SIIGO}" action="#{downloadAttachment.downloadAux(projectHome.linkSiigoFile)}">
+										</s:link>
+									</a4j:outputPanel>
+
+									<a4j:outputPanel>
+										<h:outputText style="color:red" value="NO SE HA INGRESADO LA TASA MAXIMA DE USURA PARA EL TRIMESTRE ACTUAL, INGRESELA PARA PODER APROBAR FACTURAS" rendered="#{!usuryRateHome.quarterExist()}" />
+									</a4j:outputPanel>
+								</h:panelGrid>
+							</a4j:outputPanel>
+						</a4j:region>
+					</h:form>
+				</rich:modalPanel>
+			</a4j:region>
+
+
+			<a4j:region id="regionConceptCharts" renderRegionOnly="true" selfRendered="true">
+				<a4j:form>
+					<a4j:jsFunction name="rerenderConceptCharts" reRender="titleConceptChart,panelInvoiceConceptList,conceptInfoDataGrid" oncomplete="#{rich:component('modalPanelInvoiceConcept')}.show()" ajaxSingle="true" />
+				</a4j:form>
+				<rich:modalPanel id="modalPanelInvoiceConcept" autosized="true" width="650">
+					<f:facet name="header">
+						<h:panelGroup>
+							<a4j:outputPanel id="titleConceptChart">
+								<h:outputText value="#{messages.Concepts}  #{projectHome.billingPeriod}"></h:outputText>
+							</a4j:outputPanel>
+						</h:panelGroup>
+					</f:facet>
+					<h:form>
+						<a4j:outputPanel id="panelInvoiceConceptList" style="width:650px;">
+							<table style="width: 650px;">
+								<tr>
+									<td style="width: 25%;"><h:outputLabel style="font-weight:bold;" value="#{messages.Number_of_periods_to_campare}:" /></td>
+									<td style="width: 5%;"></td>
+									<td style="width: 70%;"><rich:inputNumberSlider width="75%" showArrows="true" showBoundaryValues="false" value="#{projectHome.historicConceptNumber}" clientErrorMessage="#{messages.Invalid_value}" maxValue="10" minValue="1" step="1" showToolTip="false">
+											<a4j:support event="onchange" limitToList="true" ajaxSingle="true" ignoreDupResponses="true" reRender="chartConcept"></a4j:support>
+										</rich:inputNumberSlider></td>
+								</tr>
+							</table>
+							<br />
+							<rich:panel rendered="#{not empty projectHome.selectedInvoice.invoiceConcepts}">
+
+								<rich:extendedDataTable binding="#{chartTableConceptBind}" noDataLabel="#{messages.table_no_data}" width="100%" reRender="dataScrollerGroup" rows="0" tableState="#{projectHome.chartTableInvoiceConceptState}" selectionMode="none" sortMode="single" id="conceptInfoDataGrid" var="_invocon1" value="#{projectHome.selectedInvoice.invoiceConcepts}">
+									<rich:column width="20%" id="colChart1" style="text-align:center">
+										<f:facet name="header">
+											<h:outputText value="#{messages.Concept}" />
+										</f:facet>
+										<h:outputText value="#{projectHome.nombreConceptoParaComparacionConceptos(_invocon1)}" />
+									</rich:column>
+									<rich:column width="80%" id="colChart2">
+										<f:facet name="header">
+											<h:outputText value="#{messages.Comparison}" />
+										</f:facet>
+										<a4j:outputPanel id="chartConcept" ajaxRendered="true">
+											<p:lineChart width="100%" height="150px" value="#{projectHome.conceptHistoricList(_invocon1)}" var="report" labelFunctionX="#{messages.Value}" titleX="#{messages.Date}" titleY="#{messages.Value}($)" labelFunctionY="#{messages.Period}" xfield="#{projectHome.formatDate(report[2])}">
+												<p:chartSeries label="" value="#{report[0]}" />
+											</p:lineChart>
+										</a4j:outputPanel>
+									</rich:column>
+								</rich:extendedDataTable>
+
+							</rich:panel>
+							<h:outputText rendered="#{empty projectHome.selectedInvoice.invoiceConcepts}" value="#{messages.there_are_no_concepts_asociated_with_this_invoice}" />
+						</a4j:outputPanel>
+						<h:commandButton type="button" id="closeModalPanelInvoiceConcept" onclick="#{rich:component('modalPanelInvoiceConcept')}.hide()" value="#{messages.Close}">
+						</h:commandButton>
+					</h:form>
+				</rich:modalPanel>
+			</a4j:region>
+
+			<rich:modalPanel id="modalPanelApproveConfirmation" width="500" autosized="true">
+				<f:facet name="header">
+					<h:panelGroup>
+						<a4j:outputPanel id="titleConceptApprove" ajaxRendered="true">
+							<h:outputText value="#{messages.Approve} #{messages.preliquidation}    #{projectHome.billingPeriod}"></h:outputText>
+						</a4j:outputPanel>
+					</h:panelGroup>
+				</f:facet>
+				<h:form>
+					<h:panelGrid columns="1">
+						<h:outputText value="#{messages.preliquidation_choose_invoiceExpirationDate}" />
+						<s:decorate template="layout/edit.xhtml">
+							<ui:define name="label">#{messages.expedition_date}</ui:define>
+							<rich:calendar id="expirationDate" value="#{projectHome.expeditionInvoiceDate}" datePattern="dd/MM/yyyy">
+								<a4j:support event="onchanged" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="buttonFormOutputPanel"></a4j:support>
+							</rich:calendar>
+						</s:decorate>
+						<s:decorate template="layout/edit.xhtml">
+							<ui:define name="label">#{messages.maturity_date}</ui:define>
+							<rich:calendar id="expirationDate" value="#{projectHome.expirationInvoiceDate}" datePattern="dd/MM/yyyy">
+								<a4j:support event="onchanged" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="buttonFormOutputPanel"></a4j:support>
+							</rich:calendar>
+						</s:decorate>
+						<h:outputText value="#{messages.Surely_this_development_continue}" />
+						<a4j:outputPanel id="buttonFormOutputPanel">
+							<h:panelGrid columns="2">
+								<h:commandButton type="button" value="#{messages.NOT}" onclick="#{rich:component('modalPanelApproveConfirmation')}.hide()">
+								</h:commandButton>
+								<h:commandButton disabled="#{projectHome.expirationInvoiceDate == null || projectHome.expeditionInvoiceDate == null}" rendered="#{projectHome.validateApprovePreliquidationsDate()}" id="doApprovePreliquidationButton" type="button" value="#{messages.YES}, #{messages.Approve} #{messages.preliquidation}">
+									<a4j:support event="onclick" ajaxSingle="true" ignoreDupResponses="true" limitToList="true" oncomplete="#{rich:component('modalPanelApproveConfirmation')}.hide()" action="#{projectHome.saveInvoiceAprovedList()}" reRender="growlPanel,outputpanelApproveButton,tabPanelPreliquidation,expirationDate"></a4j:support>
+								</h:commandButton>
+								<a4j:outputPanel>
+									<h:panelGrid columns="1">
+										<h:outputLabel style="color:red" value="* La fecha de vencimento no puede ser menor que la fecha de expedicíon." rendered="#{!projectHome.validateApprovePreliquidationsDate()}" />
+									</h:panelGrid>
+								</a4j:outputPanel>
+							</h:panelGrid>
+						</a4j:outputPanel>
+					</h:panelGrid>
+				</h:form>
+			</rich:modalPanel>
+
+
+
+			<rich:modalPanel id="modalPanelProjectClosure" autosized="true">
+				<f:facet name="header">
+					<h:panelGroup>
+						<a4j:outputPanel id="titleCloseProject">
+							<h:outputText value="#{messages.CLOSE_BILLING}  -  #{projectHome.billingPeriod}"></h:outputText>
+						</a4j:outputPanel>
+					</h:panelGroup>
+				</f:facet>
+				<h:form>
+					<a4j:outputPanel id="ouputPanelProjectClosure">
+						<h:panelGrid width="400px" columns="1">
+							<h:panelGrid rendered="#{projectHome.projectCloseable}">
+								<h:outputLabel rendered="#{projectHome.calculateUnApprovedInvoices() > 0}" value="#{messages.This_project_has} #{projectHome.calculateUnApprovedInvoices()} #{messages.not_approved_bills_these_bills_will_be_lost_and_are_NOT_consecutive_asiganara}" />
+								<h:outputLabel value="#{messages.Surely_this_development_continue}" />
+							</h:panelGrid>
+							<h:panelGrid rendered="#{!projectHome.projectCloseable}">
+								<h:outputLabel value="#{messages.noCloseableProject}" />
+							</h:panelGrid>
+							<h:panelGrid columns="#{projectHome.projectCloseable ? 2:1}">
+								<h:commandButton type="button" value="#{projectHome.projectCloseable ? messages.Cancel : messages.Close}">
+									<a4j:support event="onclick" ajaxSingle="true" ignoreDupResponses="true" limitToList="true" onclick="#{rich:component('modalPanelProjectClosure')}.hide()" action="#{projectHome.destroyModal1()}"></a4j:support>
+								</h:commandButton>
+								<h:commandButton rendered="#{projectHome.projectCloseable}" type="button" value="#{messages.YES}, #{messages.closeProject}">
+									<a4j:support event="onclick" ajaxSingle="true" action="#{projectHome.closeProject()}" ignoreDupResponses="true" limitToList="true" oncomplete="#{rich:component('modalPanelProjectClosure')}.hide()" reRender="growlPanel"></a4j:support>
+								</h:commandButton>
+							</h:panelGrid>
+						</h:panelGrid>
+					</a4j:outputPanel>
+				</h:form>
+			</rich:modalPanel>
+
+			<rich:modalPanel id="modalPanelNews" autosized="true">
+				<f:facet name="header">
+					<h:panelGroup>
+						<h:outputText value="#{messages.News}"></h:outputText>
+					</h:panelGroup>
+				</f:facet>
+				<h:form>
+					<rich:dataTable id="projectNews" var="_projectProperty" value="#{projectHome.listNews}">
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{projectPropertyList}" />
+									<ui:param name="propertyLabel" value="Id" />
+									<ui:param name="propertyPath" value="projectProperty.id" />
+								</ui:include>
+							</f:facet>
+							<h:outputText value="#{_projectProperty.id}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{projectPropertyList}" />
+									<ui:param name="propertyLabel" value="#{messages.Billed}" />
+									<ui:param name="propertyPath" value="projectProperty.billed.id" />
+								</ui:include>
+							</f:facet>
+							<h:outputText value="#{_projectProperty.billed.nameBusinessEntity}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{projectPropertyList}" />
+									<ui:param name="propertyLabel" value="#{messages.Biller}" />
+									<ui:param name="propertyPath" value="projectProperty.biller.id" />
+								</ui:include>
+							</f:facet>
+							<h:outputText value="#{_projectProperty.biller.nameBusinessEntity}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{projectPropertyList}" />
+									<ui:param name="propertyLabel" value="#{messages.Contract_type_id}" />
+									<ui:param name="propertyPath" value="projectProperty.contractType.id" />
+								</ui:include>
+							</f:facet>
+							<h:outputText value="#{_projectProperty.contractType.id}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{projectPropertyList}" />
+									<ui:param name="propertyLabel" value="#{messages.Project_id}" />
+									<ui:param name="propertyPath" value="projectProperty.project.id" />
+								</ui:include>
+							</f:facet>
+							<h:outputText value="#{_projectProperty.project.id}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{projectPropertyList}" />
+									<ui:param name="propertyLabel" value="#{messages.Real_property_id}" />
+									<ui:param name="propertyPath" value="projectProperty.realProperty.id" />
+								</ui:include>
+							</f:facet>
+							<h:outputText value="#{_projectProperty.realProperty.id}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{projectPropertyList}" />
+									<ui:param name="propertyLabel" value="#{messages.Subscription_date}" />
+									<ui:param name="propertyPath" value="projectProperty.subscriptionDate" />
+								</ui:include>
+							</f:facet>
+							<h:outputText value="#{_projectProperty.subscriptionDate}">
+								<s:convertDateTime type="date" dateStyle="short" />
+							</h:outputText>
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{projectPropertyList}" />
+									<ui:param name="propertyLabel" value="#{messages.Expiration_date}" />
+									<ui:param name="propertyPath" value="projectProperty.expirationDate" />
+								</ui:include>
+							</f:facet>
+							<h:outputText value="#{_projectProperty.expirationDate}">
+								<s:convertDateTime type="date" dateStyle="short" />
+							</h:outputText>
+						</h:column>
+						<rich:column styleClass="action">
+							<h:commandButton type="button" id="openViewChangeModalPanel" value="#{messages.View_changes}">
+								<a4j:support event="onclick" ajaxSingle="true" oncomplete="#{rich:component('viewChangeModalPanel')}.show()" action="#{projectHome.changesTermSheet(_projectProperty)}" reRender="changes">
+								</a4j:support>
+							</h:commandButton>
+						</rich:column>
+					</rich:dataTable>
+					<h:commandButton type="button" id="closeModalPanelNews" value="#{messages.Close}">
+						<rich:componentControl for="modalPanelNews" attachTo="closeModalPanelNews" operation="hide" event="onclick" />
+						<a4j:support event="onclick" ajaxSingle="true" action="#{projectHome.destroyModal3()}" reRender="projectNews"></a4j:support>
+					</h:commandButton>
+				</h:form>
+			</rich:modalPanel>
+
+
+			<rich:modalPanel id="viewChangeModalPanel" width="500" autosized="true">
+				<f:facet name="header">
+					<h:panelGroup>
+						<h:outputText value="#{messages.Changes_in_the_term_sheet}"></h:outputText>
+					</h:panelGroup>
+				</f:facet>
+				<h:form>
+					<h:dataTable id="changes" value="#{changeNews}" var="map">
+						<h:column>
+							<div>
+								<f:facet name="header">#{messages.Changed_field}</f:facet>
+								<h:outputText value="#{map.key}" />
+							</div>
+						</h:column>
+						<h:column>
+							<f:facet name="header">#{messages.Value}</f:facet>
+							<h:dataTable value="#{map.value}" var="_value" cellpadding="0" cellspacing="0" border="0">
+								<h:column>
+									<h:outputText value="#{_value}" />
+								</h:column>
+							</h:dataTable>
+						</h:column>
+					</h:dataTable>
+					<h:commandButton type="button" id="closeviewChangeModalPanel" value="#{messages.Close}">
+						<rich:componentControl for="viewChangeModalPanel" attachTo="closeviewChangeModalPanel" operation="hide" event="onclick" />
+						<a4j:support event="onclick" ajaxSingle="true"></a4j:support>
+					</h:commandButton>
+				</h:form>
+
+			</rich:modalPanel>
+
+			<rich:modalPanel id="modalPanelGroup" width="1000" autosized="true">
+				<f:facet name="header">
+					<h:panelGroup>
+						<h:outputText value="#{messages.Group}"></h:outputText>
+					</h:panelGroup>
+
+				</f:facet>
+				<h:form>
+					<h:panelGrid width="100%" id="panelGroupList" columns="1">
+						<rich:extendedDataTable binding="#{tableGroupsBind}" rendered="#{projectHome.groups.size() > 0}" width="100%" reRender="dataScrollerGroup" rows="15" selectionMode="single" sortMode="single" id="groupList" var="_group" value="#{projectHome.groups}">
+							<rich:column width="17%" sortable="true" sortBy="#{_group.billed}" id="col_Billed" filterBy="#{projectHome.billedNameGroup(_group)}" filterEvent="onchange">
+								<f:facet name="header">
+									<h:outputText value="#{messages.Billed}" />
+								</f:facet>
+								<h:outputText value="#{projectHome.billedNameGroup(_group)}" />
+							</rich:column>
+							<rich:column width="17%" sortable="true" sortBy="#{_group.billed}" id="col_Billed_Id_number" filterBy="#{projectHome.billedIdNumberGroup(_group)}" filterEvent="onchange">
+								<f:facet name="header">
+									<h:panelGroup>
+										<h:outputText value="#{messages.Billed}" />
+										<br />
+										<h:outputText value="#{messages.Id_number}" />
+									</h:panelGroup>
+								</f:facet>
+								<h:outputText value="#{projectHome.billedIdNumberGroup(_group)}" />
+							</rich:column>
+							<rich:column width="12%" sortable="true" sortBy="#{_group.biller}" id="col_Biller" filterBy="#{projectHome.billerNameGroup(_group)}" filterEvent="onchange">
+								<f:facet name="header">
+									<h:outputText value="#{messages.Biller}" />
+								</f:facet>
+								<h:outputText value="#{projectHome.billerNameGroup(_group)}" />
+							</rich:column>
+							<rich:column width="17%" sortable="true" sortBy="#{_group.biller}" id="col_Biller_Id_number" filterBy="#{projectHome.billerIdNumberGroup(_group)}" filterEvent="onchange">
+								<f:facet name="header">
+									<h:panelGroup>
+										<h:outputText value="#{messages.Biller}" />
+										<br />
+										<h:outputText value="#{messages.Id_number}" />
+									</h:panelGroup>
+								</f:facet>
+								<h:outputText value="#{projectHome.billerIdNumberGroup(_group)}" />
+							</rich:column>
+							<rich:column width="10%" sortable="true" sortBy="#{_group.realProperty}" id="col_realProperty" filterBy="#{projectHome.realPropertyNameGroup(_group)}" filterEvent="onchange">
+								<f:facet name="header">
+									<h:outputText value="#{messages.realProperty}" />
+								</f:facet>
+								<h:outputText value="#{projectHome.realPropertyNameGroup(_group)}" />
+							</rich:column>
+							<rich:column width="17%" sortable="false" id="col_billedAddress">
+								<f:facet name="header">
+									<h:outputText value="#{messages.Street_address} " />
+								</f:facet>
+								<h:selectOneMenu required="true" value="#{_group.address}">
+									<s:selectItems value="#{projectHome.billedAddressGroup(_group)}" var="address" label="#{address.toString()}" />
+									<s:convertEntity></s:convertEntity>
+									<a4j:support event="onchange" ajaxSingle="true" disableDefault="true"></a4j:support>
+								</h:selectOneMenu>
+							</rich:column>
+							<rich:column width="5%" sortable="false" id="col_group">
+								<f:facet name="header">
+									<h:outputText value="#{messages.Group}" />
+								</f:facet>
+								<h:selectBooleanCheckbox value="#{_group.grouped}">
+									<a4j:support event="onclick" reRender="statusField" />
+								</h:selectBooleanCheckbox>
+							</rich:column>
+							<rich:column width="5%" sortable="false" id="col_grouped">
+								<f:facet name="header">
+									<h:panelGroup>
+										<h:outputText value="Esta" />
+										<br />
+										<h:outputText value="Agrupado" />
+									</h:panelGroup>
+								</f:facet>
+								<h:selectBooleanCheckbox value="#{_group.groupedIntoPeriod}" disabled="true" />
+							</rich:column>
+							<f:facet name="footer">
+								<rich:datascroller id="dataScrollerGroup" />
+							</f:facet>
+						</rich:extendedDataTable>
+					</h:panelGrid>
+					<h:commandButton type="button" id="groupGroupModalPanel" value="#{messages.Group}">
+						<rich:componentControl for="modalPanelGroup" attachTo="groupGroupModalPanel" operation="hide" event="onclick" />
+						<a4j:support event="onclick" action="#{projectHome.groupAction()}" Single="true" reRender="panelGroupList"></a4j:support>
+					</h:commandButton>
+					<h:commandButton type="button" id="closeGroupModalPanel" value="#{messages.Close}">
+						<rich:componentControl for="modalPanelGroup" attachTo="closeGroupModalPanel" operation="hide" event="onclick" />
+						<a4j:support event="onclick" Single="true" action="#{projectHome.cleanGroupModalPanel()}" reRender="panelGroupList"></a4j:support>
+					</h:commandButton>
+				</h:form>
+			</rich:modalPanel>
+		</rich:panel>
+
+		<div class="tableControl">
+			<s:link view="/BillingList.xhtml" rendered="#{projectList.previousExists and authenticator.validateShowFunction('BillingList.xhtml', 'firstPage')}" value="#{messages.First_Page} #{messages.left} #{messages.left}" id="firstPage">
+				<f:param name="firstResult" value="0" />
+			</s:link>
+			<s:link view="/BillingList.xhtml" rendered="#{projectList.previousExists and authenticator.validateShowFunction('BillingList.xhtml', 'previousPage')}" value="#{messages.left} #{messages.Previous_Page}" id="previousPage">
+				<f:param name="firstResult" value="#{projectList.previousFirstResult}" />
+			</s:link>
+			<s:link view="/BillingList.xhtml" rendered="#{projectList.nextExists and authenticator.validateShowFunction('BillingList.xhtml', 'nextPage')}" value="#{messages.Next_page} #{messages.right}" id="nextPage">
+				<f:param name="firstResult" value="#{projectList.nextFirstResult}" />
+			</s:link>
+			<s:link view="/BillingList.xhtml" rendered="#{projectList.nextExists and authenticator.validateShowFunction('BillingList.xhtml', 'lastPage')}" value="#{messages.Last_Page} #{messages.right}" id="lastPage">
+				<f:param name="firstResult" value="#{projectList.lastFirstResult}" />
+			</s:link>
+		</div>
+
+		<rich:modalPanel id="modalPanelRecoverClosure" autosized="true">
+			<f:facet name="header">
+				<h:panelGroup>
+					<a4j:outputPanel id="titleRecoverProject">
+						<h:outputText value="#{messages.CLOSE_RECOVER}  -  #{projectHome.recoverPeriod}"></h:outputText>
+					</a4j:outputPanel>
+				</h:panelGroup>
+			</f:facet>
+			<h:form>
+				<a4j:outputPanel id="ouputPanelRecoverClosure">
+					<h:panelGrid width="400px" columns="1">
+						<h:panelGrid rendered="#{!projectHome.recoverCloseable}">
+							<h:outputLabel value="#{messages.noCloseableRecover}" />
+						</h:panelGrid>
+						<h:panelGrid columns="#{projectHome.recoverCloseable ? 2:1}">
+							<h:commandButton type="button" value="#{projectHome.recoverCloseable ? messages.Cancel : messages.Close}">
+								<a4j:support event="onclick" ajaxSingle="true" ignoreDupResponses="true" limitToList="true" onclick="#{rich:component('modalPanelRecoverClosure')}.hide()" action="#{projectHome.destroyModal1()}"></a4j:support>
+							</h:commandButton>
+							<h:commandButton rendered="#{projectHome.recoverCloseable}" type="button" value="#{messages.YES}, #{messages.closeProject}">
+								<a4j:support event="onclick" ajaxSingle="true" action="#{projectHome.closeRecover()}" ignoreDupResponses="true" limitToList="true" oncomplete="#{rich:component('modalPanelRecoverClosure')}.hide()"></a4j:support>
+							</h:commandButton>
+						</h:panelGrid>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</h:form>
+		</rich:modalPanel>
+
+	</ui:define>
+
+</ui:composition>

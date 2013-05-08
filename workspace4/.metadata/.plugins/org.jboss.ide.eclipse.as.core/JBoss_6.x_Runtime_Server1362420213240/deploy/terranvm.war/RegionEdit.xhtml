@@ -1,0 +1,157 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="region" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{regionHome.managed ? 'Editar' : 'Agregar'} #{messages.Add_Region}</f:facet>
+
+
+            <s:decorate id="nameField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Name}</ui:define>
+                <h:inputTextarea id="name"
+                               cols="80"
+                               rows="3"
+                           required="true"
+                              value="#{regionHome.instance.name}"/>
+            </s:decorate>
+
+
+            <s:decorate id="abbreviationField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Abbreviation}</ui:define>
+                <h:inputTextarea id="abbreviation"
+                               cols="80"
+                               rows="3"
+                           required="true"
+                              value="#{regionHome.instance.abbreviation}"/>
+            </s:decorate>
+
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                #{messages.required_fields}
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="#{messages.Save}"
+                         action="#{regionHome.persist}"
+                       disabled="#{!regionHome.wired}"
+                       rendered="#{!regionHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="#{messages.Save}"
+                         action="#{regionHome.update}"
+                       rendered="#{regionHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="#{messages.Delete}"
+                         action="#{regionHome.remove}"
+                      immediate="true"
+                       rendered="false or #{regionHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="#{messages.Cancel}"
+             propagation="end"
+                    view="/Region.xhtml"
+                rendered="#{regionHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="#{messages.Cancel}"
+             propagation="end"
+                    view="/#{empty regionFrom ? 'RegionList' : regionFrom}.xhtml"
+                rendered="#{!regionHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="#{messages.Country} *" labelClass="required">
+    <div class="association" id="countryParent">
+
+        <h:outputText value="#{messages.There_is_no_country_associated_with_this_region}"
+                   rendered="#{regionHome.instance.country == null}"/>
+
+        <rich:dataTable var="_country"
+                   value="#{regionHome.instance.country}"
+                rendered="#{regionHome.instance.country != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="countryTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_country.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Name}</f:facet>
+                <h:outputText value="#{_country.name}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Abbreviation}</f:facet>
+                <h:outputText value="#{_country.abbreviation}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button id="#{regionHome.instance.country != null ? 'changeParent' : 'selectParent'}" value="#{regionHome.instance.country != null ? '' : ''} #{messages.select_country}"
+                       view="/CountryList.xhtml">
+                <f:param name="from" value="RegionEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab label="#{messages.Cities}">
+        <h:form styleClass="association" id="citiesChildren">
+
+            <h:outputText value="#{messages.There_are_no_cities_associated_with_this_region}"
+                       rendered="#{empty regionHome.cities}"/>
+
+            <rich:dataTable value="#{regionHome.cities}"
+                           var="_city"
+                      rendered="#{not empty regionHome.cities}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="citiesTable">
+                <rich:column sortBy="#{_city.id}">
+                    <f:facet name="header">Id</f:facet>
+                    <h:outputText value="#{_city.id}"/>
+                </rich:column>
+                <rich:column sortBy="#{_city.name}">
+                    <f:facet name="header">#{messages.Name}</f:facet>
+                    <h:outputText value="#{_city.name}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{regionHome.managed}" id="cities">
+        <div class="actionButtons">
+            <s:button id="addcity"
+                   value="#{messages.Add_city}"
+                    view="/CityEdit.xhtml"
+             propagation="none">
+                 <f:param name="regionId"
+                         value="#{regionHome.instance.id}"/>
+                 <f:param name="cityFrom" value="Region"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

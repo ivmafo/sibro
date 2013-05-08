@@ -1,0 +1,84 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:a4j="http://richfaces.org/a4j" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+
+	<ui:define name="body">
+		<rich:panel>
+			<f:facet name="header">#{messages.Approved_list_Project} (#{empty makerCheckerProjectList.resultList ? 0 : (makerCheckerProjectList.paginated ? makerCheckerProjectList.resultCount : makerCheckerProjectList.resultList.size)})</f:facet>
+			<div class="results" id="makerCheckerProjectList"><h:outputText value="#{messages.There_are_no_projects_to_pass}" rendered="#{empty makerCheckerProjectList.resultList}" /> <a4j:outputPanel ajaxRendered="true">
+				<h:form styleClass="association">
+					<rich:dataTable id="makerCheckerProjectList" var="_makerChecker" value="#{makerCheckerProjectList.resultList}" rendered="#{not empty makerCheckerProjectList.resultList}">
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{makerCheckerProjectList}" />
+									<ui:param name="propertyLabel" value="Id" />
+									<ui:param name="propertyPath" value="makerChecker.id" />
+								</ui:include>
+							</f:facet>
+							<h:outputText value="#{_makerChecker.id}" />
+						</h:column>
+												<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{projectList}" />
+									<ui:param name="propertyLabel" value="#{messages.Business_entity_id}" />
+								</ui:include>
+
+							</f:facet>
+							<h:outputText value="#{projectHome.getInstanceMaker(_makerChecker).businessEntity.nameBusinessEntity}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{projectList}" />
+									<ui:param name="propertyLabel" value="#{messages.Business_line_id}" />
+
+								</ui:include>
+							</f:facet>
+							<h:outputText value="#{projectHome.getInstanceMaker(_makerChecker).businessLine.nameBusinessLine}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{projectList}" />
+									<ui:param name="propertyLabel" value="#{messages.Name}" />
+
+								</ui:include>
+							</f:facet>
+							<h:outputText value="#{projectHome.getInstanceMaker(_makerChecker).nameProject}" />
+						</h:column>
+						<h:column>
+							<f:facet name="header">
+								<ui:include src="layout/sort.xhtml">
+									<ui:param name="entityList" value="#{projectList}" />
+									<ui:param name="propertyLabel" value="#{messages.Cost_center_project}" />
+								</ui:include>
+							</f:facet>
+							<h:outputText value="#{projectHome.getInstanceMaker(_makerChecker).costCenter()}" />
+						</h:column>
+						<rich:column styleClass="action">
+							<f:facet name="header">Action</f:facet>
+							<s:link rendered="#{_makerChecker.conceptId == null}" view="/#{makerCheckerHome.getPageView(_makerChecker.className)}" value="#{empty from ? messages.View : messages.Select}" propagation="#{empty from ? 'none' : 'default'}" id="makerCheckerViewId">
+								<f:param name="makerCheckerId" value="#{_makerChecker.id}" />
+								<f:param name="#{makerCheckerHome.getParamNameView(_makerChecker.className)}" value="#{_makerChecker.objectId}" />
+							</s:link>
+							</rich:column>
+					</rich:dataTable>
+				</h:form>
+			</a4j:outputPanel></div>
+		</rich:panel>
+
+		<div class="tableControl"><s:link view="/MakerCheckerProjectList.xhtml" rendered="#{makerCheckerProjectList.previousExists}" value="#{messages.left}#{messages.left} #{messages.First_Page}" id="firstPage">
+			<f:param name="firstResult" value="0" />
+		</s:link> <s:link view="/MakerCheckerProjectList.xhtml" rendered="#{makerCheckerProjectList.previousExists}" value="#{messages.left} #{messages.Previous_Page}" id="previousPage">
+			<f:param name="firstResult" value="#{makerCheckerList.previousFirstResult}" />
+		</s:link> <s:link view="/MakerCheckerProjectList.xhtml" rendered="#{makerCheckerProjectList.nextExists}" value="#{messages.Next_page} #{messages.right}" id="nextPage">
+			<f:param name="firstResult" value="#{makerCheckerList.nextFirstResult}" />
+		</s:link> <s:link view="/MakerCheckerProjectList.xhtml" rendered="#{makerCheckerProjectList.nextExists}" value="#{messages.Last_Page} #{messages.right}#{messages.right}" id="lastPage">
+			<f:param name="firstResult" value="#{makerCheckerProjectList.lastFirstResult}" />
+		</s:link></div>
+
+	</ui:define>
+
+</ui:composition>

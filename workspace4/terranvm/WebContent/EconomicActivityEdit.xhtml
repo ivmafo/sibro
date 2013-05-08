@@ -1,0 +1,186 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:a4j="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="economicActivity" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{economicActivityHome.managed ? messages.Edit : messages.Add} #{messages.Economic_activity}</f:facet>
+
+
+
+            <s:decorate id="nameField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Name}</ui:define>
+                <h:inputTextarea id="name" cols="35" rows="1" required="true"
+                              value="#{economicActivityHome.instance.name}">
+                    <a4j:support event="onblur" ajaxSingle="true"></a4j:support>            
+                </h:inputTextarea>              
+            </s:decorate>
+
+
+            <s:decorate id="descriptionField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Description}</ui:define>
+                <h:inputTextarea id="description" cols="60" rows="2" 
+                         value="#{economicActivityHome.instance.description}">
+                         <a4j:support event="onblur" ajaxSingle="true"></a4j:support>  
+                </h:inputTextarea>         
+            </s:decorate>
+
+
+            <s:decorate id="codeField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Code}</ui:define>
+                <h:inputText id="code" cols="160" rows="3" required="true"
+                              value="#{economicActivityHome.instance.code}">
+                    <a4j:support event="onblur" ajaxSingle="true"></a4j:support>
+                    </h:inputText>  
+            </s:decorate>
+
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                #{messages.required_fields}
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="#{messages.Save}"
+                         action="#{economicActivityHome.persist}"
+                       disabled="#{!economicActivityHome.wired}"
+                       rendered="#{!economicActivityHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="#{messages.Save}"
+                         action="#{economicActivityHome.update}"
+                       rendered="#{economicActivityHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="#{messages.Delete}"
+                         action="#{economicActivityHome.remove}"
+                      immediate="true"
+                       rendered="false or #{economicActivityHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="#{messages.Cancel}"
+             propagation="end"
+                    view="/EconomicActivity.xhtml"
+                rendered="#{economicActivityHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="#{messages.Cancel}"
+             propagation="end"
+                    view="/#{empty economicActivityFrom ? 'EconomicActivityList' : economicActivityFrom}.xhtml"
+                rendered="#{!economicActivityHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="#{messages.Economic_sector} *" labelClass="required">
+    <div class="association" id="economicSectorParent">
+
+        <h:outputText value="There is no economicSector associated with this economicActivity."
+                   rendered="#{economicActivityHome.instance.economicSector == null}"/>
+
+        <rich:dataTable var="_economicSector"
+                   value="#{economicActivityHome.instance.economicSector}"
+                rendered="#{economicActivityHome.instance.economicSector != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="economicSectorTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_economicSector.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Name}</f:facet>
+                <h:outputText value="#{_economicSector.name}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Description}</f:facet>
+                <h:outputText value="#{_economicSector.description}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button id="#{economicActivityHome.instance.economicSector != null ? 'changeParent' : 'selectParent'}" value="#{economicActivityHome.instance.economicSector != null ? messages.Change : messages.Select} #{messages.Economic_sector}"
+                       view="/EconomicSectorList.xhtml">
+                <f:param name="from" value="EconomicActivityEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab rendered="false" label="#{messages.Business_entities}">
+        <h:form styleClass="association" id="businessEntitiesChildren">
+
+            <h:outputText value="#{messages.There_are_no_businessEntities_associated_with_this_economicActivity}"
+                       rendered="#{empty economicActivityHome.businessEntities}"/>
+
+            <rich:dataTable value="#{economicActivityHome.businessEntities}"
+                           var="_businessEntity"
+                      rendered="#{not empty economicActivityHome.businessEntities}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="businessEntitiesTable">
+                <rich:column sortBy="#{_businessEntity.id}">
+                    <f:facet name="header">Id</f:facet>
+                    <h:outputText value="#{_businessEntity.id}"/>
+                </rich:column>
+                <rich:column sortBy="#{_businessEntity.idType}">
+                    <f:facet name="header">#{messages.Id_type}</f:facet>
+                    <h:outputText value="#{_businessEntity.idType}"/>
+                </rich:column>
+                <rich:column sortBy="#{_businessEntity.idNumber}">
+                    <f:facet name="header">#{messages.Id_number}</f:facet>
+                    <h:outputText value="#{_businessEntity.idNumber}"/>
+                </rich:column>
+                <rich:column sortBy="#{_businessEntity.verificationNumber}">
+                    <f:facet name="header">#{messages.Verification_number}</f:facet>
+                    <h:outputText value="#{_businessEntity.verificationNumber}"/>
+                </rich:column>
+                <rich:column sortBy="#{_businessEntity.nameBusinessEntity}">
+                    <f:facet name="header">#{messages.Name}</f:facet>
+                    <h:outputText value="#{_businessEntity.nameBusinessEntity}"/>
+                </rich:column>
+                <rich:column sortBy="#{_businessEntity.email}">
+                    <f:facet name="header">#{messages.Email}</f:facet>
+                    <h:outputText value="#{_businessEntity.email}"/>
+                </rich:column>
+                <rich:column sortBy="#{_businessEntity.legalEntityType}">
+                    <f:facet name="header">#{messages.Legal_entity_type}</f:facet>
+                    <h:outputText value="#{_businessEntity.legalEntityType}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{economicActivityHome.managed}" id="businessEntities">
+        <div class="actionButtons">
+            <s:button id="addbusinessEntity"
+                   value="#{messages.Add_businessEntity}"
+                    view="/BusinessEntityEdit.xhtml"
+             propagation="none">
+                 <f:param name="economicActivityId"
+                         value="#{economicActivityHome.instance.id}"/>
+                 <f:param name="businessEntityFrom" value="EconomicActivity"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

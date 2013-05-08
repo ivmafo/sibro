@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE resources PUBLIC "-//Sun Microsystems, Inc.//DTD Application Server 9.0 Resource Definitions //EN"
+    "http://www.sun.com/software/appserver/dtds/sun-resources_1_3.dtd">
+<resources>
+    <jdbc-connection-pool
+        name="terranvmPool"
+        datasource-classname="org.postgresql.jdbc3.Jdbc3ConnectionPool"
+        res-type="javax.sql.DataSource">
+        <property name="database" value="jdbc:postgresql://10.40.1.9/20121130"/> <!-- HSQLDB uses database instead of url -->
+        <property name="url" value="jdbc:postgresql://10.40.1.9/20121130"/>
+        <property name="user" value="postgres"/>
+        <property name="password" value="onlinets"/> <!-- Use the value "()" for an empty password -->
+    </jdbc-connection-pool>
+    <jdbc-resource
+        jndi-name="terranvmDatasource"
+        pool-name="terranvmPool"
+        enabled="true"
+        object-type="user"/>
+</resources>

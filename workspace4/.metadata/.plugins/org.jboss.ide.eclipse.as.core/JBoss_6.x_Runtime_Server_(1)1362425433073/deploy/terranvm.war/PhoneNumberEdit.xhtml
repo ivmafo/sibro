@@ -1,0 +1,193 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:a4j="http://richfaces.org/a4j"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="phoneNumber" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{phoneNumberHome.managed ? messages.Edit : messages.Add} #{messages.Phone_number}</f:facet>
+
+
+
+            <s:decorate id="numberField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Phone_number}</ui:define>
+                <h:inputText id="number"
+                               required="true"
+                              value="#{phoneNumberHome.instance.number}">
+                              <a4j:support event="onblur" ajaxSingle="true"></a4j:support>
+                              </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="indicativeField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Indicative}</ui:define>
+                <h:inputText id="indicative"
+                              value="#{phoneNumberHome.instance.indicative}">
+                              <a4j:support event="onblur" ajaxSingle="true"></a4j:support>
+                              </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="extensionField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Extension}</ui:define>
+                <h:inputText id="extension"
+                              value="#{phoneNumberHome.instance.extension}">
+                              <a4j:support event="onblur" ajaxSingle="true"></a4j:support>
+                              </h:inputText>
+            </s:decorate>
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                #{messages.required_fields}
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="#{messages.Save}"
+                         action="#{phoneNumberHome.persist}"
+                       disabled="#{!phoneNumberHome.wired}"
+                       rendered="#{!phoneNumberHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="#{messages.Save}"
+                         action="#{phoneNumberHome.update}"
+                       rendered="#{phoneNumberHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="#{messages.Delete}"
+                         action="#{phoneNumberHome.remove}"
+                      immediate="true"
+                       rendered="#{phoneNumberHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="#{messages.Cancel}"
+             propagation="end"
+                    view="/PhoneNumber.xhtml"
+                rendered="#{phoneNumberHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="#{messages.Cancel}"
+             propagation="end"
+                    view="/#{empty phoneNumberFrom ? 'PhoneNumberList' : phoneNumberFrom}.xhtml"
+                rendered="#{!phoneNumberHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="#{messages.Business_entity} " rendered="#{not empty businessEntityId}" >
+    <div class="association" id="businessEntityParent">
+
+        <h:outputText value="#{messages.There_is_no_businessEntity_associated_with_this_phoneNumber}"
+                   rendered="#{phoneNumberHome.instance.businessEntity == null}"/>
+
+        <rich:dataTable var="_businessEntity"
+                   value="#{phoneNumberHome.instance.businessEntity}"
+                rendered="#{phoneNumberHome.instance.businessEntity != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="businessEntityTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_businessEntity.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Economic_activity_id}</f:facet>
+                <h:outputText value="#{_businessEntity.economicActivity.code}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Id_type}</f:facet>
+                <h:outputText value="#{_businessEntity.idType}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Id_number}</f:facet>
+                <h:outputText value="#{_businessEntity.idNumber}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Verification_number}</f:facet>
+                <h:outputText value="#{_businessEntity.verificationNumber}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Name}</f:facet>
+                <h:outputText value="#{_businessEntity.nameBusinessEntity}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Email}</f:facet>
+                <h:outputText value="#{_businessEntity.email}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Legal_entity_type}</f:facet>
+                <h:outputText value="#{_businessEntity.legalEntityType}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button id="#{phoneNumberHome.instance.businessEntity != null ? 'changeParent1' : 'selectParent1'}" value="#{phoneNumberHome.instance.businessEntity != null ? messages.Change : messages.Select} #{messages.businessEntity}"
+                       view="/BusinessEntityList.xhtml">
+                <f:param name="from" value="PhoneNumberEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab label="#{messages.Contact}" rendered="#{not empty contactId}">
+    <div class="association" id="contactParent">
+
+        <h:outputText value="#{messages.There_is_no_contact_associated_with_this_phoneNumber}"
+                   rendered="#{phoneNumberHome.instance.contact == null}"/>
+
+        <rich:dataTable var="_contact"
+                   value="#{phoneNumberHome.instance.contact}"
+                rendered="#{phoneNumberHome.instance.contact != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="contactTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_contact.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Contact_type_id}</f:facet>
+                <h:outputText value="#{_contact.contactType.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.First_name}</f:facet>
+                <h:outputText value="#{_contact.firstName}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Last_name}</f:facet>
+                <h:outputText value="#{_contact.lastName}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Id_number}</f:facet>
+                <h:outputText value="#{_contact.idNumber}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button id="#{phoneNumberHome.instance.contact != null ? 'changeParent' : 'selectParent'}" value="#{phoneNumberHome.instance.contact != null ? 'Cambiar' : 'Seleccionar'} #{messages.Contact}"
+                       view="/ContactList.xhtml">
+                <f:param name="from" value="PhoneNumberEdit"/>
+                <f:param name="fromBusiness" value=""/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

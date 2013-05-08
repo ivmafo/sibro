@@ -1,0 +1,194 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="city" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{cityHome.managed ? 'Editar' : 'Agregar'} #{messages.Add_City}</f:facet>
+
+
+
+            <s:decorate id="nameField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Name}</ui:define>
+                <h:inputTextarea id="name"
+                               cols="80"
+                               rows="3"
+                           required="true"
+                              value="#{cityHome.instance.name}"/>
+            </s:decorate>
+
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                #{messages.required_fields}
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons"> 
+
+            <h:commandButton id="save"
+                          value="#{messages.Save}"
+                         action="#{cityHome.persist}"
+                       disabled="#{!cityHome.wired}"
+                       rendered="#{!cityHome.managed and authenticator.validateShowFunction('CityEdit.xhtml', 'save')}"/>
+
+            <h:commandButton id="update"
+                          value="#{messages.Save}"
+                         action="#{cityHome.update}"
+                       rendered="#{cityHome.managed and authenticator.validateShowFunction('CityEdit.xhtml', 'update')}"/>
+
+            <h:commandButton id="delete"
+                          value="#{messages.Delete}"
+                         action="#{cityHome.remove}"
+                      immediate="true"
+                       rendered="false or #{cityHome.managed and authenticator.validateShowFunction('CityEdit.xhtml', 'delete')}"/>
+
+            <s:button id="cancelEdit"
+                   value="#{messages.Cancel}"
+             propagation="end"
+                    view="/City.xhtml"
+                rendered="#{cityHome.managed and authenticator.validateShowFunction('CityEdit.xhtml', 'cancelEdit')}"/>
+
+            <s:button id="cancelAdd"
+                   value="#{messages.Cancel}"
+             propagation="end"
+                    view="/#{empty cityFrom ? 'CityList' : cityFrom}.xhtml"
+                rendered="#{!cityHome.managed and authenticator.validateShowFunction('CityEdit.xhtml', 'cancelAdd')}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="#{messages.Region} *" labelClass="required">
+    <div class="association" id="regionParent">
+
+        <h:outputText value="#{messages.There_is_no_region_associated_with_this_city}"
+                   rendered="#{cityHome.instance.region == null}"/>
+
+        <rich:dataTable var="_region"
+                   value="#{cityHome.instance.region}"
+                rendered="#{cityHome.instance.region != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="regionTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_region.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Country_id}</f:facet>
+                <h:outputText value="#{_region.country.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Name}</f:facet>
+                <h:outputText value="#{_region.name}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Abbreviation}</f:facet>
+                <h:outputText value="#{_region.abbreviation}"/>
+            </h:column>
+        </rich:dataTable>
+
+        <div class="actionButtons">
+            <s:button id="#{cityHome.instance.region != null ? 'changeParent' : 'selectParent'}" value="#{cityHome.instance.region != null ? '' : ''} #{messages.Select_region}"
+                       view="/RegionList.xhtml"
+                       rendered="#{authenticator.validateShowFunction('CityEdit.xhtml', 'Region_change') or authenticator.validateShowFunction('CityEdit.xhtml', 'Region_select')}">
+                <f:param name="from" value="CityEdit"/>
+            </s:button>
+        </div>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab label="#{messages.Addresses}">
+        <h:form styleClass="association" id="addressesChildren">
+
+            <h:outputText value="#{messages.There_are_no_addresses_associated_with_this_city}"
+                       rendered="#{empty cityHome.addresses}"/>
+
+            <rich:dataTable value="#{cityHome.addresses}"
+                           var="_address"
+                      rendered="#{not empty cityHome.addresses}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="addressesTable">
+                <rich:column sortBy="#{_address.id}">
+                    <f:facet name="header">Id</f:facet>
+                    <h:outputText value="#{_address.id}"/>
+                </rich:column>
+                <rich:column sortBy="#{_address.kindOfWay}">
+                    <f:facet name="header">#{messages.Kind_of_way}</f:facet>
+                    <h:outputText value="#{_address.kindOfWay}"/>
+                </rich:column>
+                <rich:column sortBy="#{_address.wayNumber}">
+                    <f:facet name="header">#{messages.Way_number}</f:facet>
+                    <h:outputText value="#{_address.wayNumber}"/>
+                </rich:column>
+                <rich:column sortBy="#{_address.wayLetter}">
+                    <f:facet name="header">#{messages.Way_letter}</f:facet>
+                    <h:outputText value="#{_address.wayLetter}"/>
+                </rich:column>
+                <rich:column sortBy="#{_address.isWayBis}">
+                    <f:facet name="header">#{messages.Is_way_bis}</f:facet>
+                    <h:outputText value="#{_address.isWayBis}"/>
+                </rich:column>
+                <rich:column sortBy="#{_address.wayBisLetter}">
+                    <f:facet name="header">#{messages.Way_bis_letter}</f:facet>
+                    <h:outputText value="#{_address.wayBisLetter}"/>
+                </rich:column>
+                <rich:column sortBy="#{_address.wayEastOrSouth}">
+                    <f:facet name="header">#{messages.Way_east_or_south}</f:facet>
+                    <h:outputText value="#{_address.wayEastOrSouth}"/>
+                </rich:column>
+                <rich:column sortBy="#{_address.number}">
+                    <f:facet name="header">#{messages.Number}</f:facet>
+                    <h:outputText value="#{_address.number}"/>
+                </rich:column>
+                <rich:column sortBy="#{_address.numberLetter}">
+                    <f:facet name="header">#{messages.Number_letter}</f:facet>
+                    <h:outputText value="#{_address.numberLetter}"/>
+                </rich:column>
+                <rich:column sortBy="#{_address.additionalNumber}">
+                    <f:facet name="header">#{messages.Additional_number}</f:facet>
+                    <h:outputText value="#{_address.additionalNumber}"/>
+                </rich:column>
+                <rich:column sortBy="#{_address.numberEastOrSouth}">
+                    <f:facet name="header">#{messages.Number_east_or_south}</f:facet>
+                    <h:outputText value="#{_address.numberEastOrSouth}"/>
+                </rich:column>
+                <rich:column sortBy="#{_address.other}">
+                    <f:facet name="header">#{messages.Other}</f:facet>
+                    <h:outputText value="#{_address.other}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{cityHome.managed}" id="addresses">
+        <div class="actionButtons">
+            <s:button id="addaddress"
+                   value="Add address"
+                    view="/AddressEdit.xhtml"
+             propagation="none"
+             rendered="#{authenticator.validateShowFunction('CityEdit.xhtml', 'addaddress')}">
+                 <f:param name="cityId"
+                         value="#{cityHome.instance.id}"/>
+                 <f:param name="addressFrom" value="City"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

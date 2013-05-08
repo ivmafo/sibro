@@ -1,0 +1,31 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:a4j="http://richfaces.org/a4j" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+
+<ui:define name="body">
+
+	<rich:tabPanel switchType="client">
+		<rich:tab>
+			<f:facet name="label">
+				<h:panelGroup ><h:outputText value="#{messages.Ipc_monthly}"/></h:panelGroup>
+			</f:facet>
+			<a4j:include  viewId="IpcMonthlyList.xhtml"></a4j:include>
+		</rich:tab>
+		<rich:tab>
+			<f:facet name="label">
+				<h:panelGroup ><h:outputText value="#{messages.Ipc_yearly}"/></h:panelGroup>
+			</f:facet>
+			<a4j:include  viewId="IpcYearlyList.xhtml"></a4j:include>
+		</rich:tab>
+		
+		<rich:tab>
+			<f:facet name="label">
+				<h:panelGroup><h:outputText value="#{messages.Ipc_accumulated}"/></h:panelGroup>			
+			</f:facet>
+			<a4j:include viewId="IpcAccumulatedList.xhtml"></a4j:include>
+		</rich:tab>
+		
+	</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

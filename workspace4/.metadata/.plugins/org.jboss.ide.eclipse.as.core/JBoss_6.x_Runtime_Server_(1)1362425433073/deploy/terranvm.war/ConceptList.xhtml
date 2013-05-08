@@ -1,0 +1,140 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<h:form id="conceptSearch" styleClass="edit">
+
+			<rich:simpleTogglePanel label="#{messages.Concept_Search_Filter}" switchType="ajax">
+
+				<s:decorate template="layout/display.xhtml">
+					<ui:define name="label">#{messages.Name}</ui:define>
+					<h:inputText id="nameConcept" value="#{conceptList.concept.name}" />
+				</s:decorate>
+
+				<s:decorate template="layout/display.xhtml">
+					<ui:define name="label">#{messages.Description}</ui:define>
+					<h:inputText id="description" value="#{conceptList.concept.description}" />
+				</s:decorate>
+
+				<s:decorate template="layout/display.xhtml">
+					<ui:define name="label">#{messages.Match}</ui:define>
+					<h:selectOneRadio id="logic" value="#{conceptList.restrictionLogicOperator}" styleClass="radio">
+						<f:selectItem itemLabel="#{messages.All}" itemValue="and" />
+						<f:selectItem itemLabel="#{messages.Any}" itemValue="or" />
+					</h:selectOneRadio>
+				</s:decorate>
+
+			</rich:simpleTogglePanel> 
+
+			<div class="actionButtons"><h:commandButton id="search" value="#{messages.Search}" action="/ConceptList.xhtml" rendered="#{authenticator.validateShowFunction('ConceptList.xhtml', 'search')}" /> <s:button id="reset" value="#{messages.Reset}" includePageParams="false" rendered="#{authenticator.validateShowFunction('ConceptList.xhtml', 'reset')}"/></div>
+
+		</h:form>
+
+		<rich:panel>
+			<f:facet name="header">#{messages.Search_Results} (#{empty conceptList.resultList ? 0 : (conceptList.paginated ? conceptList.resultCount : conceptList.resultList.size)})</f:facet>
+			<div class="results" id="conceptList"><h:outputText value="#{messages.search_returned_no_results}" rendered="#{empty conceptList.resultList}" /> <rich:dataTable id="conceptList" var="_concept" value="#{conceptList.resultList}" rendered="#{not empty conceptList.resultList}">
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="layout/sort.xhtml">
+							<ui:param name="entityList" value="#{conceptList}" />
+							<ui:param name="propertyLabel" value="#{messages.Id}" />
+							<ui:param name="propertyPath" value="concept.id" />
+						</ui:include>
+					</f:facet>
+					<h:outputText value="#{_concept.id}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="layout/sort.xhtml">
+							<ui:param name="entityList" value="#{conceptList}" />
+							<ui:param name="propertyLabel" value="#{messages.Name}" />
+							<ui:param name="propertyPath" value="concept.name" />
+						</ui:include>
+					</f:facet>
+					<h:outputText value="#{_concept.name}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="layout/sort.xhtml">
+							<ui:param name="entityList" value="#{conceptList}" />
+							<ui:param name="propertyLabel" value="#{messages.Description}" />
+							<ui:param name="propertyPath" value="concept.description" />
+						</ui:include>
+					</f:facet>
+					<h:outputText value="#{_concept.description}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="layout/sort.xhtml">
+							<ui:param name="entityList" value="#{conceptList}" />
+							<ui:param name="propertyLabel" value="#{messages.Tax}" />
+							<ui:param name="propertyPath" value="concept.tax" />
+						</ui:include>
+					</f:facet>
+					<h:outputText value="#{_concept.tax}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="layout/sort.xhtml">
+							<ui:param name="entityList" value="#{conceptList}" />
+							<ui:param name="propertyLabel" value="#{messages.Project_property_id}" />
+							<ui:param name="propertyPath" value="concept.projectProperty.id" />
+						</ui:include>
+					</f:facet>
+					<h:outputText value="#{_concept.projectProperty.id}" />
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<ui:include src="layout/sort.xhtml">
+							<ui:param name="entityList" value="#{conceptList}" />
+							<ui:param name="propertyLabel" value="#{messages.Plugin_id}" />
+							<ui:param name="propertyPath" value="concept.plugin.id" />
+						</ui:include>
+					</f:facet>
+					<h:outputText value="#{_concept.plugin.id}" />
+				</h:column>
+				
+				<rich:column styleClass="action">
+				<table>
+						<tr>
+							<td>
+								<f:facet name="header"> #{messages.Action}</f:facet>
+								<s:link view="/#{empty from ? 'Concept' : from}.xhtml" value="#{empty from ? messages.View : messages.Select}" propagation="#{empty from ? 'none' : 'default'}" id="conceptViewId"
+								rendered="#{authenticator.validateShowFunction('ConceptList.xhtml', 'conceptViewId')}">
+									<f:param name="conceptId" value="#{_concept.id}" />
+								</s:link>
+							</td>
+            				<td>#{' '}</td>
+            				<td>
+           			 			<s:link view="/ConceptEdit.xhtml" value="#{messages.Edit}" propagation="none" id="conceptEdit" rendered="#{empty from and authenticator.validateShowFunction('ConceptList.xhtml', 'conceptEdit')}" disabled="#{conceptHome.conceptListInApprove(_concept)}">
+									<f:param name="conceptId" value="#{_concept.id}" />
+								</s:link>
+           			 			<rich:toolTip disabled="#{not conceptHome.conceptListInApprove(_concept)}" for="editButton#{_concept.id}">#{messages.You_can_not_edit_pending_approval_of_a_change}</rich:toolTip>
+							</td>
+						</tr>
+					</table>
+				</rich:column>
+			</rich:dataTable></div>
+		</rich:panel>
+
+		<div class="tableControl"><s:link view="/ConceptList.xhtml" rendered="#{conceptList.previousExists and authenticator.validateShowFunction('ConceptList.xhtml', 'firstPage')}" value="#{messages.left}#{messages.left} #{messages.First_Page}" id="firstPage">
+			<f:param name="firstResult" value="0" />
+		</s:link> <s:link view="/ConceptList.xhtml" rendered="#{conceptList.previousExists and authenticator.validateShowFunction('ConceptList.xhtml', 'previousPage')}" value="#{messages.left} #{messages.Previous_Page}" id="previousPage">
+			<f:param name="firstResult" value="#{conceptList.previousFirstResult}" />
+		</s:link> <s:link view="/ConceptList.xhtml" rendered="#{conceptList.nextExists and authenticator.validateShowFunction('ConceptList.xhtml', 'nextPage')}" value="#{messages.Next_page} #{messages.right}" id="nextPage">
+			<f:param name="firstResult" value="#{conceptList.nextFirstResult}" />
+		</s:link> <s:link view="/ConceptList.xhtml" rendered="#{conceptList.nextExists and authenticator.validateShowFunction('ConceptList.xhtml', 'lastPage')}" value="#{messages.Last_Page} #{messages.right}#{messages.right}" id="lastPage">
+			<f:param name="firstResult" value="#{conceptList.lastFirstResult}" />
+		</s:link></div>
+
+		<s:div styleClass="actionButtons" rendered="#{empty from}">
+			<s:button view="/ConceptEdit.xhtml" id="create" propagation="none" value="#{messages.Create_concept}" rendered="#{authenticator.validateShowFunction('ConceptList.xhtml', 'create')}">
+				<f:param name="conceptId" />
+			</s:button>
+		</s:div>
+
+	</ui:define>
+
+</ui:composition>

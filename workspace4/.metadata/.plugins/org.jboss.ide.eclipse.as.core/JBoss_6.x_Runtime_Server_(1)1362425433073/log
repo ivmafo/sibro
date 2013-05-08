@@ -1,0 +1,22 @@
+!SESSION 2013-03-04 13:00:03.811 -----------------------------------------------
+eclipse.buildId=M20120914-1800
+java.version=1.6.0_41
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=linux, ARCH=x86, WS=gtk, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.jee.product
+Command-line arguments:  -os linux -ws gtk -arch x86 -product org.eclipse.epp.package.jee.product
+
+!ENTRY org.jboss.ide.eclipse.as.core 0 33685505 2013-03-04 14:30:59.741
+!MESSAGE Module terranvm published without error.
+
+!ENTRY org.jboss.ide.eclipse.as.core 0 33685505 2013-03-04 14:30:59.751
+!MESSAGE Module jboss-seam.jar published without error.
+
+!ENTRY org.jboss.ide.eclipse.as.core 0 33685505 2013-03-04 14:30:59.763
+!MESSAGE Module primefaces-1.1.jar published without error.
+
+!ENTRY org.jboss.ide.eclipse.as.core 1 16842760 2013-03-04 14:30:59.787
+!MESSAGE Server Starting
+
+!ENTRY org.jboss.ide.eclipse.as.core 1 16973825 2013-03-04 14:31:01.070
+!MESSAGE Server processes have been terminated.

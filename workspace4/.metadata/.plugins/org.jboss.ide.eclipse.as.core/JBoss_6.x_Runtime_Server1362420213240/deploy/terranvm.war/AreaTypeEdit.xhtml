@@ -1,0 +1,128 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="areaType" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{areaTypeHome.managed ? messages.Edit : messages.Add} #{messages.Area_type}</f:facet>
+
+
+<!--            <s:decorate id="idField" template="layout/edit.xhtml">-->
+<!--                <ui:define name="label">Id</ui:define>-->
+<!--                <h:inputText id="id"-->
+<!--                       required="true"-->
+<!--                       disabled="#{areaTypeHome.managed}"-->
+<!--                          value="#{areaTypeHome.instance.id}">-->
+<!--                    <a:support event="onblur" reRender="idField" bypassUpdates="true" ajaxSingle="true"/>-->
+<!--                </h:inputText>-->
+<!--            </s:decorate>-->
+
+
+            <s:decorate id="nameField" template="layout/edit.xhtml">
+                <ui:define name="label">#{messages.Name}</ui:define>
+                <h:inputTextarea id="name"
+                               cols="35"
+                               rows="1"
+                           required="true"
+                              value="#{areaTypeHome.instance.name}"/>
+            </s:decorate>
+
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                #{messages.required_fields}
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="#{messages.Save}"
+                         action="#{areaTypeHome.persist}"
+                       disabled="#{!areaTypeHome.wired}"
+                       rendered="#{!areaTypeHome.managed and authenticator.validateShowFunction('AreaTypeEdit.xhtml', 'save')}"/>
+
+            <h:commandButton id="update"
+                          value="#{messages.Save}"
+                         action="#{areaTypeHome.update}"
+                       rendered="#{areaTypeHome.managed and authenticator.validateShowFunction('AreaTypeEdit.xhtml', 'update')}"/>
+
+            <h:commandButton id="delete"
+                          value="#{messages.Delete}"
+                         action="#{areaTypeHome.remove}"
+                      immediate="true"
+                       rendered="#{areaTypeHome.managed and authenticator.validateShowFunction('AreaTypeEdit.xhtml', 'delete')}"/>
+
+            <s:button id="cancelEdit"
+                   value="#{messages.Cancel}"
+             propagation="end"
+                    view="/AreaType.xhtml"
+                rendered="#{areaTypeHome.managed and authenticator.validateShowFunction('AreaTypeEdit.xhtml', 'cancelEdit')}"/>
+
+            <s:button id="cancelAdd"
+                   value="#{messages.Cancel}"
+             propagation="end"
+                    view="/#{empty areaTypeFrom ? 'AreaTypeList' : areaTypeFrom}.xhtml"
+                rendered="#{!areaTypeHome.managed and authenticator.validateShowFunction('AreaTypeEdit.xhtml', 'cancelAdd')}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="#{messages.Areas}">
+    <h:form styleClass="association" id="areasChildren">
+    
+            <h:outputText value="#{messages.There_are_no_areas_associated_with_this_areaType}"
+                       rendered="#{empty areaTypeHome.areas}"/>
+
+            <rich:dataTable value="#{areaTypeHome.areas}"
+                           var="_area"
+                      rendered="#{not empty areaTypeHome.areas}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="areasTable">
+                <rich:column sortBy="#{_area.id}">
+                    <f:facet name="header">Id</f:facet>
+                    <h:outputText value="#{_area.id}"/>
+                </rich:column>
+                <rich:column sortBy="#{_area.name}">
+                    <f:facet name="header">#{messages.Name}</f:facet>
+                    <h:outputText value="#{_area.name}"/>
+                </rich:column>
+                <rich:column sortBy="#{_area.area}">
+                    <f:facet name="header">#{messages.Area}</f:facet>
+                    <h:outputText value="#{_area.area}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{areaTypeHome.managed}" id="areas">
+        <div class="actionButtons">
+            <s:button id="addarea"
+                   value="#{messages.Add_area}"
+                    view="/AreaEdit.xhtml"
+                    rendered="#{authenticator.validateShowFunction('AreaTypeEdit.xhtml', 'addarea')}"
+             propagation="none">
+                 <f:param name="areaTypeId"
+                         value="#{areaTypeHome.instance.id}"/>
+                 <f:param name="areaFrom" value="AreaType"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

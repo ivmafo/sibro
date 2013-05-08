@@ -1,0 +1,281 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">#{messages.Address_Details}</f:facet>
+
+        <s:decorate id="id" template="layout/display.xhtml">
+            <ui:define name="label">Id</ui:define>
+            <h:outputText value="#{addressHome.instance.id}"/>
+        </s:decorate>
+
+        <s:decorate id="kindOfWay" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Kind_of_way}</ui:define>
+            <h:outputText value="#{addressHome.instance.kindOfWay}"/>
+        </s:decorate>
+
+        <s:decorate id="wayNumber" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Way_number}</ui:define>
+            <h:outputText value="#{addressHome.instance.wayNumber}"/>
+        </s:decorate>
+
+        <s:decorate id="wayLetter" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Way_letter}</ui:define>
+            <h:outputText value="#{addressHome.instance.wayLetter}"/>
+        </s:decorate>
+
+        <s:decorate id="isWayBis" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Is_way_bis}</ui:define>
+            <h:outputText value="#{addressHome.instance.isWayBis}"/>
+        </s:decorate>
+
+        <s:decorate id="wayBisLetter" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Way_bis_letter}</ui:define>
+            <h:outputText value="#{addressHome.instance.wayBisLetter}"/>
+        </s:decorate>
+
+        <s:decorate id="wayEastOrSouth" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Way_east_or_south}</ui:define>
+            <h:outputText value="#{addressHome.instance.wayEastOrSouth}"/>
+        </s:decorate>
+
+        <s:decorate id="number" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Number}</ui:define>
+            <h:outputText value="#{addressHome.instance.number}"/>
+        </s:decorate>
+
+        <s:decorate id="numberLetter" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Number_letter}</ui:define>
+            <h:outputText value="#{addressHome.instance.numberLetter}"/>
+        </s:decorate>
+
+        <s:decorate id="additionalNumber" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Additional_number}</ui:define>
+            <h:outputText value="#{addressHome.instance.additionalNumber}"/>
+        </s:decorate>
+
+        <s:decorate id="numberEastOrSouth" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Number_east_or_south}</ui:define>
+            <h:outputText value="#{addressHome.instance.numberEastOrSouth}"/>
+        </s:decorate>
+
+        <s:decorate id="other" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Other}</ui:define>
+            <h:outputText value="#{addressHome.instance.other}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/AddressEdit.xhtml"
+                    id="edit"
+                 value="#{messages.Edit}"
+                 rendered="#{authenticator.validateShowFunction('Address.xhtml', 'edit')}" />
+                 
+                	
+        <s:button view="/#{empty addressFrom ? 'AddressList' : addressFrom}.xhtml"
+                    id="done"
+                 value="#{messages.Done}"
+                 rendered="#{authenticator.validateShowFunction('Address.xhtml', 'done')}" />
+                 
+                 
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab rendered="#{not empty businessEntityId}">
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>#{messages.Business_entity}</h:panelGroup>
+        </f:facet>
+    <div class="association" id="businessEntityParent"> 
+
+        <h:outputText value="#{messages.There_is_no_businessEntity_associated_with_this_address}"
+                   rendered="#{addressHome.instance.businessEntity == null}"/>
+
+        <rich:dataTable var="_businessEntity"
+                   value="#{addressHome.instance.businessEntity}"
+                rendered="#{addressHome.instance.businessEntity != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="businessEntityTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_businessEntity.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Economic_activity_id}</f:facet>
+                <h:outputText value="#{_businessEntity.economicActivity.code}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Id_type}</f:facet>
+                <h:outputText value="#{_businessEntity.idType}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Id_number}</f:facet>
+                <h:outputText value="#{_businessEntity.idNumber}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Verification_number}</f:facet>
+                <h:outputText value="#{_businessEntity.verificationNumber}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Name}</f:facet>
+                <h:outputText value="#{_businessEntity.nameBusinessEntity}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Email}</f:facet>
+                <h:outputText value="#{_businessEntity.email}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Legal_entity_type}</f:facet>
+                <h:outputText value="#{_businessEntity.legalEntityType}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Trade_Name}</f:facet>
+                <h:outputText value="#{_businessEntity.tradeName}"/>
+            </h:column>
+            <h:column styleClass="action" rendered="#{authenticator.validateShowFunction('Address.xhtml', 'viewbusinessEntity')}">
+                <f:facet name="header">#{messages.Action}</f:facet>
+                <s:link id="viewbusinessEntity"
+                     value="#{messages.View}"
+                      view="/BusinessEntity.xhtml">
+                    <f:param name="businessEntityId"
+                           value="#{_businessEntity.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>#{messages.City}</h:panelGroup>
+        </f:facet>
+    <div class="association" id="cityParent">
+
+        <h:outputText value="#{messages.There_is_no_city_associated_with_this_address}"
+                   rendered="#{addressHome.instance.city == null}"/>
+
+        <rich:dataTable var="_city"
+                   value="#{addressHome.instance.city}"
+                rendered="#{addressHome.instance.city != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="cityTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_city.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Region_id}</f:facet>
+                <h:outputText value="#{_city.region.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Name}</f:facet>
+                <h:outputText value="#{_city.name}"/>
+            </h:column>
+            <h:column styleClass="action" rendered="#{authenticator.validateShowFunction('Address.xhtml', 'viewcity')}" >
+                <f:facet name="header">#{messages.Action}</f:facet>
+                <s:link id="viewcity"
+                     value="#{messages.View}"
+                      view="/City.xhtml">
+                    <f:param name="cityId"
+                           value="#{_city.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+
+    <rich:tab rendered="false">
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/manytoone.gif" style="vertical-align: middle; padding-right: 4px;"/>#{messages.Real_property}</h:panelGroup>
+        </f:facet>
+    <div class="association" id="realPropertyParent">
+
+        <h:outputText value="#{messages.There_is_no_realProperty_associated_with_this_address}"
+                   rendered="#{addressHome.instance.realProperty == null}"/>
+
+        <rich:dataTable var="_realProperty"
+                   value="#{addressHome.instance.realProperty}"
+                rendered="#{addressHome.instance.realProperty != null}"
+              rowClasses="rvgRowOne,rvgRowTwo"
+                      id="realPropertyTable">
+            <h:column>
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_realProperty.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Legal_nature_of_property_id}</f:facet>
+                <h:outputText value="#{_realProperty.legalNatureOfProperty.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Real_property_use_type_id}</f:facet>
+                <h:outputText value="#{_realProperty.realPropertyUseType.id}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Name}</f:facet>
+                <h:outputText value="#{_realProperty.nameProperty}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Year_built}</f:facet>
+                <h:outputText value="#{_realProperty.yearBuilt}">
+                    <s:convertDateTime type="date" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Construction_license}</f:facet>
+                <h:outputText value="#{_realProperty.constructionLicense}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Fund}</f:facet>
+                <h:outputText value="#{_realProperty.fund}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Enrolment_number}</f:facet>
+                <h:outputText value="#{_realProperty.enrolmentNumber}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Purchase_date}</f:facet>
+                <h:outputText value="#{_realProperty.purchaseDate}">
+                    <s:convertDateTime type="date" dateStyle="short"/>
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Total_surface_area}</f:facet>
+                <h:outputText value="#{_realProperty.totalSurfaceArea}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">#{messages.Cadastral_id}</f:facet>
+                <h:outputText value="#{_realProperty.cadastralId}"/>
+            </h:column>
+            <h:column styleClass="action" rendered="#{authenticator.validateShowFunction('Address.xhtml', 'viewrealProperty')}">
+                <f:facet name="header">#{messages.Action}</f:facet>
+                <s:link id="viewrealProperty"
+                     value="#{messages.View}"
+                      view="/RealProperty.xhtml">
+                    <f:param name="realPropertyId"
+                           value="#{_realProperty.id}"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

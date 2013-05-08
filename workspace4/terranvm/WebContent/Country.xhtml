@@ -1,0 +1,102 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <rich:panel>
+        <f:facet name="header">#{messages.Country_Details}</f:facet>
+
+        <s:decorate id="id" template="layout/display.xhtml">
+            <ui:define name="label">Id</ui:define>
+            <h:outputText value="#{countryHome.instance.id}"/>
+        </s:decorate>
+
+        <s:decorate id="name" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Name}</ui:define>
+            <h:outputText value="#{countryHome.instance.name}"/>
+        </s:decorate>
+
+        <s:decorate id="abbreviation" template="layout/display.xhtml">
+            <ui:define name="label">#{messages.Abbreviation}</ui:define>
+            <h:outputText value="#{countryHome.instance.abbreviation}"/>
+        </s:decorate>
+
+        <div style="clear:both"/>
+
+    </rich:panel>
+
+    <div class="actionButtons">
+
+        <s:button view="/CountryEdit.xhtml"
+                    id="edit"
+                 value="#{messages.Edit}"/>
+
+        <s:button view="/#{empty countryFrom ? 'CountryList' : countryFrom}.xhtml"
+                    id="done"
+                 value="#{messages.Done}"/>
+
+    </div>
+
+    <rich:tabPanel switchType="ajax">
+
+    <rich:tab>
+        <f:facet name="label">
+            <h:panelGroup><h:graphicImage value="/img/onetomany.gif" style="vertical-align: middle; padding-right: 4px;"/>#{messages.Regions}</h:panelGroup>
+        </f:facet>
+    <h:form styleClass="association" id="regionsChildren">
+
+        <h:outputText value="#{messages.There_are_no_regions_associated_with_this_country}"
+                   rendered="#{empty countryHome.regions}"/>
+
+        <rich:dataTable value="#{countryHome.regions}"
+                       var="_region"
+                  rendered="#{not empty countryHome.regions}"
+                rowClasses="rvgRowOne,rvgRowTwo"
+                        id="regionsTable">
+            <rich:column sortBy="#{_region.id}">
+                <f:facet name="header">Id</f:facet>
+                <h:outputText value="#{_region.id}"/>
+            </rich:column>
+            <rich:column sortBy="#{_region.name}">
+                <f:facet name="header">#{messages.Name}</f:facet>
+                <h:outputText value="#{_region.name}"/>
+            </rich:column>
+            <rich:column sortBy="#{_region.abbreviation}">
+                <f:facet name="header">#{messages.Abbreviation}</f:facet>
+                <h:outputText value="#{_region.abbreviation}"/>
+            </rich:column>
+            <h:column>
+                <f:facet name="header">Action</f:facet>
+                <s:link id="selectregion"
+                     value="#{messages.Select}"
+                      view="/Region.xhtml">
+                    <f:param name="regionId"
+                            value="#{_region.id}"/>
+                    <f:param name="regionFrom" value="Country"/>
+                </s:link>
+            </h:column>
+        </rich:dataTable>
+
+    </h:form>
+
+    <div class="actionButtons">
+        <s:button
+               value="#{messages.Add_Region}"
+                view="/RegionEdit.xhtml">
+            <f:param name="countryId"
+                    value="#{countryHome.instance.id}"/>
+            <f:param name="regionFrom" value="Country"/>
+        </s:button>
+    </div>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>

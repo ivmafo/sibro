@@ -1,0 +1,155 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="economicSectorSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="#{messages.EconomicSector_Search_Filter}" switchType="ajax">
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">#{messages.Name}</ui:define>
+                <h:inputText id="name" value="#{economicSectorList.economicSector.name}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">#{messages.Description}</ui:define>
+                <h:inputText id="description" value="#{economicSectorList.economicSector.description}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">#{messages.Match}</ui:define>
+                <h:selectOneRadio id="logic" value="#{economicSectorList.restrictionLogicOperator}" styleClass="radio">
+                    <f:selectItem itemLabel="#{messages.All}" itemValue="and"/>
+                    <f:selectItem itemLabel="#{messages.Any}" itemValue="or"/>
+                </h:selectOneRadio>
+            </s:decorate>
+
+        </rich:simpleTogglePanel>
+
+        <div class="actionButtons">
+            <h:commandButton id="search" value="#{messages.Search}" action="/EconomicSectorList.xhtml"/>
+            <s:button id="reset" value="#{messages.Reset}" includePageParams="false"/>
+        </div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">#{messages.Search_Results} (#{empty economicSectorList.resultList ? 0 : (economicSectorList.paginated ? economicSectorList.resultCount : economicSectorList.resultList.size)})</f:facet>
+    <div class="results" id="economicSectorList">
+
+    <h:outputText value="#{messages.search_returned_no_results}"
+               rendered="#{empty economicSectorList.resultList}"/>
+
+    <rich:dataTable id="economicSectorList"
+                var="_economicSector"
+              value="#{economicSectorList.resultList}"
+           rendered="#{not empty economicSectorList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{economicSectorList}"/>
+                    <ui:param name="propertyLabel" value="Id"/>
+                    <ui:param name="propertyPath" value="economicSector.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_economicSector.id}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{economicSectorList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Name}"/>
+                    <ui:param name="propertyPath" value="economicSector.name"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_economicSector.name}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{economicSectorList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Description}"/>
+                    <ui:param name="propertyPath" value="economicSector.description"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_economicSector.description}"/>
+        </h:column>
+        <rich:column styleClass="action">
+            <f:facet name="header">Action</f:facet>
+            <s:link view="/#{empty from ? 'EconomicSector' : from}.xhtml"
+                   value="#{empty from ? 'Ver' : 'Seleccionar'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="economicSectorViewId">
+                <f:param name="economicSectorId"
+                        value="#{_economicSector.id}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/EconomicSectorEdit.xhtml"
+                   value="#{messages.Edit}"
+             propagation="none"
+                      id="economicSectorEdit"
+                rendered="#{empty from}">
+                <f:param name="economicSectorId"
+                        value="#{_economicSector.id}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/EconomicSectorList.xhtml"
+            rendered="#{economicSectorList.previousExists}"
+               value="#{messages.left}#{messages.left} #{messages.First_Page}"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/EconomicSectorList.xhtml"
+            rendered="#{economicSectorList.previousExists}"
+               value="#{messages.left} #{messages.Previous_Page}"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{economicSectorList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/EconomicSectorList.xhtml"
+            rendered="#{economicSectorList.nextExists}"
+               value="#{messages.Next_page} #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{economicSectorList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/EconomicSectorList.xhtml"
+            rendered="#{economicSectorList.nextExists}"
+               value="#{messages.Last_Page} #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{economicSectorList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/EconomicSectorEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="#{messages.Create_economicSector}">
+            <f:param name="economicSectorId"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

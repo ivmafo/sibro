@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pages login-view-id="/login.xhtml" no-conversation-view-id="/home.xhtml"
+	xmlns="http://jboss.com/products/seam/pages" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.2.xsd">
+	<page login-required="true" view-id="/*" />
+	<page view-id="*">
+
+		<restrict>#{authenticator.restrictionPage(facesContext.externalContext.requestServletPath)}</restrict>
+		<navigation>
+			<rule if-outcome="home">
+				<redirect view-id="/home.xhtml" />
+			</rule>
+		</navigation>
+	</page>
+
+	<exception class="org.jboss.seam.framework.EntityNotFoundException">
+		<redirect view-id="/error.xhtml">
+			<message severity="warn">Entidad No Encontrada</message>
+		</redirect>
+	</exception>
+	<exception class="javax.persistence.EntityNotFoundException">
+		<redirect view-id="/error.xhtml">
+			<message severity="warn">Entidad No Encontrada al persistir</message>
+		</redirect>
+	</exception>
+	<exception class="javax.persistence.EntityExistsException">
+		<redirect view-id="/error.xhtml">
+			<message severity="warn">Entidad Duplicada</message>
+		</redirect>
+	</exception>
+	<exception class="javax.persistence.OptimisticLockException">
+		<end-conversation />
+		<redirect view-id="/error.xhtml">
+			<message severity="warn">Otro Usuario ha cambiado los mismos datos, por favor intente de nuevo</message>
+		</redirect>
+	</exception>
+	<exception class="org.jboss.seam.security.AuthorizationException">
+		<redirect view-id="/error.xhtml">
+			<message severity="error">Usted No tiene Permiso para acceder a este Recurso</message>
+		</redirect>
+	</exception>
+	<exception class="org.jboss.seam.security.NotLoggedInException">
+		<redirect view-id="/login.xhtml">
+			<message severity="warn">No se ha detectado login</message>
+		</redirect>
+	</exception>
+	<exception class="javax.faces.application.ViewExpiredException">
+		<redirect view-id="/error.xhtml">
+			<message severity="warn">La sesión ha expirado, por favor intente de nuevo</message>
+		</redirect>
+	</exception>
+	<exception class="org.jboss.seam.ConcurrentRequestTimeoutException"
+		log-level="trace">
+		<redirect view-id="/error.xhtml">
+			<message severity="error">Tiempo agotado, petición-concurrente 503</message>
+		</redirect>
+	</exception>
+	<exception class="org.jboss.seam.web.FileUploadException">
+		<redirect view-id="/error.xhtml">
+			<message severity="error">Archivo a cargar no puede ser superior a 1 MB</message>
+		</redirect>
+	</exception>
+	<exception>
+		<redirect view-id="/home.xhtml">
+			<message severity="info">Por favor intente de nuevo. Ver el log para mas detalles</message>
+		</redirect>
+	</exception>
+</pages>

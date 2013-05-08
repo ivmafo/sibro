@@ -1,0 +1,426 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:p="http://primefaces.prime.com.tr/ui" xmlns:a4j="http://richfaces.org/a4j" xmlns:s="http://jboss.com/products/seam/taglib" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+	<ui:define name="body">
+		<a4j:keepAlive beanName="recoverHome"></a4j:keepAlive>
+
+		<center>
+			<h1>#{messages.recover_manual}</h1>
+		</center>
+		<h:form>
+
+			<div style="width: 100%; height: 80px; text-align: center; vertical-align: middle;">
+				<a4j:outputPanel id="outputpanelSearch">
+
+					<rich:panel>
+						<table style="width: 100%; text-align: center;">
+							<tr>
+								<td><h:outputLabel style="font-weight:bold;" value="#{messages.bussines_entity_legalName} (#{messages.Billed}): " /> <h:inputText cols="30" rows="1" value="#{recoverHome.searchName}">
+										<a4j:support event="onchange" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="cleanButton"></a4j:support>
+									</h:inputText>
+								</td>
+								<td><h:outputLabel style="font-weight:bold;" value="#{messages.nit_cedula}: " /> <h:inputText cols="30" rows="1" value="#{recoverHome.searchId}">
+										<a4j:support event="onchange" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="cleanButton"></a4j:support>
+									</h:inputText>
+								</td>
+								<td><h:commandButton type="button" id="searchButton" value="#{messages.Search}">
+										<a4j:support event="onclick" limitToList="true" ajaxSingle="true" action="#{recoverHome.searchInvoiceRecoverList()}" ignoreDupResponses="true" reRender="tableInvoiceRecoverList,cleanButton,growlPanel,outputpanelButtons"></a4j:support>
+									</h:commandButton>
+								</td>
+								<td><h:commandButton type="button" id="cleanButton" value="#{messages.Clean}" disabled="#{recoverHome.searchFormEmpty()}">
+										<a4j:support event="onclick" limitToList="true" ajaxSingle="true" action="#{recoverHome.cleanSearchForm()}" ignoreDupResponses="true" reRender="outputpanelSearch"></a4j:support>
+									</h:commandButton>
+								</td>
+							</tr>
+						</table>
+					</rich:panel>
+				</a4j:outputPanel>
+			</div>
+
+			<rich:extendedDataTable noDataLabel="#{messages.table_no_data}" binding="#{htmlRecoverDataTable}" width="100%" height="350px" rows="8" sortMode="multi" tableState="#{recoverHome.recoverListTableState}" value="#{recoverHome.invoiceRecoverList}" var="_invoice" id="tableInvoiceRecoverList">
+
+				<rich:column width="3%" sortable="true" id="col1" sortBy="#{_invoice.id}" filterBy="#{_invoice.id}" filterEvent="onchange" style="text-align: center">
+					<f:facet name="header">
+						<h:outputText value="id" />
+					</f:facet>
+					<h:outputText value="#{_invoice.id}" />
+				</rich:column>
+				<rich:column width="11%" sortable="true" id="col9" sortBy="#{_invoice.projectProperty.rentableUnit.name}" filterBy="#{_invoice.projectProperty.rentableUnit.name}" filterEvent="onchange" style="text-align: center">
+					<f:facet name="header">
+						<h:outputText value="#{messages.Rentable_unit}" />
+					</f:facet>
+					<h:outputText value="#{(_invoice.groupNumber!=-1 and _invoice.projectProperty.objectOfContract.id == 2) ? _invoice.projectProperty.rentableUnit.name : ''}" />
+				</rich:column>
+				<rich:column width="20%" sortable="true" id="col2" sortBy="#{_invoice.nameBilled}" filterBy="#{_invoice.nameBilled}" filterEvent="onchange" style="text-align: center">
+					<f:facet name="header">
+						<h:outputText value="#{messages.Billed}" />
+					</f:facet>
+					<h:outputText value="#{_invoice.nameBilled}" />
+				</rich:column>
+
+				<rich:column width="10%" sortable="true" id="col3" sortBy="#{_invoice.idNumberBilled}" filterBy="#{_invoice.idNumberBilled}" filterEvent="onchange" style="text-align: center">
+					<f:facet name="header">
+						<h:outputText value="#{messages.nit_cedula}" />
+					</f:facet>
+					<h:outputText value="#{_invoice.idNumberBilled}" />
+				</rich:column>
+
+				<rich:column width="10%" sortable="true" id="col4" sortBy="#{_invoice.number}" filterBy="#{_invoice.number}" filterEvent="onchange" style="text-align: center">
+					<f:facet name="header">
+						<h:outputText value="#{messages.Fac_Number}" />
+					</f:facet>
+					<h:outputText value="#{_invoice.number}" />
+				</rich:column>
+
+				<rich:column width="13%" sortable="true" id="col5" sortBy="#{_invoice.total()}" filterBy="#{_invoice.total()}" filterEvent="onchange" style="text-align: center">
+					<f:facet name="header">
+						<h:outputText value="#{messages.Total}" />
+					</f:facet>
+					<h:outputText value="#{_invoice.total()}">
+						<f:convertNumber currencySymbol="$ " type="currency" />
+					</h:outputText>
+				</rich:column>
+
+				<rich:column width="13%" sortable="true" id="col6" sortBy="#{_invoice.expeditionDate}" filterBy="#{_invoice.expeditionDate}" filterEvent="onchange" style="text-align: center">
+					<f:facet name="header">
+						<h:outputText value="#{messages.expediton_date}" />
+					</f:facet>
+					<h:outputText value="#{_invoice.expeditionDate}">
+					</h:outputText>
+				</rich:column>
+
+				<rich:column width="13%" sortable="true" id="col7" sortBy="#{_invoice.expirationDate}" filterBy="#{_invoice.expirationDate}" filterEvent="onchange" style="text-align: center">
+					<f:facet name="header">
+						<h:outputText value="#{messages.expiration_date}" />
+					</f:facet>
+					<h:outputText value="#{_invoice.expirationDate}">
+					</h:outputText>
+				</rich:column>
+				<rich:column width="7%" sortable="true" id="col8" style="text-align: center">
+					<f:facet name="header">
+						<h:selectBooleanCheckbox rendered="#{recoverHome.invoiceRecoverList.size() > 0}" id="checkAll" value="#{recoverHome.selectAllInvoices}">
+							<a4j:support event="onchange" action="#{recoverHome.checkAllInvoices()}" limitToList="true" ignoreDupResponses="true" ajaxSingle="true" reRender="checkBoxSelected,outputpanelButtons,panelTotalRecover"></a4j:support>
+						</h:selectBooleanCheckbox>
+					</f:facet>
+					<h:selectBooleanCheckbox id="checkBoxSelected" value="#{_invoice.selected}">
+						<a4j:support event="onchange" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="outputpanelButtons,panelTotalRecover"></a4j:support>
+					</h:selectBooleanCheckbox>
+				</rich:column>
+				<f:facet name="footer">
+					<rich:datascroller id="datascroller" rendered="#{recoverHome.invoiceRecoverList.size() > 8}" />
+				</f:facet>
+			</rich:extendedDataTable>
+
+
+			<div style="width: 100%; height: 50px; text-align: center;">
+				<a4j:outputPanel id="outputpanelButtons">
+					<table style="width: 100%; text-align: center;">
+						<tr>
+							<td style="width: 200px; width: 40%;"><h:commandButton rendered="#{recoverHome.renderButtonRecover()}" type="button" value="#{messages.recover_verb}">
+									<a4j:support event="onclick" ajaxSingle="true" action="#{recoverHome.resetInvoiceConceptList()}" limitToList="true" reRender="panelTotalRecover,message" oncomplete="#{rich:component('modalPanelOrderRecover1')}.show()" ignoreDupResponses="true"></a4j:support>
+								</h:commandButton>
+							</td>
+
+
+							<td style="text-align: right; width: 20%;">
+								<table>
+									<tr>
+										<td style="text-align: right;"><h:outputLabel style="font-weight:bold;" value="#{messages.Total}:" rendered="#{recoverHome.invoiceRecoverList.size() > 0 and recoverHome.recoverInvoiceListSelectionAcceptable}" />
+										</td>
+										<td style="text-align: left;"><h:outputLabel style="color:blue;font-weight:bold;" value="#{recoverHome.sumInvoice()}" rendered="#{recoverHome.invoiceRecoverList.size() > 0 and recoverHome.recoverInvoiceListSelectionAcceptable}">
+												<f:convertNumber currencySymbol="$ " type="currency" />
+											</h:outputLabel>
+										</td>
+									</tr>
+								</table>
+							</td>
+
+
+							<td style="width: 300px; width: 20%;"><h:outputText style="color:red" value="#{messages.recover_message_invoice_differentBilledSelected}" rendered="#{!recoverHome.recoverInvoiceListSelectionAcceptable}" />
+							</td>
+						</tr>
+					</table>
+					<br />
+				</a4j:outputPanel>
+			</div>
+		</h:form>
+
+
+		<rich:modalPanel id="modalPanelOrderRecover1" width="400" autosized="true" onshow="fadeModal1();">
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText value="#{messages.recover_manual}  -  #{messages.recover_total_value}"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+			<a4j:form ajaxSingle="true" ajaxSubmit="false">
+				<a4j:outputPanel id="panelTotalRecover">
+
+					<a4j:outputPanel>
+						<table style="width: 100%; height: 150px; text-align: center;">
+							<tr style="padding-top: 5%; padding-bottom: 5%;">
+								<td style="text-align: right; width: 50%; padding-right: 5%;"><h:outputLabel style="font-weight:bold;" value="#{messages.recover_surplus_available}:" rendered="#{recoverHome.surplusAvailable()}" />
+								</td>
+								<td style="text-align: left; width: 50%;"><h:outputLabel rendered="#{recoverHome.surplusAvailable()}" style="color:blue" value="#{recoverHome.lastRecover.surplusValue}">
+										<f:convertNumber currencySymbol="$ " type="currency" />
+									</h:outputLabel>
+								</td>
+							</tr> 
+
+							<tr style="padding-top: 5%; padding-bottom: 5%;">
+								<td style="text-align: right; width: 50%; padding-right: 5%"><h:outputLabel style="font-weight:bold;" value="#{messages.recover_value}:" />
+								</td>
+								<td style="text-align: left; width: 50%;"><rich:inputNumberSpinner id="spinnerTotalValue" inputSize="15" value="#{recoverHome.recoverTotalValue}" step="0.01" minValue="0.00" maxValue="#{recoverHome.doubleMaxValue()}">
+										<a4j:support event="onchange" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="buttonAcceptReversionMount"></a4j:support>
+									</rich:inputNumberSpinner>
+								</td>
+							</tr>
+
+							<tr style="padding-top: 5%; padding-bottom: 5%;">
+								<td style="text-align: right; width: 50%; padding-right: 5%"><h:outputLabel style="font-weight:bold;" value="#{messages.recover_pay_form_label}:" />
+								</td>
+								<td style="text-align: left; width: 50%;"><a4j:outputPanel id="payForm">
+										<h:selectOneMenu id="payFormCombo" required="true" value="#{recoverHome.payFormType}">
+											<s:selectItems value="#{recoverHome.payFormsList()}" var="_payForm" label="#{_payForm.name}"></s:selectItems>
+											<a4j:support ajaxSingle="true" event="onchange" ignoreDupResponses="true" reRender="buttonAcceptReversionMount" limitToList="true"></a4j:support>
+											<s:convertEntity></s:convertEntity>
+										</h:selectOneMenu>
+									</a4j:outputPanel>
+								</td>
+							</tr>
+
+							<tr style="padding-top: 5%; padding-bottom: 5%;">
+								<td style="text-align: right; width: 50%; padding-right: 5%"><h:outputLabel style="font-weight:bold;" value="#{messages.recover_date}:" />
+								</td>
+								<td style="text-align: left; width: 50%;"><rich:calendar id="recoverDate" required="true" value="#{recoverHome.recoverDate}" datePattern="dd/MM/yyyy">
+										<a4j:support event="onchanged" reRender="message,buttonAcceptReversionMount" action="#{recoverHome.validateRecoverDate()}" ignoreDupResponses="true" limitToList="true" ajaxSingle="true"></a4j:support>
+									</rich:calendar>
+								</td>
+							</tr>
+							<tr style="padding-top: 5%; padding-bottom: 5%;">
+								<td style="text-align: right; width: 50%;"></td>
+								<td style="text-align: left; width: 50%;"><s:label style="color: #FF0000;" id="message" value="#{recoverHome.dateValidateMessage}" />
+								</td>
+							</tr>
+
+							<tr style="padding-top: 5%; padding-bottom: 5%;">
+								<td style="text-align: right; width: 50%;"><h:outputLabel style="font-weight:bold;" value="Periodo Recaudo Vigente:" />
+								</td>
+								<td style="text-align: left; width: 50%;"><h:outputLabel value="#{recoverHome.currentRecover()} " />
+								</td>
+							</tr>
+
+
+
+							<tr style="padding-top: 10% px; padding-bottom: 2%;">
+								<td style="text-align: center; width: 50%"><h:commandButton type="button" value="#{messages.Close}">
+										<a4j:support event="onclick" ajaxSingle="true" action="#{recoverHome.closeModal1()}" ignoreDupResponses="true" limitToList="true" oncomplete="#{rich:component('modalPanelOrderRecover1')}.hide()" reRender="spinnerTotalValue,buttonAcceptReversionMount"></a4j:support>
+									</h:commandButton></td>
+								<td style="text-align: center; width: 50%"><h:commandButton id="buttonAcceptReversionMount" disabled="#{recoverHome.acceptableTotalRecoverValue()}" type="button" value="#{messages.recover_set_total_value}">
+										<a4j:support event="onclick" ajaxSingle="true" ignoreDupResponses="true" limitToList="true" oncomplete="#{rich:component('modalPanelOrderRecover2')}.show()" reRender="labelRecoverTotalValue,panelRecoverConcepts,panelRecoverSave"></a4j:support>
+									</h:commandButton></td>
+							</tr>
+						</table>
+
+					</a4j:outputPanel>
+					<table>
+
+					</table>
+				</a4j:outputPanel>
+			</a4j:form>
+		</rich:modalPanel>
+
+
+		<rich:modalPanel id="modalPanelOrderRecover2" width="900" autosized="true">
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText value="#{messages.recover_manual}"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+			<a4j:form ajaxSubmit="false" ajaxSingle="true">
+				<a4j:outputPanel id="panelRecoverConcepts">
+					<h:panelGrid style="width: 100%;" columns="1">
+						<a4j:outputPanel>
+							<table style="width: 100%; text-align: center;">
+								<tr>
+									<td style="text-align: center;"><table>
+											<tr>
+												<td style="text-align: left;"><h:outputLabel style="font-weight:bold;" value="#{messages.recover_total_value}:" /></td>
+												<td style="text-align: right;"><h:outputLabel style="color:blue" value="#{recoverHome.recoverTotalValue}">
+														<f:convertNumber currencySymbol="$ " type="currency" />
+													</h:outputLabel></td>
+											</tr>
+											<tr>
+												<td style="text-align: left;"><h:outputLabel style="font-weight:bold;" value="#{messages.recover_surplus_available}:" rendered="#{recoverHome.surplusAvailable()}" /></td>
+												<td style="text-align: right;"><h:outputLabel rendered="#{recoverHome.surplusAvailable()}" style="color:blue" value="#{recoverHome.lastRecover.surplusValue}">
+														<f:convertNumber currencySymbol="$ " type="currency" />
+													</h:outputLabel></td>
+											</tr>
+											<tr>
+												<td><h:outputLabel rendered="#{recoverHome.surplusAvailable()}" value=" " /></td>
+												<td><h:outputLabel rendered="#{recoverHome.surplusAvailable()}" value="#{recoverHome.lineSum}" /></td>
+											</tr>
+											<tr>
+												<td style="text-align: left;"><h:outputLabel style="font-weight:bold;" value="#{messages.recover_total_available}:" rendered="#{recoverHome.surplusAvailable()}" /></td>
+												<td style="text-align: right;"><h:outputLabel rendered="#{recoverHome.surplusAvailable()}" style="color:blue" value="#{recoverHome.allMoneyAvailable}">
+														<f:convertNumber currencySymbol="$ " type="currency" />
+													</h:outputLabel></td>
+
+											</tr>
+										</table></td>
+									<td>
+										<table>
+											<tr>
+												<td style="text-align: left;"><h:outputLabel style="font-weight:bold;" value="#{messages.recover_total_concepts_balance}:" /></td>
+												<td style="text-align: right;"><h:outputLabel style="color:black" value="#{recoverHome.totalSelectedConcept}">
+														<f:convertNumber currencySymbol="$ " type="currency" />
+													</h:outputLabel></td>
+
+											</tr>
+										</table>
+									</td>
+									<td>
+										<table>
+											<tr>
+												<td style="text-align: center;"><h:commandButton id="buttonPriority" type="button" value="#{messages.recover_with_priority}" disabled="#{recoverHome.recoverWithPriority}">
+														<a4j:support event="onclick" action="#{recoverHome.recoverWithPriority()}" limitToList="true" reRender="buttonNoPriority,buttonPriority,tableInvoiceConceptRecoverList,panelRecoverSave" ignoreDupResponses="true"></a4j:support>
+													</h:commandButton></td>
+											</tr>
+											<tr>
+												<td style="text-align: center;"><h:commandButton id="buttonNoPriority" type="button" value="#{messages.recover_without_priority}" disabled="#{!recoverHome.recoverWithPriority}">
+														<a4j:support event="onclick" action="#{recoverHome.recoverWithoutPriority()}" limitToList="true" reRender="buttonNoPriority,buttonPriority,tableInvoiceConceptRecoverList,panelRecoverSave" ignoreDupResponses="true"></a4j:support>
+													</h:commandButton></td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+
+							</table>
+						</a4j:outputPanel>
+						<rich:extendedDataTable noDataLabel="#{messages.table_no_data}" binding="#{htmlInvoiceConceptRecoverDataTable}" width="100%" height="300px" rows="0" sortMode="multi" tableState="#{recoverHome.recoverInvoiceConceptListTableState}" value="#{recoverHome.invoiceConceptsRecoverList}" var="_invCon" id="tableInvoiceConceptRecoverList">
+
+							<rich:column width="5%" sortable="true" sortBy="#{_invCon.id}" filterBy="#{_invCon.id}" filterEvent="onchange" style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="id" />
+								</f:facet>
+								<h:outputText value="#{_invCon.id}" />
+							</rich:column>
+							<rich:column width="15%" sortable="true" sortBy="#{_invCon.invoice.number}" filterBy="#{_invCon.invoice.number}" filterEvent="onchange" style="text-align: center">
+								<f:facet name="header">
+									<center>  
+										<b>#{messages.MONO_number_capital} #{messages.MONO_of}<br></br>#{messages.MONO_invoice_capital}</b>
+									</center>
+								</f:facet>
+								<h:outputText value="#{_invCon.invoice.number}" />
+							</rich:column> 
+							<rich:column width="25%" sortable="true" sortBy="#{_invCon.concept.name}" filterBy="#{conceptHome.nameInvoiceConcept(_invCon)}" filterEvent="onchange" style="text-align: center">
+								<f:facet name="header">
+									<h:outputText value="#{messages.Concept}" />
+								</f:facet> 
+								<h:outputText style="font-weight: bold;font-size:xx-small;" value="#{recoverHome.getLabelMandatoryInterest(_invCon)} " />
+								<h:outputText value=" #{conceptHome.nameInvoiceConcept(_invCon)}" /> 
+								<rich:toolTip>
+									<span style="white-space: nowrap"> #{_invCon.concept.name}</span>
+								</rich:toolTip>
+							</rich:column>
+							<rich:column width="17%" sortable="true" sortBy="#{_invCon.total}" filterBy="#{_invCon.total}" filterEvent="onchange" style="text-align: right;padding-right:3%;">
+								<f:facet name="header">
+									<center>
+										<b>#{messages.MONO_total_capital} #{messages.MONO_ofthe}<br></br>#{messages.MONO_concept_capital}</b>
+									</center>
+								</f:facet>
+								<h:outputText value="#{_invCon.total}">
+									<f:convertNumber currencySymbol="$ " type="currency" />
+								</h:outputText>
+							</rich:column>
+							<rich:column width="17%" sortable="true" sortBy="#{_invCon.balance}" filterBy="#{_invCon.balance}" filterEvent="onchange" style="text-align: right;padding-right:3%;">
+								<f:facet name="header">
+									<h:outputText value="#{messages.balance}" />
+								</f:facet>
+								<h:outputText style="font-weight:bold;padding-right:10px;" value="#{_invCon.balance}">
+									<f:convertNumber currencySymbol="$ " type="currency" />
+								</h:outputText>
+							</rich:column>
+							<rich:column width="21%" sortable="true" id="colRecover" sortBy="#{_invCon.recoverValue}" filterBy="#{_invCon.recoverValue}" filterEvent="onchange" style="text-align: center">
+								<f:facet name="header">
+									<center>
+										<b>#{messages.MONO_value_capital} #{messages.MONO_ofthe}<br></br>#{messages.MONO_recover_capital}</b>
+									</center>
+								</f:facet>
+								<div id="divColumnRecover" style="width: 100%;" align="center">
+									<rich:inputNumberSpinner style="color:blue;" inputSize="15" rendered="#{!recoverHome.recoverWithPriority}" id="spinnerConceptRecoverValue" value="#{_invCon.recoverValue}" step="0.01" minValue="0.00" maxValue="#{_invCon.balance}">
+										<a4j:support event="onchange" ignoreDupResponses="true" limitToList="true" ajaxSingle="true" reRender="panelRecoverSave"></a4j:support>
+									</rich:inputNumberSpinner>
+									<h:outputLabel style="color:blue" rendered="#{recoverHome.recoverWithPriority}" value="#{_invCon.recoverValue}">
+										<f:convertNumber currencySymbol="$ " type="currency" />
+									</h:outputLabel>
+								</div> 
+							</rich:column>
+
+						</rich:extendedDataTable>
+						<a4j:outputPanel style="width:100%;" id="panelRecoverSave">
+							<table style="width: 100%;">
+								<tr>
+									<td style="width: 25%;"><h:commandButton type="button" value="#{messages.Close}">
+											<a4j:support event="onclick" ajaxSingle="true" ignoreDupResponses="true" limitToList="true" action="#{recoverHome.closeModal2()}" oncomplete="#{rich:component('modalPanelOrderRecover2')}.hide()" reRender="panelTotalRecover,panelTotalRecover"></a4j:support>
+										</h:commandButton></td>
+									<td style="width: 25%;"><h:commandButton disabled="#{!recoverHome.recoverComplete}" type="button" value="#{messages.recover_save}">
+											<a4j:support event="onclick" ajaxSingle="true" action="#{recoverHome.saveRecover()}" ignoreDupResponses="true" limitToList="true" oncomplete="#{rich:component('modalPanelPdf')}.show()" reRender="growlPanel,linkPDF,modalPanelPdf"></a4j:support>
+										</h:commandButton></td>
+									<td style="width: 25%;"><h:outputLabel style="font-weight:bold;" rendered="#{!recoverHome.recoverComplete}" value="#{messages.recover_recovered_value}: " /> <h:outputLabel style="color:red" rendered="#{!recoverHome.recoverComplete}" value="#{recoverHome.recoveredValue}">
+											<f:convertNumber currencySymbol="$ " type="currency" />
+										</h:outputLabel> <h:outputLabel style="font-weight:bold;" rendered="#{recoverHome.recoverComplete and recoverHome.moneyAvailable() > 0.0}" value="Excedente: " /> <h:outputLabel style="color:blue" rendered="#{recoverHome.recoverComplete and recoverHome.moneyAvailable() > 0.0}" value="#{recoverHome.moneyAvailable()}">
+											<f:convertNumber currencySymbol="$ " type="currency" />
+										</h:outputLabel></td>
+									<td style="width: 25%;"><h:outputLabel style="font-weight:bold;" rendered="#{!recoverHome.recoverComplete}" value="Disponible: " /> <h:outputLabel style="#{recoverHome.moneyAvailable() &gt;= 0 ? 'color:blue':'color:red' }" rendered="#{!recoverHome.recoverComplete}" value="#{recoverHome.moneyAvailable()}">
+											<f:convertNumber currencySymbol="$ " type="currency" />
+										</h:outputLabel></td>
+								</tr>
+							</table>
+						</a4j:outputPanel>
+					</h:panelGrid>
+				</a4j:outputPanel>
+			</a4j:form>
+		</rich:modalPanel>
+
+
+
+
+
+<rich:modalPanel id="modalPanelPdf" width="300" autosized="true">
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText value="#{messages.recover_manual}  -  #{messages.Generate_PDF}"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+			<a4j:form ajaxSingle="true" ajaxSubmit="false">  </a4j:form>
+			
+			<a4j:form>
+			<table> 
+			<tr>
+				
+				<td>
+					<s:link id="linkPDF" rendered="#{recoverHome.linkPDF != null}" value="#{messages.Download_PDF}" action="#{downloadAttachment.download()}" >
+						<f:param name="relativePath" value="#{recoverHome.linkPDF}"></f:param>
+					</s:link>
+				</td>
+				
+				
+				<td>#{'    '}</td>
+				
+				<td>
+					<s:button value="#{messages.Close}" view="/RecoverManual.xhtml">
+							<a4j:support event="onclick" ajaxSingle="true" ignoreDupResponses="true" limitToList="true"  oncomplete="#{rich:component('modalPanelPdf')}.hide()" ></a4j:support>
+					</s:button>
+				</td>
+    		</tr>
+			</table>
+
+			</a4j:form>
+		</rich:modalPanel>
+
+
+
+
+	</ui:define>
+
+</ui:composition>

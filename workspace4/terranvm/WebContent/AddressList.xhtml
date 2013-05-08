@@ -1,0 +1,300 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="addressSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="#{messages.Address_Search_Filter}" switchType="ajax">
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">#{messages.Kind_of_way}</ui:define>
+                <h:inputText id="kindOfWay" value="#{addressList.address.kindOfWay}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">#{messages.Way_letter}</ui:define>
+                <h:inputText id="wayLetter" value="#{addressList.address.wayLetter}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">#{messages.Way_bis_letter}</ui:define>
+                <h:inputText id="wayBisLetter" value="#{addressList.address.wayBisLetter}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">#{messages.Way_east_or_south}</ui:define>
+                <h:inputText id="wayEastOrSouth" value="#{addressList.address.wayEastOrSouth}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">#{messages.Number_letter}</ui:define>
+                <h:inputText id="numberLetter" value="#{addressList.address.numberLetter}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">#{messages.Number_east_or_south}</ui:define>
+                <h:inputText id="numberEastOrSouth" value="#{addressList.address.numberEastOrSouth}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">#{messages.Other}</ui:define>
+                <h:inputText id="other" value="#{addressList.address.other}"/>
+            </s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">#{messages.Match}</ui:define>
+                <h:selectOneRadio id="logic" value="#{addressList.restrictionLogicOperator}" styleClass="radio">
+                    <f:selectItem itemLabel="#{messages.All}" itemValue="and"/>
+                    <f:selectItem itemLabel="#{messages.Any}" itemValue="or"/>
+                </h:selectOneRadio>
+            </s:decorate>
+
+        </rich:simpleTogglePanel>
+
+<div class="actionButtons"><h:commandButton id="search" value="#{messages.Search}" action="/AddressList.xhtml" rendered="#{authenticator.validateShowFunction('AddressList.xhtml', 'search')}" /> <s:button id="reset" value="#{messages.Reset}" includePageParams="false" rendered="#{authenticator.validateShowFunction('AddressList.xhtml', 'reset')}"         /></div>
+       
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">#{messages.Search_Results} (#{empty addressList.resultList ? 0 : (addressList.paginated ? addressList.resultCount : addressList.resultList.size)})</f:facet>
+    <div class="results" id="addressList">
+
+    <h:outputText value="#{messages.search_returned_no_results}"
+               rendered="#{empty addressList.resultList}"/>
+
+    <rich:dataTable id="addressList"
+                var="_address"
+              value="#{addressList.resultList}"
+           rendered="#{not empty addressList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{addressList}"/>
+                    <ui:param name="propertyLabel" value="Id"/>
+                    <ui:param name="propertyPath" value="address.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_address.id}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{addressList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Business_entity_id}"/>
+                    <ui:param name="propertyPath" value="address.businessEntity.nameBusinessEntity"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_address.businessEntity.nameBusinessEntity}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{addressList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.City_id}"/>
+                    <ui:param name="propertyPath" value="address.city.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_address.city.name}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{addressList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Real_property_id}"/>
+                    <ui:param name="propertyPath" value="address.realProperty.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_address.realProperty.id}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{addressList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Kind_of_way}"/>
+                    <ui:param name="propertyPath" value="address.kindOfWay"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_address.kindOfWay}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{addressList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Way_number}"/>
+                    <ui:param name="propertyPath" value="address.wayNumber"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_address.wayNumber}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{addressList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Way_letter}"/>
+                    <ui:param name="propertyPath" value="address.wayLetter"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_address.wayLetter}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{addressList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Is_way_bis}"/>
+                    <ui:param name="propertyPath" value="address.isWayBis"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_address.isWayBis}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{addressList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Way_bis_letter}"/>
+                    <ui:param name="propertyPath" value="address.wayBisLetter"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_address.wayBisLetter}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{addressList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Way_east_or_south}"/>
+                    <ui:param name="propertyPath" value="address.wayEastOrSouth"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_address.wayEastOrSouth}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{addressList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Number}"/>
+                    <ui:param name="propertyPath" value="address.number"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_address.number}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{addressList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Number_letter}"/>
+                    <ui:param name="propertyPath" value="address.numberLetter"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_address.numberLetter}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{addressList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Additional_number}"/>
+                    <ui:param name="propertyPath" value="address.additionalNumber"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_address.additionalNumber}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{addressList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Number_east_or_south}"/>
+                    <ui:param name="propertyPath" value="address.numberEastOrSouth"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_address.numberEastOrSouth}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{addressList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Other}"/>
+                    <ui:param name="propertyPath" value="address.other"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_address.other}"/>
+        </h:column>
+        <rich:column styleClass="action">
+            <f:facet name="header">Action</f:facet>
+            <s:link view="/#{empty from ? 'Address' : from}.xhtml"
+                   value="#{empty from ? 'Ver' : 'Seleccionar'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="addressViewId" 
+                      rendered="#{authenticator.validateShowFunction('AddressList.xhtml', 'addressViewId')}">
+                <f:param name="addressId"
+                        value="#{_address.id}"/>
+            </s:link>
+            #{' '}
+            <s:link view="/AddressEdit.xhtml"
+                   value="#{messages.Edit}"
+             propagation="none"
+                      id="addressEdit"
+                rendered="#{empty from and authenticator.validateShowFunction('AddressList.xhtml', 'addressEdit')}">
+                <f:param name="addressId"
+                        value="#{_address.id}"/>
+            </s:link>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/AddressList.xhtml"
+            rendered="#{addressList.previousExists and authenticator.validateShowFunction('AddressList.xhtml', 'firstPage')}"
+               value="#{messages.left}#{messages.left} #{messages.First_Page}"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/AddressList.xhtml"
+            rendered="#{addressList.previousExists and authenticator.validateShowFunction('AddressList.xhtml', 'previousPage') }"
+               value="#{messages.left} #{messages.Previous_Page}"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{addressList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/AddressList.xhtml"
+            rendered="#{addressList.nextExists and authenticator.validateShowFunction('AddressList.xhtml', 'nextPage')}"
+               value="#{messages.Next_page} #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{addressList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/AddressList.xhtml"
+            rendered="#{addressList.nextExists and authenticator.validateShowFunction('AddressList.xhtml', 'lastPage')}"
+               value="#{messages.Last_Page} #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{addressList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/AddressEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="#{messages.Create_address}" 
+                 rendered="#{authenticator.validateShowFunction('AddressList.xhtml', 'create')}">
+            <f:param name="addressId"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

@@ -1,0 +1,968 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass book
+\begin_preamble
+
+\usepackage{watermark}\usepackage{eso-pic}\@ifundefined{definecolor}
+ {\usepackage{color}}{}
+\usepackage{type1cm}\usepackage{fancyhdr}\usepackage{multirow}
+
+\title{\mbox{\includegraphics[width=12cm]{watermark}}\\ \bigskip
+\Huge{\textsf{MANUAL DE USUARIO\\\textit{POSWEB V2.0}}} \\ \huge{\textsf{Solidda Group S.A.}}
+\author{\LARGE{\textsf{Cindy Andrea Serrano}}\\\LARGE{\textsf{Quality
+       Assurance}}\\\LARGE{\textsf{Koghi S.A.S.}}}}
+\end_preamble
+\use_default_options false
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 2
+\tocdepth 2
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+mbox{
+\end_layout
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/watermark.eps
+	width 12cm
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset VSpace bigskip
+\end_inset
+
+ 
+\size giant
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{}
+\end_layout
+
+\end_inset
+
+
+\family sans
+MANUAL 
+\family default
+TECNICO
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{}
+\end_layout
+
+\end_inset
+
+ 
+\family sans
+\shape italic
+TERRANUM BUSINESS PLATAFORM
+\family default
+\shape default
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{}
+\end_layout
+
+\end_inset
+
+ 
+\size default
+
+\begin_inset Newline newline
+\end_inset
+
+ 
+\size giant
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{}
+\end_layout
+
+\end_inset
+
+ 
+\size huge
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{}
+\end_layout
+
+\end_inset
+
+
+\family sans
+Terranum
+\family default
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{}
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Author
+
+\size largest
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{}
+\end_layout
+
+\end_inset
+
+
+\family sans
+Wilson Amaya
+\family default
+\size default
+
+\begin_inset Newline newline
+\end_inset
+
+ 
+\size largest
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{}
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{}
+\end_layout
+
+\end_inset
+
+
+\family sans
+Desarrollador
+\family default
+\size default
+
+\begin_inset Newline newline
+\end_inset
+
+ 
+\size largest
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{}
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{}
+\end_layout
+
+\end_inset
+
+
+\family sans
+Koghi S.A.S.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+pagestyle
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+{
+\end_layout
+
+\end_inset
+
+fancy
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+addtolength{
+\backslash
+headheight}{50pt}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+CONTROL DE CAMBIOS
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset VSpace bigskip
+\end_inset
+
+ 
+\begin_inset Tabular
+<lyxtabular version="3" rows="2" columns="4">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Versión 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Autor 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Descripción 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Fecha
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1.0 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Wilson Favian Amaya 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Versión Inicial 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+
+\backslash
+today
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+PROPOSITO DEL DOCUMENTO
+\end_layout
+
+\begin_layout Standard
+Este documento tiene como propósito aclarar aspectos técnicos de la aplicación.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+ALCANCE DEL DOCUMENTO
+\end_layout
+
+\begin_layout Standard
+En este documento se describirán algunas restricciones de la aplicación
+ y se listaran los datos que deben ser ingresados por la base de datos y
+ la forma de ingresarlos a la misma.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+ 
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Conexión a la base de datos
+\end_layout
+
+\begin_layout Standard
+En este manual se mencionaran Scripts que deben ser ejecutados en la base
+ de datos, para poder ejecutar estos Scripts se debe tener una conexión
+ previa a la base de datos, esta conexión se realiza ejecutando los siguientes
+ comandos en la consola del servidor.
+\end_layout
+
+\begin_layout Enumerate
+su (ingresar la contraseña de root)
+\end_layout
+
+\begin_layout Enumerate
+su postgres
+\end_layout
+
+\begin_layout Enumerate
+psql _U postgres terranvm_db
+\end_layout
+
+\begin_layout Section
+Cobro Anticipado.
+\end_layout
+
+\begin_layout Itemize
+Se realizara una liquidación anticipada de N días para las hojas de términos
+ con cobros anticipados, así que se debe tener en cuenta que el sistema
+ adelantará (virtualmente) la fecha a la hora de calcular los conceptos
+ anticipados, por ende si se crean y aprueban facturas, entre el día en
+ que se realiza esta liquidación anticipada y el inicio del nuevo mes, estas
+ tendrán un consecutivo de facturación superior al de las facturas ya generadas,
+ pero serán del mes anterior (ya que no se haría adelanto virtual de fecha)
+ por ende, no se recomienda crear y aprobar facturas del mes actual, si
+ ya se generaron y aprobaron facturas anticipadas del mes entrante, para
+ que no tengan problemas de consecutivos.
+\end_layout
+
+\begin_layout Itemize
+Para ingresar a la base de datos los días que se adelantara el sistema a
+ la hora de realizar los cobros anticipados, se deben seguir los siguientes
+ pasos.
+\end_layout
+
+\begin_layout Enumerate
+SELECT * FROM days_for_early_payment;(al ejecutar esta consulta veremos
+ los datos actuales de la tabla)
+\end_layout
+
+\begin_layout Enumerate
+UPDATE days_for_early_payment set days=N where id=?(donde N debe ser reemplazado
+ por el número de días que se adelantara el sistema, y ? debe ser reemplazado
+ por el número del id que le corresponde al mes que se desea actualizar.)
+\end_layout
+
+\begin_layout Section
+Original - Copia
+\end_layout
+
+\begin_layout Itemize
+Los datos de las facturas que dicen quien se quedara con el original, quien
+ con la copia1, y quien con copia2 son ingresados por bases de datos usando
+ los siguientes Scripts.
+\end_layout
+
+\begin_layout Enumerate
+UPDATE business_entity set original ='X1'; 
+\end_layout
+
+\begin_layout Enumerate
+UPDATE business_entity set first_copy ='X2'; 
+\end_layout
+
+\begin_layout Enumerate
+UPDATE business_entity set second_copy  ='X3'; 
+\end_layout
+
+\begin_layout Standard
+Donde las variables X1, X2, X3 serán reemplazadas por los datos de las entidades
+ que se quedaran con la original, copia1 y copia2 respectivamente.
+\end_layout
+
+\begin_layout Section
+Ruta de almacenamiento de los archivos SIIGO y los PDF
+\end_layout
+
+\begin_layout Itemize
+Para ingresar esta ruta a la base de datos se deberán usar los siguientes
+ Scripts.
+ 
+\end_layout
+
+\begin_layout Enumerate
+UPDATE system_configuration SET value ='X1' WHERE name='Carpeta_PDF'; 
+\end_layout
+
+\begin_layout Enumerate
+UPDATE system_configuration SET value ='X2' WHERE name='Carpeta_SIIGO';
+\end_layout
+
+\begin_layout Standard
+Donde las variables X1 será reemplazada por la ruta donde se almaceneran
+ los PDF y X2 será reemplazada por la ruta donde se almacenaran las interface
+ SIIGO.
+\end_layout
+
+\begin_layout Standard
+todas las carpetas indicadas en estas rutas deben existir previamente en
+ el servidor, y las rutas no deben terminar en 
+\begin_inset Quotes eld
+\end_inset
+
+/
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Reporteador
+\end_layout
+
+\begin_layout Standard
+Para poder insertar un reporte a Orbis, es necesario generarlo desde la
+ aplicación Pentaho, una vez hecho esto se debe crear un parametro, para
+ esto se da click en data, en la parte inferior de data esta la opción parameter
+s, se debe dar click derecho sobre esta opción, y add Parameter.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/pentahoaddparameter-1.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+ahora se configurara el parámetro con el nombre projectId, será de tipo
+ entero y de tipo oculto (Hidden)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/addParameter-1.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Una vez configurado este parámetro, modificaremos la consulta que realiza
+ Pentaho, para que tome el parámetro creado y lo utilice en sus filtros.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/pentahoaddfiltro-1.png
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+La forma de utilizar este parámetro varía según cada consulta, en este ejemplo,
+ se consultan invoice, incoice_concept y project_property, ya que project_proper
+ty almacena el id del proyecto, hacemos que solo se consulten los datos
+ de project_property donde el project_property.project sea igual al id del
+ proyecto.
+\end_layout
+
+\begin_layout Standard
+una vez modificada la consulta, se procede a publicar el archivo al servidor
+ de Pentaho.
+\end_layout
+
+\begin_layout Standard
+Se puede publicar el reporte dando click en File y luego en Publish.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/publish-1.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+se ingresa el usuario, contraseña y se da click en ok.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/publishcarpeta-0.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Aquí se selecciona la carpeta en la que se almacenará el reporte, en la
+ parte de abajo piden un password de publicación, este es el password que
+ se configuro en /ruta_Pentaho/biserver-ce/pentajo-solutions/system/publisher_co
+nfig.xml donde ruta_pentaho es la ruta donde se encuentra la carpeta del
+ servidor de pentaho, se da click en ok.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/publishsuccesfully-0.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+se debe mostrar el mensaje anterior.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/publishurl-1.png
+	lyxscale 80
+	width 14cm
+	height 14cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Copiamos la url de la página que nos muestra el reporte en el navegador,
+ (para esto seleccionamos la opción de mostrar el reporte publicado)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Graphics
+	filename /home/csolano/terranvm/imagenesManuales/publishscript-0.png
+	lyxscale 80
+	width 14cm
+	height 6cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Se ingresa en la base de datos de Orbis, y se insertan los siguientes datos
+ en la tabla reports, se ingresa el id, el nombre del reporte, la descripción
+ y la url completa del mismo, por último se debe ingresar true o false,
+ si se ingresa true significa que este reporte no se discrimina por proyecto,
+ de lo contrario se ingresara false.
+ 
+\end_layout
+
+\begin_layout Section
+Archivo de Conexión a la Base de Datos
+\end_layout
+
+\begin_layout Standard
+El archivo de configuración a la base de datos se llama terranvm-ds.xml,
+ este se encuentra en la carpeta de Jboss, en la ruta server/default/deploy
+\end_layout
+
+\begin_layout Standard
+en este archivo se debe configurar el nombre de la base de datos, el usuario
+ y el password de conexión.
+ 
+\end_layout
+
+\begin_layout Section
+Configuración de Jboss
+\end_layout
+
+\begin_layout Standard
+Jboss tiene dos archivos de configuración que deben ser editados, el primero
+ modificara la cantidad de memoria Ram que sera asignada a la aplicación,
+\end_layout
+
+\begin_layout Standard
+este archivo se encuentra en la carpeta de Jboss /bin y se llama run.conf,
+ lo abrimos con un editor de texto, y editamos la linea JAVA_OPTS=
+\end_layout
+
+\begin_layout Standard
+Aquí cambiamos los valores de Xms, Xmx, asignándole los valores de memoria
+ mínima y máxima que podrá usar la aplicación,
+\end_layout
+
+\begin_layout Standard
+El segundo Archivo esta dentro de la carpeta de Jboss en la ruta /server/default
+/deploy/ y se llama transaction-jboss-beans.xml, en este archivo buscamos
+ la linea que contiene la siguiente expresión “<property name=”defaultTimeout”
+ esta expresión indica el tiempo limite de ejecución de una tarea, por ejemplo
+ Cron Job, así que se debe cambiar el valor numérico de esta linea a una
+ cantidad de segundos superior al tiempo máximo de ejecución de todas las
+ tareas que realiza la aplicación.
+\end_layout
+
+\begin_layout Section
+Detección de Errores
+\end_layout
+
+\begin_layout Standard
+Para poder detectar un error en la aplicacíon es necesario leer los logs
+ que se encuentran almacenados en la carpeta de Jboss dentro de la ruta
+ /server/default/log/ y el nombre del archivo es server.log.
+ 
+\end_layout
+
+\begin_layout Section
+Obtener la Fecha de un Cambio en Base de Datos
+\end_layout
+
+\begin_layout Standard
+Para obtener la fecha de un cambio en una tabla de la base de datos que
+ este siendo auditada, es necesario crear un procedimiento almacenado como
+ el siguiente: CREATE OR REPLACE FUNCTION from_unixtime(double precision)
+ RETURNS TIMESTAMP AS ' SELECT to_timestamp($1)::timestamp AS result ' LANGUAGE
+ 'SQL'; luego de esto es necesario realizar la siguiente consulta: select
+ FROM_UNIXTIME(revtstmp/1000) from revinfo where rev = ?; donde el signo
+ de interrogacion debera ser reemplazado por el id al cual corresponde el
+ cambio que se desea consultar.
+ Para conocer cual es valor del id correspondiente a un cambio, se debera
+ dirigir a la tabla auditada de la cual desee conocer la fecha del cambio;
+ dentro de los campos de esta tabla se encuentra el campo rev; se debera
+ revizar cual es el numero correspondiente al cambio que quiera consultar
+ y agregar este valor a la consulta ya indicada.
+\end_layout
+
+\begin_layout Section
+Resolución de Problemas
+\end_layout
+
+\begin_layout Itemize
+Error “Too many open files”
+\end_layout
+
+\begin_layout Standard
+Esto es debido a la apertura simultánea de más ficheros de los permitidos
+ por el sistema operativo.
+ Este error se puede reconocer ya que en el log del servidor saldr una linea
+ como la siguiente:
+\end_layout
+
+\begin_layout Standard
+\paragraph_spacing single
+
+\size scriptsize
+ERROR [STDERR] (http-0.0.0.0-8080-8) log4j:ERROR Could not read configuration
+ file from URL [vfs:/usr/local/jboss/server/default/deploy/terranvm.war/WEB-INF/c
+lasses/log4j.properties].
+ 2012-07-24 09:04:07,033 ERROR [STDERR] (http-0.0.0.0-8080-8) java.io.FileNotFoundExc
+eption: /usr/local/jboss/server/default/tmp/vfs/automount37ab61c2ff2411e3/
+ terranvm.war-1c5fbf2179e43f00/WEB-INF/classes/log4j.properties (Too many
+ open files).
+\end_layout
+
+\begin_layout Standard
+\noindent
+Para solucionar esto, se cambia la configuración del sistema operativo para
+ aumentar el límite.
+ En nuestro caso, sería editando el fichero /etc/security/limits.conf con
+ el siguiente comando: 
+\end_layout
+
+\begin_layout Standard
+\paragraph_spacing double
+
+\series bold
+sudo vi /etc/security/limits.conf
+\end_layout
+
+\begin_layout Standard
+\paragraph_spacing double
+\noindent
+Añadir al final del fichero las siguientes lineas:
+\end_layout
+
+\begin_layout Standard
+\paragraph_spacing double
+
+\series bold
+user soft nofile 30000 
+\end_layout
+
+\begin_layout Standard
+\paragraph_spacing double
+
+\series bold
+user hard nofile 30000
+\series default
+.
+\end_layout
+
+\begin_layout Standard
+\noindent
+Sustituyendo “user” por el nombre del usuario que ejecuta la aplicación.
+ Es necesario reiniciar la sesión de ese usuario.
+ Para comprobar que el cambio se ha aplicado correctamente, ejecutar el
+ comando: 
+\end_layout
+
+\begin_layout Standard
+\paragraph_spacing double
+
+\series bold
+ulimit -a
+\end_layout
+
+\begin_layout Standard
+\paragraph_spacing double
+\noindent
+Verificar que el la salida que se muestra en consola se encuentre la siguiente
+ linea:
+\end_layout
+
+\begin_layout Standard
+\paragraph_spacing double
+
+\series bold
+open files (-n) 30000
+\end_layout
+
+\end_body
+\end_document

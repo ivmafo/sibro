@@ -1,0 +1,183 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="rentableUnitSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="RentableUnit Search Filter" switchType="ajax">
+        
+        	<s:decorate id="nameField" template="layout/edit.xhtml">
+				<ui:define name="label"> #{messages.Name}</ui:define>
+				<h:inputText value="#{rentableUnitList.rentableUnit.name}"
+					required="true" />
+			</s:decorate>
+
+			<s:decorate id="metersField" template="layout/edit.xhtml">
+				<ui:define name="label"> #{messages.Area}(mts²)</ui:define>
+				<h:inputText value="#{rentableUnitList.rentableUnit.meters}"
+					required="true" />
+			</s:decorate>
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label"> #{messages.Match}</ui:define>
+                <h:selectOneRadio id="logic" value="#{rentableUnitList.restrictionLogicOperator}" styleClass="radio">
+                    <f:selectItem itemLabel="#{messages.All}" itemValue="and"/>
+                    <f:selectItem itemLabel="#{messages.Any}" itemValue="or"/>
+                </h:selectOneRadio>
+            </s:decorate>
+
+        </rich:simpleTogglePanel>
+
+        <div class="actionButtons">
+            <h:commandButton id="search" value="#{messages.Search}" action="/RentableUnitList.xhtml"/>
+            <s:button id="reset" value="#{messages.Reset}" includePageParams="false"/>
+        </div>
+
+    </h:form>
+
+    <rich:panel>
+        <f:facet name="header">  #{messages.Search_Results} (#{empty rentableUnitList.resultList ? 0 : (rentableUnitList.paginated ? rentableUnitList.resultCount : rentableUnitList.resultList.size)})</f:facet>
+    <div class="results" id="rentableUnitList">
+
+    <h:outputText value="The rentableUnit search returned no results."
+               rendered="#{empty rentableUnitList.resultList}"/>
+
+    <rich:dataTable id="rentableUnitList"
+                var="_rentableUnit"
+              value="#{rentableUnitList.resultList}"
+           rendered="#{not empty rentableUnitList.resultList}">
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{rentableUnitList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Id}"/>
+                    <ui:param name="propertyPath" value="rentableUnit.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_rentableUnit.id}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{rentableUnitList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Name}"/>
+                    <ui:param name="propertyPath" value="rentableUnit.name"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_rentableUnit.name}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{rentableUnitList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Area}(mts²)"/>
+                    <ui:param name="propertyPath" value="rentableUnit.meters"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_rentableUnit.meters}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{rentableUnitList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Rentable_unit_id}"/>
+                    <ui:param name="propertyPath" value="rentableUnit.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_rentableUnit.rentableUnit.id}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">
+                <ui:include src="layout/sort.xhtml">
+                    <ui:param name="entityList" value="#{rentableUnitList}"/>
+                    <ui:param name="propertyLabel" value="#{messages.Area_id}"/>
+                    <ui:param name="propertyPath" value="rentableUnit.area.id"/>
+                </ui:include>
+            </f:facet>
+            <h:outputText value="#{_rentableUnit.area.id}"/>
+        </h:column>
+        <rich:column styleClass="action">
+        <table>
+        <tr>
+        <td>
+            <f:facet name="header"> #{messages.Action} </f:facet>
+            <s:link view="/#{empty from ? 'RentableUnit' : from}.xhtml"
+                   value="#{empty from ? messages.View : messages.Edit}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="rentableUnitViewId">
+                <f:param name="rentableUnitId"
+                        value="#{_rentableUnit.id}"/>
+            </s:link></td>
+            <td>#{' '}</td>
+            <td><div id="editButton#{_rentableUnit.id}"><s:link view="/RentableUnitEdit.xhtml"
+                   value="Edit"
+             propagation="none"
+                      id="rentableUnitEdit"
+                rendered="#{empty from}" disabled="#{rentableUnitHome.rentableUnitListInApprove(_rentableUnit)}">
+                <f:param name="rentableUnitId"
+                        value="#{_rentableUnit.id}"/>
+            </s:link>
+            <rich:toolTip disabled="#{not rentableUnitHome.rentableUnitListInApprove(_rentableUnit)}" for="editButton#{_rentableUnit.id}">No se puede editar, pendiente aprobación de un cambio</rich:toolTip>
+            </div>
+            </td></tr></table>
+        </rich:column>
+    </rich:dataTable>
+
+    </div>
+    </rich:panel>
+
+    <div class="tableControl">
+
+        <s:link view="/RentableUnitList.xhtml"
+            rendered="#{rentableUnitList.previousExists}"
+               value="#{messages.left}#{messages.left} #{messages.First_Page}"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+
+        <s:link view="/RentableUnitList.xhtml"
+            rendered="#{rentableUnitList.previousExists}"
+               value="#{messages.left} #{messages.Previous_Page}"
+                  id="previousPage">
+            <f:param name="firstResult"
+                    value="#{rentableUnitList.previousFirstResult}"/>
+        </s:link>
+
+        <s:link view="/RentableUnitList.xhtml"
+            rendered="#{rentableUnitList.nextExists}"
+               value="#{messages.Next_page} #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult"
+                    value="#{rentableUnitList.nextFirstResult}"/>
+        </s:link>
+
+        <s:link view="/RentableUnitList.xhtml"
+            rendered="#{rentableUnitList.nextExists}"
+               value="#{messages.Last_Page} #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult"
+                    value="#{rentableUnitList.lastFirstResult}"/>
+        </s:link>
+
+    </div>
+
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/RentableUnitEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="#{messages.Create_rentable_Unit}">
+            <f:param name="rentableUnitId"/>
+        </s:button>
+    </s:div>
+
+</ui:define>
+
+</ui:composition>

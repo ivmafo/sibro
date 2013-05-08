@@ -1,0 +1,191 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:s="http://jboss.com/products/seam/taglib"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:a="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich"
+    template="layout/template.xhtml">
+
+<ui:define name="body">
+
+    <h:form id="plugin" styleClass="edit">
+
+        <rich:panel>
+            <f:facet name="header">#{pluginHome.managed ? 'Edit' : 'Add'} Plugin</f:facet>
+
+
+            <s:decorate id="idField" template="layout/edit.xhtml">
+                <ui:define name="label">Id</ui:define>
+                <h:inputText id="id"
+                       required="true"
+                       disabled="#{pluginHome.managed}"
+                          value="#{pluginHome.instance.id}">
+                    <a:support event="onblur" reRender="idField" bypassUpdates="true" ajaxSingle="true"/>
+                </h:inputText>
+            </s:decorate>
+
+
+            <s:decorate id="nameField" template="layout/edit.xhtml">
+                <ui:define name="label">Name</ui:define>
+                <h:inputTextarea id="name"
+                               cols="80"
+                               rows="3"
+                           required="true"
+                              value="#{pluginHome.instance.name}"/>
+            </s:decorate>
+
+
+            <s:decorate id="mainUrlField" template="layout/edit.xhtml">
+                <ui:define name="label">Main url</ui:define>
+                <h:inputTextarea id="mainUrl"
+                               cols="80"
+                               rows="3"
+                           required="true"
+                              value="#{pluginHome.instance.mainUrl}"/>
+            </s:decorate>
+
+
+            <s:decorate id="summaryUrlField" template="layout/edit.xhtml">
+                <ui:define name="label">Summary url</ui:define>
+                <h:inputTextarea id="summaryUrl"
+                               cols="80"
+                               rows="3"
+                           required="true"
+                              value="#{pluginHome.instance.summaryUrl}"/>
+            </s:decorate>
+
+
+            <s:decorate id="wsdlUrlField" template="layout/edit.xhtml">
+                <ui:define name="label">Wsdl url</ui:define>
+                <h:inputTextarea id="wsdlUrl"
+                               cols="80"
+                               rows="3"
+                           required="true"
+                              value="#{pluginHome.instance.wsdlUrl}"/>
+            </s:decorate>
+
+
+
+            <div style="clear:both">
+                <span class="required">*</span>
+                required fields
+            </div>
+
+        </rich:panel>
+
+        <div class="actionButtons">
+
+            <h:commandButton id="save"
+                          value="Save"
+                         action="#{pluginHome.persist}"
+                       disabled="#{!pluginHome.wired}"
+                       rendered="#{!pluginHome.managed}"/>
+
+            <h:commandButton id="update"
+                          value="Save"
+                         action="#{pluginHome.update}"
+                       rendered="#{pluginHome.managed}"/>
+
+            <h:commandButton id="delete"
+                          value="Delete"
+                         action="#{pluginHome.remove}"
+                      immediate="true"
+                       rendered="#{pluginHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancel"
+             propagation="end"
+                    view="/Plugin.xhtml"
+                rendered="#{pluginHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancel"
+             propagation="end"
+                    view="/#{empty pluginFrom ? 'PluginList' : pluginFrom}.xhtml"
+                rendered="#{!pluginHome.managed}"/>
+
+        </div>
+    </h:form>
+
+<rich:tabPanel switchType="ajax">
+
+    <rich:tab label="Concepts">
+        <h:form styleClass="association" id="conceptsChildren">
+
+            <h:outputText value="There are no concepts associated with this plugin."
+                       rendered="#{empty pluginHome.concepts}"/>
+
+            <rich:dataTable value="#{pluginHome.concepts}"
+                           var="_concept"
+                      rendered="#{not empty pluginHome.concepts}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="conceptsTable">
+                <rich:column sortBy="#{_concept.id}">
+                    <f:facet name="header">Id</f:facet>
+                    <h:outputText value="#{_concept.id}"/>
+                </rich:column>
+                <rich:column sortBy="#{_concept.description}">
+                    <f:facet name="header">Description</f:facet>
+                    <h:outputText value="#{_concept.description}"/>
+                </rich:column>
+                <rich:column sortBy="#{_concept.tax}">
+                    <f:facet name="header">Tax</f:facet>
+                    <h:outputText value="#{_concept.tax}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{pluginHome.managed}" id="concepts">
+        <div class="actionButtons">
+            <s:button id="addconcept"
+                   value="Add concept"
+                    view="/ConceptEdit.xhtml"
+             propagation="none">
+                 <f:param name="pluginId"
+                         value="#{pluginHome.instance.id}"/>
+                 <f:param name="conceptFrom" value="Plugin"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+
+    <rich:tab label="Plugin contract types">
+        <h:form styleClass="association" id="pluginContractTypesChildren">
+
+            <h:outputText value="There are no pluginContractTypes associated with this plugin."
+                       rendered="#{empty pluginHome.pluginContractTypes}"/>
+
+            <rich:dataTable value="#{pluginHome.pluginContractTypes}"
+                           var="_pluginContractType"
+                      rendered="#{not empty pluginHome.pluginContractTypes}"
+                    rowClasses="rvgRowOne,rvgRowTwo"
+                            id="pluginContractTypesTable">
+                <rich:column sortBy="#{_pluginContractType.id}">
+                    <f:facet name="header">Id</f:facet>
+                    <h:outputText value="#{_pluginContractType.id}"/>
+                </rich:column>
+            </rich:dataTable>
+
+        </h:form>
+
+        <f:subview rendered="#{pluginHome.managed}" id="pluginContractTypes">
+        <div class="actionButtons">
+            <s:button id="addpluginContractType"
+                   value="Add pluginContractType"
+                    view="/PluginContractTypeEdit.xhtml"
+             propagation="none">
+                 <f:param name="pluginId"
+                         value="#{pluginHome.instance.id}"/>
+                 <f:param name="pluginContractTypeFrom" value="Plugin"/>
+            </s:button>
+        </div>
+        </f:subview>
+    </rich:tab>
+</rich:tabPanel>
+</ui:define>
+
+</ui:composition>
