@@ -2,27 +2,27 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="312" key="DIALOG_WIDTH"/>
-		<item value="214" key="DIALOG_Y_ORIGIN"/>
-		<item value="620" key="DIALOG_X_ORIGIN"/>
+		<item value="56" key="DIALOG_Y_ORIGIN"/>
 		<item value="437" key="DIALOG_HEIGHT"/>
+		<item value="937" key="DIALOG_X_ORIGIN"/>
 		<item value="1|Ubuntu|11.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="true" key="wrap"/>
-		<item value="false" key="casesensitive"/>
 		<item value="false" key="isRegEx"/>
+		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="false" key="wholeword"/>
-		<item value="Group" key="selection"/>
+		<item value="RETENTION_RATE_RTEICA" key="selection"/>
 		<list key="findhistory">
-			<item value="group"/>
-			<item value="getConcept"/>
-			<item value="expired"/>
-			<item value="Intere"/>
-			<item value="ORDER BY"/>
-			<item value="center"/>
-			<item value="cost"/>
-			<item value="order"/>
+			<item value="RETENTION_RATE_RTEICA"/>
+			<item value="RETENTION_RATE_SUBCATEGORY_RETECREE"/>
+			<item value="RETENTION_RATE_SUBCATEGORY_RETEICA "/>
+			<item value="RETENTION_RATE_RTEFUENTE"/>
+			<item value="getRetentionValue"/>
+			<item value="RETENTION_RATE_RTEIVA"/>
+			<item value="getREte"/>
+			<item value="getRE"/>
 		</list>
 		<list key="replacehistory">
 		</list>

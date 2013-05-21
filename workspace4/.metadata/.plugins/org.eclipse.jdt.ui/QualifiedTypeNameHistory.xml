@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<qualifiedTypeNameHistroy/>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="org.koghi.terranvm.entity.InvoiceConcept"/>
+<fullyQualifiedTypeName name="org.koghi.terranvm.entity.ConceptRetentionRateAccount"/>
+<fullyQualifiedTypeName name="org.koghi.terranvm.entity.RetentionRate"/>
+</qualifiedTypeNameHistroy>

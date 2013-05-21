@@ -172,6 +172,29 @@ public class ConceptHome extends EntityHome<Concept> {
 	
 	@Transactional
 	public void deleteRetenetionRateAccounts() {
+	
+	String query = "DELETE FROM concept_retention_rate_account a "+
+						"WHERE" +
+							" a.concept = ?  AND "+ 
+							"a.retention_rate_account IN  ("+
+								"SELECT id from retention_rate_account b WHERE " +
+								"a.retention_rate_account = b.id AND " +
+								"(b.retention_rate = ? " +
+								"OR b.retention_rate = ? "+
+								"OR b.retention_rate = ? "+
+								"OR b.retention_rate = ?)"+
+							")";
+	
+	Query q = this.getEntityManager().createNativeQuery(query);
+	q.setParameter(1, this.getInstance().getId());
+	q.setParameter(2, RetentionRate.RETENTION_RATE_RTEFUENTE);
+	q.setParameter(3, RetentionRate.RETENTION_RATE_RTEICA);
+	q.setParameter(4, RetentionRate.RETENTION_RATE_RTEIVA);
+	q.setParameter(5, RetentionRate.RETENTION_RATE_RTECREE);
+	int records = q.executeUpdate();
+	System.out.print("Elimando Registros de ConceptoRetentionAccount del Concepto : [Record] "+ records);
+ 	}
+	/*public void deleteRetenetionRateAccounts() {
 		
 		String query = "DELETE FROM concept_retention_rate_account a "+
 							"WHERE" +
@@ -191,7 +214,7 @@ public class ConceptHome extends EntityHome<Concept> {
 		q.setParameter(4, RetentionRate.RETENTION_RATE_RTEIVA);
 		int records = q.executeUpdate();
 		System.out.print("Elimando Registros de ConceptoRetentionAccount del Concepto : [Record] "+ records);
-	}
+	}*/
 
 	@SuppressWarnings("deprecation")
 	public void cancelChange() {

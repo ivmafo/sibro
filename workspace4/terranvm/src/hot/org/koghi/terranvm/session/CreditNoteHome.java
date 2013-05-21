@@ -1381,21 +1381,24 @@ public class CreditNoteHome extends EntityHome<CreditNote> {
 				Concept con = invocon.getConcept();
 				Double iva = retencion(con, RetentionRate.RETENTION_RATE_IVA, getEntityManager());
 				Double stamptx = retencion(con, RetentionRate.RETENTION_RATE_TIMBRE, getEntityManager());
+				Double cree    = retencion(con,RetentionRate.RETENTION_RATE_RTECREE,getEntityManager());
 				Double balance = invocon.getBalance();
 				Double number;
 				double ivamenosint;
 				if (invocon.getInvoiceConceptType() != InvoiceConcept.TYPE_INTEREST) {
 					Double reteIva = retencion(con, RetentionRate.RETENTION_RATE_RTEIVA, getEntityManager());
 					Double reteIca = retencion(con, RetentionRate.RETENTION_RATE_RTEICA, getEntityManager());
+					Double reteCree= retencion(con, RetentionRate.RETENTION_RATE_RTECREE,getEntityManager());
 					Double reteFuente = retencion(con, RetentionRate.RETENTION_RATE_RTEFUENTE, getEntityManager());
-					ivamenosint = (1 + iva + stamptx - (reteFuente + reteIca + (reteIva * iva)));
+					ivamenosint = (1 + iva + stamptx+ cree - (reteFuente + reteIca+reteCree+ (reteIva * iva)));
 
 					number = balance / ivamenosint;
 				} else {
 					Double reteIvaInt = retencion(con, RetentionRate.RETENTION_RATE_SUBCATEGORY_RETEIVA, getEntityManager());
 					Double reteIcaInt = retencion(con, RetentionRate.RETENTION_RATE_SUBCATEGORY_RETEICA, getEntityManager());
 					Double reteFuenteInt = retencion(con, RetentionRate.RETENTION_RATE_SUBCATEGORY_RETEFUENTE, getEntityManager());
-					ivamenosint = 1 + iva + stamptx - (((reteFuenteInt + reteIcaInt + (reteIvaInt * iva)) < 0) ? ((reteFuenteInt + reteIcaInt + (reteIvaInt * iva)) * (-1)) : (reteFuenteInt + reteIcaInt + (reteIvaInt * iva)));
+					Double reteCreeInt = retencion(con, RetentionRate.RETENTION_RATE_SUBCATEGORY_RETECREE, getEntityManager());
+					ivamenosint = 1 + iva + stamptx + cree - (((reteFuenteInt + reteIcaInt + reteCreeInt +(reteIvaInt * iva)) < 0) ? ((reteFuenteInt + reteIcaInt + reteCreeInt + (reteIvaInt * iva)) * (-1)) : (reteFuenteInt + reteIcaInt + reteCreeInt + (reteIvaInt * iva)));
 					number = balance / ivamenosint;
 				}
 

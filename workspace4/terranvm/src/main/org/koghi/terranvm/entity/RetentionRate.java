@@ -34,7 +34,8 @@ public class RetentionRate implements java.io.Serializable {
 	public final static int RETENTION_RATE_INCOME_ACCOUNT=8;
 	public final static int RETENTION_RATE_PENALTY_OF_PORTAFOLIO=9;
 	public final static int RETENTION_RATE_DISCOUNT=10;
-	public final static int RETENTION_RATE_MEMORANDUM_ACCOUNTS=11;//CUENTAS DE ORDEN DEUDORA
+	public final static int RETENTION_RATE_MEMORANDUM_ACCOUNTS=11;
+	public final static int RETENTION_RATE_RTECREE=13;//CUENTAS DE ORDEN DEUDORA
 	
 	public final static int RETENTION_RATE_SUBCATEGORY_CUENTAS_POR_COBRAR = 1101;
 	public final static int RETENTION_RATE_SUBCATEGORY_CUENTAS_DE_BANCOS = 1102;
@@ -46,6 +47,7 @@ public class RetentionRate implements java.io.Serializable {
 	public final static int RETENTION_RATE_SUBCATEGORY_OTROSINGRESOS = 1108;
 	public final static int RETENTION_RATE_SUBCATEGORY_DEUDORAS_CONTROL_INTERESES_DEUDAS_VENCIDAS = 1109;
 	public final static int RETENTION_RATE_SUBCATEGORY_DEUDORAS_CONTROL_CONTRARIO = 1110;
+	public final static int RETENTION_RATE_SUBCATEGORY_RETECREE= 1111;
 	
 	private int id;
 	private String name;

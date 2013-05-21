@@ -11,7 +11,7 @@ public class RetentionRateAccountList extends EntityQuery<RetentionRateAccount> 
 	private static final String EJBQL = "select retentionRateAccount from RetentionRateAccount retentionRateAccount";
 
 	private static final String[] RESTRICTIONS = { "lower(retentionRateAccount.name) like lower(concat(#{retentionRateAccountList.retentionRateAccount.name},'%'))", "lower(retentionRateAccount.account) like lower(concat(#{retentionRateAccountList.retentionRateAccount.account},'%'))", };
-
+	//private static final String[] RESTRICTIONS = { "", };
 	private RetentionRateAccount retentionRateAccount = new RetentionRateAccount();
 
 	public RetentionRateAccountList() {

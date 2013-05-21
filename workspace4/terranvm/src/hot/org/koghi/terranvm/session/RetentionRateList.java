@@ -10,12 +10,13 @@ public class RetentionRateList extends EntityQuery<RetentionRate> {
 
 	private static final String EJBQL = "select retentionRate from RetentionRate retentionRate";
 
-	private static final String[] RESTRICTIONS = { "lower(retentionRate.name) like lower(concat(#{retentionRateList.retentionRate.name},'%'))", };
+	private static final String[] RESTRICTIONS = { "lower(retentionRate.name) like lower(concat(#{retentionRateList.retentionRate.name},'%'))", };	
 
 	private RetentionRate retentionRate = new RetentionRate();
 
 	public RetentionRateList() {
 		setEjbql(EJBQL);
+		//setRestrictionExpressionStrings(Arrays.asList(RESTRICTIONS));
 		setRestrictionExpressionStrings(Arrays.asList(RESTRICTIONS));
 		setMaxResults(25);
 	}
